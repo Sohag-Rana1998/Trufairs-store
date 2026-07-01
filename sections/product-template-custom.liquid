@@ -1909,7 +1909,7 @@ font-size: 12px;font-style: italic;
                                 aria-label="{{ value }}{% unless value_available %} - Out of stock{% endunless %}"
                                 title="{{ value }}{% unless value_available %} (Out of stock){% endunless %}">
                           {% if swatch_variant and swatch_variant.featured_media and swatch_variant.featured_media.media_type == 'image' %}
-                          <img
+                           <img
   src="{{ swatch_variant.featured_media | image_url: width: 140 }}"
   alt="{{ swatch_variant.featured_media.alt | default: value | escape }}"
   loading="lazy"
@@ -2432,7 +2432,7 @@ font-size: 12px;font-style: italic;
     {% if product.description != blank %}"description": {{ product.description | strip_html | strip_newlines | truncate: 5000 | json }},{% endif %}
     "variesBy": [
       {%- for option in product.options -%}
-        {{ option | json }}{% unless forloop.last %},{% endunless %}
+        {{ option | replace: ':-', '' | strip | json }}{% unless forloop.last %},{% endunless %}
       {%- endfor -%}
     ],
     "brand": {
