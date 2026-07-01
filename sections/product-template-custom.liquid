@@ -1347,8 +1347,8 @@ font-size: 12px;font-style: italic;
                 {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
               {% else %}
                 {% assign pdp_thumb_alt_index = pdp_thumb_alt_index | plus: 1 %}
-              {% assign alt_index = pdp_thumb_alt_index | minus: 1 %}
-{% assign pdp_alt_raw = pdp_alt_tags[alt_index] %}
+                {% assign pdp_thumb_alt_lookup = pdp_thumb_alt_index | minus: 1 %}
+                {% assign pdp_alt_raw = pdp_alt_tags[pdp_thumb_alt_lookup] %}
                 {% if pdp_alt_raw != blank %}
                   {% assign media_alt = pdp_alt_raw | strip %}
                   {% if pdp_variant_title_suffix != blank %}
@@ -1499,8 +1499,8 @@ font-size: 12px;font-style: italic;
                       {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
                     {% else %}
                       {% assign pdp_main_alt_index = pdp_main_alt_index | plus: 1 %}
-                     {% assign main_alt_index = pdp_main_alt_index | minus: 1 %}
-{% assign pdp_alt_raw = pdp_alt_tags[main_alt_index] %}
+                      {% assign pdp_main_alt_lookup = pdp_main_alt_index | minus: 1 %}
+                      {% assign pdp_alt_raw = pdp_alt_tags[pdp_main_alt_lookup] %}
                       {% if pdp_alt_raw != blank %}
                         {% assign media_alt = pdp_alt_raw | strip %}
                         {% if pdp_variant_title_suffix != blank %}
@@ -2382,6 +2382,11 @@ font-size: 12px;font-style: italic;
   var VARIANT_MEDIA = {
   {% for v in product.variants %}
     {% assign vmf = v.metafields.custom.images %}
+    {% assign v_alt_index = 0 %}
+    {% assign v_title_suffix = blank %}
+    {% if v.title != blank and v.title != 'Default Title' %}
+      {% assign v_title_suffix = v.title %}
+    {% endif %}
     "{{ v.id }}": [
       {% if vmf != blank %}
         {% if vmf.type contains 'list.file_reference' %}
@@ -2390,7 +2395,7 @@ font-size: 12px;font-style: italic;
             {% assign item_url = blank %}
             {% assign item_thumb = blank %}
             {% assign item_zoom = blank %}
-            {% assign item_alt = it.alt | default: product.title %}
+            {% assign item_alt = it.alt %}
             {% assign item_width = it.width | default: 2000 %}
             {% assign item_height = it.height | default: 2000 %}
 
@@ -2398,23 +2403,48 @@ font-size: 12px;font-style: italic;
               {% assign item_url = it | image_url: width: 1400 %}
               {% assign item_thumb = it | image_url: width: 200 %}
               {% assign item_zoom = it | image_url: width: 2000 %}
+              {% if item_alt == blank %}
+                {% assign v_alt_index = v_alt_index | plus: 1 %}
+                {% assign v_alt_lookup = v_alt_index | minus: 1 %}
+                {% assign item_alt_raw = pdp_alt_tags[v_alt_lookup] %}
+                {% if item_alt_raw != blank %}
+                  {% assign item_alt = item_alt_raw | strip %}
+                  {% if v_title_suffix != blank %}
+                    {% assign item_alt = item_alt | append: ' - ' | append: v_title_suffix %}
+                  {% endif %}
+                {% else %}
+                  {% assign item_alt = product.title | append: ' - Media ' | append: forloop.index %}
+                {% endif %}
+              {% endif %}
             {% elsif item_type == 'video' %}
               {% assign item_url = it.sources.first.url %}
               {% if it.preview_image %}
                 {% assign item_thumb = it.preview_image | image_url: width: 200 %}
+              {% endif %}
+              {% if item_alt == blank %}
+                {% assign item_alt = product.title | append: ' - Media ' | append: forloop.index %}
               {% endif %}
             {% elsif item_type == 'external_video' %}
               {% assign item_url = it.external_id %}
               {% if it.preview_image %}
                 {% assign item_thumb = it.preview_image | image_url: width: 200 %}
               {% endif %}
+              {% if item_alt == blank %}
+                {% assign item_alt = product.title | append: ' - Media ' | append: forloop.index %}
+              {% endif %}
             {% elsif item_type == 'model' %}
               {% assign item_url = it.sources.first.url %}
               {% if it.preview_image %}
                 {% assign item_thumb = it.preview_image | image_url: width: 200 %}
               {% endif %}
+              {% if item_alt == blank %}
+                {% assign item_alt = product.title | append: ' - Media ' | append: forloop.index %}
+              {% endif %}
             {% else %}
               {% assign item_url = it | file_url %}
+              {% if item_alt == blank %}
+                {% assign item_alt = product.title | append: ' - Media ' | append: forloop.index %}
+              {% endif %}
             {% endif %}
 
             {
@@ -2429,12 +2459,32 @@ font-size: 12px;font-style: italic;
           {% endfor %}
         {% elsif vmf.type contains 'list.' %}
           {% for it in vmf.value %}
+            {% assign it_lc = it | strip | downcase %}
+            {% assign it_is_video = false %}
+            {% if it_lc contains '.mp4' or it_lc contains '.webm' or it_lc contains '.mov' or it_lc contains 'youtube.com/' or it_lc contains 'youtu.be/' or it_lc contains 'vimeo.com/' or it_lc contains '.glb' or it_lc contains '.gltf' %}
+              {% assign it_is_video = true %}
+            {% endif %}
+            {% if it_is_video %}
+              {% assign it_alt = product.title | append: ' - Media ' | append: forloop.index %}
+            {% else %}
+              {% assign v_alt_index = v_alt_index | plus: 1 %}
+              {% assign v_alt_lookup = v_alt_index | minus: 1 %}
+              {% assign it_alt_raw = pdp_alt_tags[v_alt_lookup] %}
+              {% if it_alt_raw != blank %}
+                {% assign it_alt = it_alt_raw | strip %}
+                {% if v_title_suffix != blank %}
+                  {% assign it_alt = it_alt | append: ' - ' | append: v_title_suffix %}
+                {% endif %}
+              {% else %}
+                {% assign it_alt = product.title | append: ' - Media ' | append: forloop.index %}
+              {% endif %}
+            {% endif %}
             {
               "type": "auto",
               "url": {{ it | strip | json }},
               "thumbUrl": "",
               "zoomUrl": {{ it | strip | json }},
-              "alt": {{ product.title | append: ' - Media ' | append: forloop.index | json }},
+              "alt": {{ it_alt | json }},
               "width": 2000,
               "height": 2000
             }{% unless forloop.last %},{% endunless %}
@@ -2442,12 +2492,32 @@ font-size: 12px;font-style: italic;
         {% else %}
           {% assign parts = vmf.value | split: ',' %}
           {% for it in parts %}
+            {% assign it_lc = it | strip | downcase %}
+            {% assign it_is_video = false %}
+            {% if it_lc contains '.mp4' or it_lc contains '.webm' or it_lc contains '.mov' or it_lc contains 'youtube.com/' or it_lc contains 'youtu.be/' or it_lc contains 'vimeo.com/' or it_lc contains '.glb' or it_lc contains '.gltf' %}
+              {% assign it_is_video = true %}
+            {% endif %}
+            {% if it_is_video %}
+              {% assign it_alt = product.title | append: ' - Media ' | append: forloop.index %}
+            {% else %}
+              {% assign v_alt_index = v_alt_index | plus: 1 %}
+              {% assign v_alt_lookup = v_alt_index | minus: 1 %}
+              {% assign it_alt_raw = pdp_alt_tags[v_alt_lookup] %}
+              {% if it_alt_raw != blank %}
+                {% assign it_alt = it_alt_raw | strip %}
+                {% if v_title_suffix != blank %}
+                  {% assign it_alt = it_alt | append: ' - ' | append: v_title_suffix %}
+                {% endif %}
+              {% else %}
+                {% assign it_alt = product.title | append: ' - Media ' | append: forloop.index %}
+              {% endif %}
+            {% endif %}
             {
               "type": "auto",
               "url": {{ it | strip | json }},
               "thumbUrl": "",
               "zoomUrl": {{ it | strip | json }},
-              "alt": {{ product.title | append: ' - Media ' | append: forloop.index | json }},
+              "alt": {{ it_alt | json }},
               "width": 2000,
               "height": 2000
             }{% unless forloop.last %},{% endunless %}
