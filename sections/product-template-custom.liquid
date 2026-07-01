@@ -1203,10 +1203,43 @@ font-size: 12px;font-style: italic;
   {% assign pdp_variant_title_suffix = current_variant.title %}
 {% endif %}
 
+{%- comment -%}
+  LCP source: resolve the exact URL the first main-gallery slide will render,
+  so it can be preloaded with fetchpriority=high before the parser reaches the <img> tag.
+{%- endcomment -%}
+{% assign pdp_lcp_url = blank %}
+{% if init_media_items != blank %}
+  {% assign pdp_first_item = init_media_items | first %}
+  {% if init_media_is_file_list %}
+    {% if pdp_first_item.media_type == 'image' or pdp_first_item.media_type == blank %}
+      {% assign pdp_lcp_url = pdp_first_item | image_url: width: 1400 %}
+    {% endif %}
+  {% else %}
+    {% assign pdp_first_u = pdp_first_item | strip %}
+    {% assign pdp_first_u_lc = pdp_first_u | downcase %}
+    {% unless pdp_first_u_lc contains '.mp4' or pdp_first_u_lc contains '.webm' or pdp_first_u_lc contains '.mov' or pdp_first_u_lc contains 'youtube.com/' or pdp_first_u_lc contains 'youtu.be/' or pdp_first_u_lc contains 'vimeo.com/' or pdp_first_u_lc contains '.glb' or pdp_first_u_lc contains '.gltf' %}
+      {% assign pdp_lcp_url = pdp_first_u %}
+    {% endunless %}
+  {% endif %}
+{% else %}
+  {% assign pdp_first_media = product.media.first %}
+  {% if pdp_first_media and pdp_first_media.media_type == 'image' %}
+    {% assign pdp_lcp_url = pdp_first_media | image_url: width: 1400 %}
+  {% endif %}
+{% endif %}
+
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.shopify.com">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
+{% if pdp_lcp_url != blank %}
+  <link rel="preload" as="image" href="{{ pdp_lcp_url | escape }}" fetchpriority="high">
+{% endif %}
+
+<link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css" media="print" onload="this.media='all';this.onload=null;">
+<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css"></noscript>
 
 <div class="pdp-wrapper">
   <!-- ===================== RIGHT: INFO PANEL (REDESIGNED) ===================== -->
@@ -1366,6 +1399,8 @@ font-size: 12px;font-style: italic;
                   {% if forloop.first and featured_media and featured_media.media_type == 'image' %}
                     <img class="pdp-thumb-img"
                          src="{{ featured_media | image_url: width: 200 }}"
+                         width="80"
+                         height="80"
                          loading="lazy"
                          decoding="async"
                          alt="{{ media_alt | escape }}">
@@ -1388,12 +1423,16 @@ font-size: 12px;font-style: italic;
                   {% if forloop.first and featured_media and featured_media.media_type == 'image' %}
                     <img class="pdp-thumb-img"
                          src="{{ featured_media | image_url: width: 200 }}"
+                         width="80"
+                         height="80"
                          loading="lazy"
                          decoding="async"
                          alt="{{ media_alt | escape }}">
                   {% else %}
                     <img class="pdp-thumb-img js-external-thumb"
                          src=""
+                         width="80"
+                         height="80"
                          data-external-src="{{ u | escape }}"
                          loading="lazy"
                          decoding="async"
@@ -1408,6 +1447,8 @@ font-size: 12px;font-style: italic;
               {% else %}
                 <img class="pdp-thumb-img"
                      src="{{ u }}"
+                     width="80"
+                     height="80"
                      loading="lazy"
                      decoding="async"
                      alt="{{ media_alt | escape }}">
@@ -1422,12 +1463,16 @@ font-size: 12px;font-style: italic;
               {% if media.media_type == 'image' %}
                 <img class="pdp-thumb-img"
                      src="{{ media | image_url: width: 200 }}"
+                     width="80"
+                     height="80"
                      loading="lazy"
                      decoding="async"
                      alt="{{ media.alt | default: product.title | escape }}">
               {% else %}
                 <img class="pdp-thumb-img"
                      src="{{ media.preview_image | image_url: width: 200 }}"
+                     width="80"
+                     height="80"
                      loading="lazy"
                      decoding="async"
                      alt="{{ media.alt | default: product.title | escape }}">
@@ -1562,6 +1607,8 @@ font-size: 12px;font-style: italic;
                     {% else %}
                       <img class="photoswipe__image"
                            src="{{ u }}"
+                           width="700"
+                           height="700"
                            data-index="{{ forloop.index }}"
                            data-photoswipe-src="{{ u }}"
                            data-photoswipe-width="2000"
@@ -1589,6 +1636,8 @@ font-size: 12px;font-style: italic;
                     {% if media.media_type == 'image' %}
                       <img class="photoswipe__image"
                            src="{{ media | image_url: width: 1400 }}"
+                           width="{{ media.width }}"
+                           height="{{ media.height }}"
                            data-index="{{ forloop.index }}"
                            data-photoswipe-src="{{ media | image_url: width: 2000 }}"
                            data-photoswipe-width="{{ media.width }}"
@@ -2331,9 +2380,109 @@ font-size: 12px;font-style: italic;
   </div>
 </div>
 
+{%- comment -%}
+  Google-optimized Product structured data.
+  Fields follow schema.org/Product + Google's Product structured data guidelines:
+  https://developers.google.com/search/docs/appearance/structured-data/product
+  - Required: name, image
+  - Needed for the Search "merchant listing" rich result (star rating/price/availability):
+    offers.priceCurrency + offers.price, offers.availability, offers.shippingDetails,
+    offers.hasMerchantReturnPolicy (see Google's 2023 merchant-listing policy update).
+  - aggregateRating is sourced from the same reviews.rating / reviews.rating_count
+    metafields the on-page review widget already renders, so structured data matches
+    visible content (a hard Google requirement).
+  - shippingDetails/hasMerchantReturnPolicy values mirror the trust-badge copy shown
+    on this page ("Free Shipping in USA", "30-Day Easy Returns") — keep both in sync
+    if those policies change.
+{%- endcomment -%}
 {% if product != blank %}
+  {% assign pdp_schema_variant = product.selected_or_first_available_variant %}
+  {% assign pdp_schema_gtin = product.metafields.custom.gtin %}
+  {% assign pdp_schema_mpn = pdp_schema_variant.metafields.custom.mpn | default: product.metafields.custom.mpn %}
+  {% assign pdp_schema_has_multiple_offers = false %}
+  {% if product.variants.size > 1 %}
+    {% assign pdp_schema_has_multiple_offers = true %}
+  {% endif %}
   <script type="application/ld+json">
-    {{ product | structured_data }}
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ shop.url | append: product.url | json }},
+    "image": [
+      {%- for media in product.media limit: 10 -%}
+        {%- if media.media_type == 'image' -%}
+          {{ media | image_url: width: 1200 | json }}{% unless forloop.last %},{% endunless %}
+        {%- endif -%}
+      {%- endfor -%}
+    ],
+    {% if product.description != blank %}"description": {{ product.description | strip_html | strip_newlines | truncate: 5000 | json }},{% endif %}
+    "sku": {{ pdp_schema_variant.sku | default: product.id | json }},
+    {% if pdp_schema_gtin != blank %}"gtin": {{ pdp_schema_gtin | json }},{% endif %}
+    {% if pdp_schema_mpn != blank %}"mpn": {{ pdp_schema_mpn | json }},{% endif %}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | json }}
+    },
+    {% if product.metafields.reviews.rating.value != blank and product.metafields.reviews.rating_count > 0 %}
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": {{ product.metafields.reviews.rating.value.rating | json }},
+      "bestRating": {{ product.metafields.reviews.rating.value.scale_max | default: 5 | json }},
+      "worstRating": 1,
+      "reviewCount": {{ product.metafields.reviews.rating_count | json }}
+    },
+    {% endif %}
+    "offers": {
+      "@type": "{% if pdp_schema_has_multiple_offers %}AggregateOffer{% else %}Offer{% endif %}",
+      "url": {{ shop.url | append: product.url | json }},
+      "priceCurrency": {{ cart.currency.iso_code | json }},
+      {% if pdp_schema_has_multiple_offers %}
+        "lowPrice": {{ product.price_min | divided_by: 100.0 | json }},
+        "highPrice": {{ product.price_max | divided_by: 100.0 | json }},
+        "offerCount": {{ product.variants.size | json }},
+      {% else %}
+        "price": {{ pdp_schema_variant.price | divided_by: 100.0 | json }},
+      {% endif %}
+      "availability": "https://schema.org/{% if pdp_schema_variant.available %}InStock{% else %}OutOfStock{% endif %}",
+      "itemCondition": "https://schema.org/NewCondition",
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0",
+          "currency": {{ cart.currency.iso_code | json }}
+        },
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": "US"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 0,
+            "maxValue": 2,
+            "unitCode": "d"
+          },
+          "transitTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 5,
+            "maxValue": 10,
+            "unitCode": "d"
+          }
+        }
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "US",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 30,
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn"
+      }
+    }
+  }
   </script>
 {% endif %}
 
@@ -3296,14 +3445,16 @@ font-size: 12px;font-style: italic;
     }
   }
 
-  function renderVariant(variant, shouldUpdateUrl){
+  function renderVariant(variant, shouldUpdateUrl, skipGalleryRebuild){
     if (!variant) return;
     setSelectedOptionsFromVariant(variant);
     syncActiveOptionButtons();
     updateVariantAvailabilityStyles();
 
-    var rebuilt = updateGallery(variant);
-    if (!rebuilt) goToVariantMedia(variant);
+    if (!skipGalleryRebuild) {
+      var rebuilt = updateGallery(variant);
+      if (!rebuilt) goToVariantMedia(variant);
+    }
 
     var priceEl = document.getElementById('pdp-price');
     var compareEl = document.getElementById('pdp-compare');
@@ -3366,7 +3517,17 @@ function initDefaultVariantSelection(){
   var variantIdFromUrl = url.searchParams.get('variant');
   var initialVariant = findVariantBySku(skuFromUrl) || findVariantById(variantIdFromUrl) || findVariantById(INITIAL_VARIANT_ID) || getFirstAvailableVariant();
 
-  if (initialVariant) renderVariant(initialVariant, true);
+  if (initialVariant) {
+    /*
+     * The gallery is already server-rendered for INITIAL_VARIANT_ID with correct
+     * fetchpriority/loading hints on the LCP image. Rebuilding it here via innerHTML
+     * would discard that element and force the browser to re-fetch/re-paint the
+     * hero image, inflating LCP. Skip the rebuild when the resolved variant matches
+     * what the server already rendered.
+     */
+    var matchesServerRenderedVariant = String(initialVariant.id) === String(INITIAL_VARIANT_ID);
+    renderVariant(initialVariant, true, matchesServerRenderedVariant);
+  }
 }
 
   function bindOptionClicks(){
