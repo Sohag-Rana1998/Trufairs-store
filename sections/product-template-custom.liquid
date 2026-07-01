@@ -1187,6 +1187,22 @@ font-size: 12px;font-style: italic;
   {% assign fallback_thumb = product.featured_media | image_url: width: 200 %}
 {% endif %}
 
+{%- comment -%}
+  Alt text merge: product.metafields.custom.alt_tags (comma separated, multi-line text)
+  is mapped in order onto the image URLs coming from the variant metafield custom.images,
+  skipping any video/embed/3D entries so the same alt-tag list lines up across variants.
+  Variant title is appended as the final part of each alt text.
+{%- endcomment -%}
+{% assign pdp_alt_tags_mf = product.metafields.custom.alt_tags %}
+{% assign pdp_alt_tags = blank %}
+{% if pdp_alt_tags_mf != blank %}
+  {% assign pdp_alt_tags = pdp_alt_tags_mf.value | split: ',' %}
+{% endif %}
+{% assign pdp_variant_title_suffix = blank %}
+{% if current_variant.title != blank and current_variant.title != 'Default Title' %}
+  {% assign pdp_variant_title_suffix = current_variant.title %}
+{% endif %}
+
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
@@ -1312,6 +1328,7 @@ font-size: 12px;font-style: italic;
 
         {% if init_media_items != blank %}
 
+          {% assign pdp_thumb_alt_index = 0 %}
           {% for item in init_media_items %}
             {% assign u = item %}
             {% assign media_alt = blank %}
@@ -1321,8 +1338,25 @@ font-size: 12px;font-style: italic;
             {% endif %}
             {% assign u = u | strip %}
             {% assign u_lc = u | downcase %}
+            {% assign pdp_is_video_entry = false %}
+            {% if u_lc contains '.mp4' or u_lc contains '.webm' or u_lc contains '.mov' or u_lc contains 'youtube.com/' or u_lc contains 'youtu.be/' or u_lc contains 'vimeo.com/' or u_lc contains '.glb' or u_lc contains '.gltf' %}
+              {% assign pdp_is_video_entry = true %}
+            {% endif %}
             {% if media_alt == blank %}
-              {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
+              {% if pdp_is_video_entry %}
+                {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
+              {% else %}
+                {% assign pdp_thumb_alt_index = pdp_thumb_alt_index | plus: 1 %}
+                {% assign pdp_alt_raw = pdp_alt_tags[pdp_thumb_alt_index | minus: 1] %}
+                {% if pdp_alt_raw != blank %}
+                  {% assign media_alt = pdp_alt_raw | strip %}
+                  {% if pdp_variant_title_suffix != blank %}
+                    {% assign media_alt = media_alt | append: ' - ' | append: pdp_variant_title_suffix %}
+                  {% endif %}
+                {% else %}
+                  {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
+                {% endif %}
+              {% endif %}
             {% endif %}
 
             <div class="swiper-slide">
@@ -1445,6 +1479,7 @@ font-size: 12px;font-style: italic;
 
               {% if init_media_items != blank %}
 
+                {% assign pdp_main_alt_index = 0 %}
                 {% for item in init_media_items %}
                   {% assign u = item %}
                   {% assign media_alt = blank %}
@@ -1454,8 +1489,25 @@ font-size: 12px;font-style: italic;
                   {% endif %}
                   {% assign u = u | strip %}
                   {% assign u_lc = u | downcase %}
+                  {% assign pdp_is_video_entry = false %}
+                  {% if u_lc contains '.mp4' or u_lc contains '.webm' or u_lc contains '.mov' or u_lc contains 'youtube.com/' or u_lc contains 'youtu.be/' or u_lc contains 'vimeo.com/' or u_lc contains '.glb' or u_lc contains '.gltf' %}
+                    {% assign pdp_is_video_entry = true %}
+                  {% endif %}
                   {% if media_alt == blank %}
-                    {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
+                    {% if pdp_is_video_entry %}
+                      {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
+                    {% else %}
+                      {% assign pdp_main_alt_index = pdp_main_alt_index | plus: 1 %}
+                      {% assign pdp_alt_raw = pdp_alt_tags[pdp_main_alt_index | minus: 1] %}
+                      {% if pdp_alt_raw != blank %}
+                        {% assign media_alt = pdp_alt_raw | strip %}
+                        {% if pdp_variant_title_suffix != blank %}
+                          {% assign media_alt = media_alt | append: ' - ' | append: pdp_variant_title_suffix %}
+                        {% endif %}
+                      {% else %}
+                        {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
+                      {% endif %}
+                    {% endif %}
                   {% endif %}
 
                   <div class="swiper-slide product-main-slide" data-index="{{ forloop.index0 }}" tabindex="{% if forloop.first %}0{% else %}-1{% endif %}">
