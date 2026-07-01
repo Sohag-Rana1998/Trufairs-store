@@ -2454,6 +2454,27 @@ font-size: 12px;font-style: italic;
         {% assign pdp_v_mpn = v.metafields.custom.mpn | default: pdp_schema_mpn %}
         {% assign pdp_v_image = v.featured_image | default: product.featured_image %}
         {% assign pdp_v_url = shop.url | append: product.url | append: '?variant=' | append: v.id %}
+        {%- comment -%}
+          Google's Rich Results Test validates that each hasVariant Product declares a
+          real property for every dimension listed in the group's "variesBy" (e.g. a
+          "color" field, not just the color folded into "name"). Known schema.org Product
+          properties (color/size/material/pattern) get their own key; anything else
+          (e.g. "Magnification") is expressed as additionalProperty/PropertyValue.
+        {%- endcomment -%}
+        {% assign pdp_v_description = product.description | strip_html | strip_newlines | truncate: 300 %}
+        {% assign pdp_extra_count = 0 %}
+        {% capture pdp_additional_properties %}
+          {% for opt_name in product.options %}
+            {% assign pdp_opt_clean = opt_name | replace: ':-', '' | strip %}
+            {% assign pdp_opt_lc = pdp_opt_clean | downcase %}
+            {% unless pdp_opt_lc == 'color' or pdp_opt_lc == 'colour' or pdp_opt_lc == 'size' or pdp_opt_lc == 'material' or pdp_opt_lc == 'pattern' %}
+              {% assign pdp_opt_value = v.options[forloop.index0] %}
+              {% if pdp_extra_count > 0 %},{% endif %}
+              {"@type":"PropertyValue","name":{{ pdp_opt_clean | json }},"value":{{ pdp_opt_value | json }}}
+              {% assign pdp_extra_count = pdp_extra_count | plus: 1 %}
+            {% endunless %}
+          {% endfor %}
+        {% endcapture %}
         {
           "@type": "Product",
           "name": {{ product.title | append: ' - ' | append: v.title | json }},
@@ -2462,6 +2483,22 @@ font-size: 12px;font-style: italic;
           {% if pdp_v_gtin != blank %}"gtin": {{ pdp_v_gtin | json }},{% endif %}
           {% if pdp_v_mpn != blank %}"mpn": {{ pdp_v_mpn | json }},{% endif %}
           {% if pdp_v_image != blank %}"image": {{ pdp_v_image | image_url: width: 1200 | json }},{% endif %}
+          "description": {{ pdp_v_description | default: product.title | json }},
+          {% for opt_name in product.options %}
+            {% assign pdp_opt_clean = opt_name | replace: ':-', '' | strip %}
+            {% assign pdp_opt_lc = pdp_opt_clean | downcase %}
+            {% assign pdp_opt_value = v.options[forloop.index0] %}
+            {% if pdp_opt_lc == 'color' or pdp_opt_lc == 'colour' %}
+              "color": {{ pdp_opt_value | json }},
+            {% elsif pdp_opt_lc == 'size' %}
+              "size": {{ pdp_opt_value | json }},
+            {% elsif pdp_opt_lc == 'material' %}
+              "material": {{ pdp_opt_value | json }},
+            {% elsif pdp_opt_lc == 'pattern' %}
+              "pattern": {{ pdp_opt_value | json }},
+            {% endif %}
+          {% endfor %}
+          {% if pdp_extra_count > 0 %}"additionalProperty": [{{ pdp_additional_properties }}],{% endif %}
           "brand": {
             "@type": "Brand",
             "name": {{ product.vendor | json }}
