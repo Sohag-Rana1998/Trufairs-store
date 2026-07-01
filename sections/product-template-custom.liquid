@@ -1347,7 +1347,8 @@ font-size: 12px;font-style: italic;
                 {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
               {% else %}
                 {% assign pdp_thumb_alt_index = pdp_thumb_alt_index | plus: 1 %}
-                {% assign pdp_alt_raw = pdp_alt_tags[pdp_thumb_alt_index | minus: 1] %}
+              {% assign alt_index = pdp_thumb_alt_index | minus: 1 %}
+{% assign pdp_alt_raw = pdp_alt_tags[alt_index] %}
                 {% if pdp_alt_raw != blank %}
                   {% assign media_alt = pdp_alt_raw | strip %}
                   {% if pdp_variant_title_suffix != blank %}
@@ -1498,7 +1499,8 @@ font-size: 12px;font-style: italic;
                       {% assign media_alt = product.title | append: ' - Media ' | append: forloop.index %}
                     {% else %}
                       {% assign pdp_main_alt_index = pdp_main_alt_index | plus: 1 %}
-                      {% assign pdp_alt_raw = pdp_alt_tags[pdp_main_alt_index | minus: 1] %}
+                     {% assign main_alt_index = pdp_main_alt_index | minus: 1 %}
+{% assign pdp_alt_raw = pdp_alt_tags[main_alt_index] %}
                       {% if pdp_alt_raw != blank %}
                         {% assign media_alt = pdp_alt_raw | strip %}
                         {% if pdp_variant_title_suffix != blank %}
