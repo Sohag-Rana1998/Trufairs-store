@@ -1,0 +1,667 @@
+{% liquid
+  assign dynamic_heading = product.metafields.custom.why_selected_heading.value | default: section.settings.heading
+  assign dynamic_body = product.metafields.custom.why_selected_body
+%}
+
+<section
+  class="trufairs-why-selected-section"
+  style="
+    --bg: {{ section.settings.background_color }};
+    --heading: {{ section.settings.heading_color }};
+    --text: {{ section.settings.text_color }};
+    --muted: {{ section.settings.muted_color }};
+    --accent: {{ section.settings.accent_color }};
+    --pt: {{ section.settings.section_padding_top }}px;
+    --pb: {{ section.settings.section_padding_bottom }}px;
+    --gap: {{ section.settings.content_gap }}px;
+    --radius: {{ section.settings.image_radius }}px;
+  "
+>
+  <div class="page-width trufairs-why-selected__wrap">
+    <div class="trufairs-why-selected__grid">
+      <div class="trufairs-why-selected__content">
+        <div class="trufairs-why-selected__eyebrow-wrapper">
+          {% if product.metafields.custom.verified_aprroved %}
+            <span class="trufairs-featured-picks__badge-2">
+              <img
+                title="This item is trufairs verified"
+                class="verified-white-logo"
+                style="max-width:35px;"
+                src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Verified_Logo_Main.png?v=1777415405"
+                height="35"
+                width="35"
+                alt=""
+              >
+              Verified Selection
+            </span>
+          {% else %}
+            <span class="trufairs-featured-picks__badge-2">
+              <img
+                title="This item is trufairs verified"
+                class="verified-white-logo"
+                style="max-width:35px;"
+                src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Trufairs_Trusted_Icon_Transparent.png?v=1762834274"
+                height="35"
+                width="35"
+                alt=""
+              >
+              Trusted Selection
+            </span>
+          {% endif %}
+        </div>
+
+        {%- if dynamic_heading != blank -%}
+          <h2 class="trufairs-why-selected__heading">
+            {{ dynamic_heading }}
+          </h2>
+        {%- endif -%}
+
+        {% if product.metafields.custom.verified_aprroved %}
+          {%- if dynamic_body != blank -%}
+            <div class="trufairs-why-selected__body">
+              {{ dynamic_body | metafield_tag }}
+            </div>
+          {%- endif -%}
+        {% else %}
+          <div class="trufairs-why-selected__body">
+            We didn't choose this — our customers did. High demand, top ratings, and repeat purchases put this product on the list. When enough people buy it and come back satisfied, that's all the proof we need.
+          </div>
+        {% endif %}
+      </div>
+
+      {% liquid
+        assign current_variant = product.selected_or_first_available_variant
+        assign why_selected_image_url = blank
+        assign current_variant_images_mf = current_variant.metafields.custom.images
+
+        comment
+          5th image URL = index 4 because Liquid array index starts from 0.
+          Video URLs are skipped before counting image URLs.
+        endcomment
+        assign target_image_index = 1
+
+        assign product_fallback_image_url = blank
+        if product.featured_image
+          assign product_fallback_image_url = product.featured_image | image_url: width: 1400
+        endif
+
+        assign current_variant_fallback_image_url = blank
+        if current_variant.featured_media and current_variant.featured_media.media_type == 'image'
+          assign current_variant_fallback_image_url = current_variant.featured_media | image_url: width: 1400
+        elsif current_variant.featured_image
+          assign current_variant_fallback_image_url = current_variant.featured_image | image_url: width: 1400
+        endif
+
+        assign image_only_urls = ''
+        assign image_only_count = 0
+
+        if current_variant_images_mf != blank
+          if current_variant_images_mf.type contains 'list.'
+            for media_item in current_variant_images_mf.value
+              assign media_url = media_item
+
+              if current_variant_images_mf.type contains 'file_reference'
+                assign media_url = media_item | file_url
+              endif
+
+              assign media_url_string = media_url | append: '' | strip
+              assign media_url_downcase = media_url_string | downcase
+
+              unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+                assign image_only_count = image_only_count | plus: 1
+
+                if image_only_urls == ''
+                  assign image_only_urls = media_url_string
+                else
+                  assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+                endif
+              endunless
+            endfor
+          else
+            assign current_variant_images_list = current_variant_images_mf.value | split: ','
+
+            for media_url in current_variant_images_list
+              assign media_url_string = media_url | strip
+              assign media_url_downcase = media_url_string | downcase
+
+              unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+                assign image_only_count = image_only_count | plus: 1
+
+                if image_only_urls == ''
+                  assign image_only_urls = media_url_string
+                else
+                  assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+                endif
+              endunless
+            endfor
+          endif
+
+          assign image_only_list = image_only_urls | split: '||'
+
+          if image_only_count > 1
+            assign why_selected_image_url = image_only_list[target_image_index] | strip
+
+            if why_selected_image_url == blank
+              assign why_selected_image_url = image_only_list | first | strip
+            endif
+          elsif image_only_count == 1
+            assign why_selected_image_url = image_only_list | first | strip
+          endif
+        endif
+
+        if why_selected_image_url == blank
+          assign why_selected_image_url = current_variant_fallback_image_url
+        endif
+
+        if why_selected_image_url == blank
+          assign why_selected_image_url = product_fallback_image_url
+        endif
+      %}
+
+      <div class="trufairs-why-selected__media" data-why-selected-image-section="{{ section.id }}">
+        <div class="trufairs-why-selected__image-wrap">
+          {%- if why_selected_image_url != blank -%}
+            <img
+              src="{{ why_selected_image_url }}"
+              loading="lazy"
+              class="trufairs-why-selected__image"
+              alt="{{ section.settings.image_alt | escape }}"
+              width="1400"
+              height="600"
+              data-why-selected-dynamic-image
+            >
+          {%- else -%}
+            <div class="trufairs-why-selected__placeholder">
+              {{ 'product-1' | placeholder_svg_tag }}
+              <span>No image available</span>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trufairs-why-selected-section {
+    background: var(--bg);
+    padding-top: var(--pt);
+    padding-bottom: var(--pb);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .trufairs-why-selected__wrap {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .trufairs-why-selected__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+    gap: var(--gap);
+    align-items: center;
+  }
+
+  .trufairs-why-selected__content {
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .trufairs-why-selected__eyebrow-wrapper {
+    margin-bottom: 32px;
+  }
+
+  .trufairs-why-selected__trust {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px 8px 12px;
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 24px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .trufairs-why-selected__trust-icon {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+  }
+
+  .trufairs-why-selected__trust-text {
+    font-size: 15px;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #000000;
+    font-weight: 700;
+  }
+
+  .trufairs-why-selected__heading {
+    margin: 0 0 16px;
+    color: var(--heading);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+
+  .trufairs-why-selected__subtitle {
+    margin: 0 0 24px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .trufairs-why-selected__body {
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.75;
+    letter-spacing: -0.01em;
+    max-width: 520px;
+  }
+
+  .trufairs-why-selected__body p {
+    margin: 0 0 20px;
+  }
+
+  .trufairs-why-selected__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .trufairs-why-selected__media {
+    position: relative;
+  }
+
+  .trufairs-why-selected__image-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #f5f5f3;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.04);
+  }
+
+  .trufairs-why-selected__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--radius);
+    transition: opacity 0.25s ease;
+  }
+
+  .trufairs-why-selected__image.is-changing {
+    opacity: 0;
+  }
+
+  .trufairs-why-selected__placeholder {
+    min-height: 520px;
+    border-radius: var(--radius);
+    background: #f5f5f3;
+    border: 2px dashed rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: #999;
+    font-size: 14px;
+    text-align: center;
+    padding: 40px;
+    line-height: 1.6;
+  }
+
+  .trufairs-why-selected__placeholder svg {
+    opacity: 0.3;
+  }
+
+  @media screen and (min-width: 990px) {
+    .trufairs-why-selected__image-wrap,
+    .trufairs-why-selected__placeholder {
+      min-height: 560px;
+    }
+
+    .trufairs-why-selected__image {
+      height: auto;
+      object-fit: cover;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .trufairs-why-selected__grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+
+    .trufairs-why-selected__content,
+    .trufairs-why-selected__body {
+      max-width: 100%;
+    }
+
+    .trufairs-why-selected__image-wrap,
+    .trufairs-why-selected__placeholder {
+      min-height: 420px;
+    }
+
+    .trufairs-why-selected__image {
+      height: auto;
+      object-fit: cover;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .trufairs-why-selected__wrap {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .trufairs-why-selected-section {
+      padding-top: 56px;
+      padding-bottom: 56px;
+    }
+
+    .trufairs-why-selected__eyebrow-wrapper {
+      margin-bottom: 24px;
+    }
+
+    .trufairs-why-selected__trust {
+      padding: 6px 14px 6px 10px;
+    }
+
+    .trufairs-why-selected__heading {
+      margin-bottom: 12px;
+      letter-spacing: -0.015em;
+    }
+
+    .trufairs-why-selected__subtitle {
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .trufairs-why-selected__body {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .trufairs-why-selected__body p {
+      margin-bottom: 16px;
+    }
+
+    .trufairs-why-selected__image-wrap,
+    .trufairs-why-selected__placeholder {
+      min-height: 340px;
+    }
+
+    .trufairs-why-selected__image {
+      height: auto;
+    }
+
+    .trufairs-why-selected__grid {
+      gap: 36px;
+    }
+  }
+</style>
+
+<script type="application/json" id="WhySelectedVariantImages-{{ section.id }}">
+{
+  {% for variant in product.variants %}
+    {% liquid
+      assign target_image_index = 1
+      assign variant_image_url = blank
+      assign variant_images_mf = variant.metafields.custom.images
+
+      assign product_fallback_image_url = blank
+      if product.featured_image
+        assign product_fallback_image_url = product.featured_image | image_url: width: 1400
+      endif
+
+      assign variant_fallback_image_url = blank
+      if variant.featured_media and variant.featured_media.media_type == 'image'
+        assign variant_fallback_image_url = variant.featured_media | image_url: width: 1400
+      elsif variant.featured_image
+        assign variant_fallback_image_url = variant.featured_image | image_url: width: 1400
+      endif
+
+      assign image_only_urls = ''
+      assign image_only_count = 0
+
+      if variant_images_mf != blank
+        if variant_images_mf.type contains 'list.'
+          for media_item in variant_images_mf.value
+            assign media_url = media_item
+
+            if variant_images_mf.type contains 'file_reference'
+              assign media_url = media_item | file_url
+            endif
+
+            assign media_url_string = media_url | append: '' | strip
+            assign media_url_downcase = media_url_string | downcase
+
+            unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+              assign image_only_count = image_only_count | plus: 1
+
+              if image_only_urls == ''
+                assign image_only_urls = media_url_string
+              else
+                assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+              endif
+            endunless
+          endfor
+        else
+          assign variant_images_list = variant_images_mf.value | split: ','
+
+          for media_url in variant_images_list
+            assign media_url_string = media_url | strip
+            assign media_url_downcase = media_url_string | downcase
+
+            unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+              assign image_only_count = image_only_count | plus: 1
+
+              if image_only_urls == ''
+                assign image_only_urls = media_url_string
+              else
+                assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+              endif
+            endunless
+          endfor
+        endif
+
+        assign image_only_list = image_only_urls | split: '||'
+
+        if image_only_count > 1
+          assign variant_image_url = image_only_list[target_image_index] | strip
+
+          if variant_image_url == blank
+            assign variant_image_url = image_only_list | first | strip
+          endif
+        elsif image_only_count == 1
+          assign variant_image_url = image_only_list | first | strip
+        endif
+      endif
+
+      if variant_image_url == blank
+        assign variant_image_url = variant_fallback_image_url
+      endif
+
+      if variant_image_url == blank
+        assign variant_image_url = product_fallback_image_url
+      endif
+    %}
+
+    "{{ variant.id }}": {{ variant_image_url | json }}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+}
+</script>
+
+<script>
+  (function() {
+    var sectionId = "{{ section.id }}";
+    var imageMapEl = document.getElementById("WhySelectedVariantImages-" + sectionId);
+    var imageWrapper = document.querySelector('[data-why-selected-image-section="' + sectionId + '"]');
+    var variantInput = document.getElementById("pdp-variant-id");
+
+    if (!imageMapEl || !imageWrapper || !variantInput) return;
+
+    var variantImageMap = {};
+
+    try {
+      variantImageMap = JSON.parse(imageMapEl.textContent || "{}");
+    } catch (error) {
+      variantImageMap = {};
+    }
+
+    function updateWhySelectedImage(variantId) {
+      var imageUrl = variantImageMap[String(variantId)];
+      var imageEl = imageWrapper.querySelector("[data-why-selected-dynamic-image]");
+
+      if (!imageUrl || !imageEl) return;
+
+      if (imageEl.getAttribute("src") === imageUrl) return;
+
+      imageEl.classList.add("is-changing");
+
+      var preloadedImage = new Image();
+
+      preloadedImage.onload = function() {
+        imageEl.setAttribute("src", imageUrl);
+        imageEl.removeAttribute("srcset");
+        imageEl.classList.remove("is-changing");
+      };
+
+      preloadedImage.onerror = function() {
+        imageEl.classList.remove("is-changing");
+      };
+
+      preloadedImage.src = imageUrl;
+    }
+
+    variantInput.addEventListener("change", function() {
+      updateWhySelectedImage(variantInput.value);
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      updateWhySelectedImage(variantInput.value);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Why we selected",
+  "tag": "section",
+  "class": "section trufairs-why-selected",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Fallback heading",
+      "default": "Why we selected this product"
+    },
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Fallback body text",
+      "default": "<p>We reviewed multiple options before choosing this mirror, most didn't meet our standards.</p><p>This one stood out for its lighting consistency, usability, and everyday reliability.</p><p>It's not about extra features — it's about getting the basics right.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Fallback image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Mirror shown in real everyday use"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f8f8f6"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Subtitle color",
+      "default": "#6b6b6b"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent line color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Column gap",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why we selected"
+    }
+  ]
+}
+{% endschema %}

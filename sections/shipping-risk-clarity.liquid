@@ -1,0 +1,244 @@
+<section class="shipping-risk-section">
+  <div class="shipping-risk-wrapper">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="shipping-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="shipping-grid">
+
+      <!-- Shipping -->
+      <div class="shipping-item">
+        <div class="icon111">
+          {{ section.settings.shipping_icon }}
+        </div>
+        <h3>{{ section.settings.shipping_title }}</h3>
+        <p>{{ section.settings.shipping_text }}</p>
+      </div>
+
+      <!-- Returns -->
+      <div class="shipping-item">
+        <div class="icon111">
+          {% comment %} {{ section.settings.returns_icon }} {% endcomment %}
+           <img 
+  src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/product-return_4989753.png?v=1777056231" 
+  alt="Product Return Icon"
+  style="width:48px;height:48px;display:inline-block;object-fit:contain;"
+>
+        </div>
+        <h3>{{ section.settings.returns_title }}</h3>
+        <p>{{ section.settings.returns_text }}</p>
+      </div>
+
+      <!-- Guarantee -->
+      <div class="shipping-item">
+        <div class="icon111">
+          {{ section.settings.guarantee_icon }}
+        </div>
+        <h3>{{ section.settings.guarantee_title }}</h3>
+        <p>{{ section.settings.guarantee_text }}</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+/* Section Styling */
+.shipping-risk-section {
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  padding: 100px 20px;
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.shipping-risk-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Heading Styling */
+.shipping-heading {
+  font-size: 36px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+  font-family: 'Playfair Display', serif;
+}
+
+/* Grid Layout */
+.shipping-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px;
+  align-items: start;
+}
+
+/* Individual Item Styling */
+.shipping-item {
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.shipping-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon Styling */
+.shipping-item .icon111 {
+  margin-bottom: 20px;
+}
+
+.shipping-item .icon111 svg {
+  width: 48px;
+  height: 48px;
+ 
+  opacity: 0.9;
+  transition: fill 0.3s ease;
+}
+.shipping-item .icon111 img {
+  width: 48px;
+  height: 48px;
+ 
+  opacity: 0.9;
+  transition: fill 0.3s ease;
+}
+
+ 
+
+/* Title Styling */
+.shipping-item h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333;
+  letter-spacing: 0.3px;
+}
+
+/* Text Styling */
+.shipping-item p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.8;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .shipping-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .shipping-heading {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .shipping-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .shipping-heading {
+    font-size: 28px;
+  }
+
+  .shipping-item {
+    padding: 25px 15px;
+  }
+
+  .shipping-item h3 {
+    font-size: 18px;
+  }
+
+  .shipping-item p {
+    font-size: 15px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Shipping & Risk Clarity",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shipping & Risk-Free Shopping"
+    },
+
+    {
+      "type": "textarea",
+      "id": "shipping_icon",
+      "label": "Shipping Icon (SVG)",
+      "default": "<svg viewBox='0 0 24 24'><path d='M3 3h13v13H3zM16 8h4l1 2v6h-5zM5 18a2 2 0 104 0 2 2 0 00-4 0zm10 0a2 2 0 104 0 2 2 0 00-4 0z'/></svg>"
+    },
+    {
+      "type": "text",
+      "id": "shipping_title",
+      "label": "Shipping Title",
+      "default": "Fast & Reliable Shipping"
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_text",
+      "label": "Shipping Text",
+      "default": "Orders are processed within 24–48 hours and delivered within 5–10 business days. Tracking is provided for every order so you can follow your package with confidence."
+    },
+
+    {
+      "type": "textarea",
+      "id": "returns_icon",
+      "label": "Returns Icon (SVG)",
+      "default": "<svg viewBox='0 0 24 24'><path d='M12 5v4l5-5-5-5v4C6.48 3 2 7.48 2 13s4.48 10 10 10 10-4.48 10-10h-2a8 8 0 11-8-8z'/></svg>"
+    },
+    {
+      "type": "text",
+      "id": "returns_title",
+      "label": "Returns Title",
+      "default": "30-Day Easy Returns"
+    },
+    {
+      "type": "textarea",
+      "id": "returns_text",
+      "label": "Returns Text",
+      "default": "If you're not fully satisfied, you can return your product within 30 days. No complicated process — just simple, straightforward support."
+    },
+
+    {
+      "type": "textarea",
+      "id": "guarantee_icon",
+      "label": "Guarantee Icon (SVG)",
+      "default": "<svg viewBox='0 0 24 24'><path d='M12 1l9 4v6c0 5.25-3.75 10.5-9 12-5.25-1.5-9-6.75-9-12V5l9-4zm-1 12l6-6-1.4-1.4L11 10.2 8.4 7.6 7 9l4 4z'/></svg>"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_title",
+      "label": "Guarantee Title",
+      "default": "Secure & Risk-Free Purchase"
+    },
+    {
+      "type": "textarea",
+      "id": "guarantee_text",
+      "label": "Guarantee Text",
+      "default": "Your payment is protected with secure encryption. If anything goes wrong, our support team is here to make it right — no risk on your side."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shipping & Risk Clarity"
+    }
+  ]
+}
+{% endschema %}

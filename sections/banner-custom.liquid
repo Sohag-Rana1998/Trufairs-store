@@ -1,0 +1,852 @@
+ 
+
+ 
+{% if section.settings.hero_image != blank %}
+  {%- liquid
+    assign hero_width_mobile = 800
+    assign hero_width_desktop = 1200
+    assign hero_format = 'webp'
+  -%}
+  
+  <link rel="preload" 
+        as="image" 
+        href="{{ section.settings.hero_image | image_url: width: hero_width_desktop, format: hero_format }}"
+        imagesrcset="{{ section.settings.hero_image | image_url: width: 400, format: hero_format }} 400w,
+                     {{ section.settings.hero_image | image_url: width: 800, format: hero_format }} 800w,
+                     {{ section.settings.hero_image | image_url: width: 1200, format: hero_format }} 1200w"
+        imagesizes="(max-width: 767px) 100vw, 60vw"
+        fetchpriority="high">
+{% endif %}
+
+ 
+<style>
+ 
+  .featured-categories-hero {
+    padding: 1rem 0;
+    background-color: {{ section.settings.background_color | default: '#ffffff' }};
+    contain: layout style;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+  }
+  
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr 380px;
+    gap: 2rem;
+    align-items: start;
+  }
+  
+  /* Sidebar - Optimized */
+  .categories-sidebar {
+    background: {{ section.settings.sidebar_bg | default: '#f8f9fa' }};
+    border-radius: 12px;
+    padding: 1.5rem;
+    height: fit-content;
+    contain: layout paint;
+  }
+  
+  .sidebar-title {
+    background: {{ section.settings.sidebar_title_bg | default: '#000000' }};
+    color: {{ section.settings.sidebar_title_color | default: '#ffffff' }};
+    margin: -1.5rem -1.5rem 1.5rem;
+    padding: 1rem 1.5rem;
+    border-radius: 12px 12px 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .categories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .category-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    text-decoration: none;
+    color: {{ section.settings.category_text_color | default: '#333333' }};
+    border-radius: 8px;
+    font-weight: 500;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .category-item:hover {
+    background-color: {{ section.settings.category_hover_bg | default: '#e9ecef' }};
+    transform: translateX(4px);
+  }
+  
+ 
+  .category-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    background-color: {{ section.settings.category_icon_color | default: '#666666' }};
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
+  
+ 
+  .icon-sofa { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3'/%3E%3Cpath d='M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4Z'/%3E%3Cpath d='M2 18v2'/%3E%3Cpath d='M22 18v2'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3'/%3E%3Cpath d='M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4Z'/%3E%3Cpath d='M2 18v2'/%3E%3Cpath d='M22 18v2'/%3E%3C/svg%3E"); }
+  .icon-chair { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3'/%3E%3Cpath d='M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v5Z'/%3E%3Cpath d='M5 18v2h4v-2'/%3E%3Cpath d='M15 18v2h4v-2'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3'/%3E%3Cpath d='M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v5Z'/%3E%3Cpath d='M5 18v2h4v-2'/%3E%3Cpath d='M15 18v2h4v-2'/%3E%3C/svg%3E"); }
+  .icon-table { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 3v18'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 12h18'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 3v18'/%3E%3Crect width='18' height='18' x='3' y='4' rx='2'/%3E%3Cpath d='M3 12h18'/%3E%3C/svg%3E"); }
+  .icon-lamp { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 21h6'/%3E%3Cpath d='M12 21v-8'/%3E%3Cpath d='M12 13L8.5 9.5a6.5 6.5 0 1 1 7 0L12 13Z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 21h6'/%3E%3Cpath d='M12 21v-8'/%3E%3Cpath d='M12 13L8.5 9.5a6.5 6.5 0 1 1 7 0L12 13Z'/%3E%3C/svg%3E"); }
+  .icon-bed { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4v16'/%3E%3Cpath d='M2 8h18a2 2 0 0 1 2 2v10'/%3E%3Cpath d='M2 17h20'/%3E%3Cpath d='M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 4v16'/%3E%3Cpath d='M2 8h18a2 2 0 0 1 2 2v10'/%3E%3Cpath d='M2 17h20'/%3E%3Cpath d='M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2'/%3E%3C/svg%3E"); }
+  .icon-storage { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 9h6v6H9z'/%3E%3Cpath d='M9 3v6'/%3E%3Cpath d='M21 9H9'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='M9 9h6v6H9z'/%3E%3Cpath d='M9 3v6'/%3E%3Cpath d='M21 9H9'/%3E%3C/svg%3E"); }
+  .icon-decor { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2L2 7l10 5 10-5-10-5z'/%3E%3Cpath d='M2 17l10 5 10-5'/%3E%3Cpath d='M2 12l10 5 10-5'/%3E%3C/svg%3E"); }
+  .icon-office { -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='18' height='12' x='3' y='4' rx='2' ry='2'/%3E%3Cpolyline points='2,3 6,8 10,4 14,8 18,3 22,8'/%3E%3Cline x1='6' x2='6' y1='8' y2='21'/%3E%3Cline x1='18' x2='18' y1='8' y2='21'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='18' height='12' x='3' y='4' rx='2' ry='2'/%3E%3Cpolyline points='2,3 6,8 10,4 14,8 18,3 22,8'/%3E%3Cline x1='6' x2='6' y1='8' y2='21'/%3E%3Cline x1='18' x2='18' y1='8' y2='21'/%3E%3C/svg%3E"); }
+  
+ 
+  .hero-main {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    contain: layout;
+  }
+  
+  .hero-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    background: {{ section.settings.placeholder_bg | default: '#f0f0f0' }};
+  }
+  
+  .hero-image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hero-image-container:hover img {
+    transform: scale(1.05);
+  }
+  
+  /* Gradient Overlay - GPU Accelerated */
+  .hero-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2.5rem 2rem 2rem;
+    color: #fff;
+    z-index: 1;
+  }
+  
+  .hero-content::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  .hero-heading {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.2;
+    color: #fff;
+  }
+  
+  .hero-description {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    margin: 0 0 1.25rem 0;
+    line-height: 1.6;
+    max-width: 600px;
+    color: rgba(255,255,255,0.95);
+  }
+  
+  .hero-cta {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    background-color: {{ section.settings.cta_bg | default: '#ffffff' }};
+    color: {{ section.settings.cta_text | default: '#000000' }};
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.2s ease;
+  }
+  
+  .hero-cta:hover {
+    transform: translateY(-2px);
+  }
+  
+  .hero-overlay-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+  
+  /* Product Grid - Optimized */
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: 100%;
+    contain: layout;
+  }
+  
+  .product-card1 {
+    background: {{ section.settings.card_bg | default: '#ffffff' }};
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    contain: layout paint;
+  }
+  
+  .product-card1:hover {
+    transform: translateY(-4px);
+  }
+ 
+  .product-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    height: 100%;
+    background: {{ section.settings.placeholder_bg | default: '#f0f0f0' }};
+  }
+  
+  .product-image-wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .product-image-wrapper:hover img {
+    transform: scale(1.1);
+  }
+  
+  /* Product Content Overlay */
+  .product-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem 1rem 1rem;
+    color: #fff;
+    z-index: 1;
+    transition: transform 0.3s ease;
+  }
+  
+  .product-content::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150%;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  .product-card1:hover .product-content {
+    transform: translateY(-4px);
+  }
+  
+  .product-heading {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+    color: #fff;
+  }
+  
+  .product-description {
+    font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+    margin: 0;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.9);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .product-overlay-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+  
+  /* 📱 Mobile Optimizations */
+  @media (max-width: 480px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .categories-sidebar {
+      order: 3;
+      padding: 1rem;
+    }
+    
+    .sidebar-title {
+      margin: -1rem -1rem 1rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .hero-main {
+      order: 1;
+    }
+    
+    .hero-image-container {
+      aspect-ratio: 16/12;
+    }
+    
+    .hero-content {
+      padding: 1.5rem 1rem 1rem;
+    }
+    
+    .product-grid {
+      order: 2;
+      gap: 0.75rem;
+    }
+    
+    .categories-list {
+      flex-direction: row;
+      gap: 0.5rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    
+    .categories-list::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .category-item {
+      flex-direction: column;
+      text-align: center;
+      padding: 0.75rem 0.5rem;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      min-width: 80px;
+    }
+    
+    .category-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  /* 💻 Tablet Optimizations */
+  @media (min-width: 481px) and (max-width: 1200px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    
+    .categories-sidebar {
+      order: 3;
+    }
+    
+    .hero-main {
+      order: 1;
+    }
+    
+    .product-grid {
+      order: 2;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    
+    .categories-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .category-item {
+      flex-direction: column;
+      text-align: center;
+      padding: 1rem 0.75rem;
+    }
+  }
+  
+  /* 🖥️ Large Screens */
+  @media (min-width: 1400px) {
+    .hero-grid {
+      grid-template-columns: 260px 1fr 460px;
+      gap: 2.5rem;
+    }
+    
+    .hero-content {
+      padding: 3rem 2.5rem 2.5rem;
+    }
+  }
+  
+  /* ♿ Accessibility - Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    
+    .hero-image-container:hover img,
+    .product-image-wrapper:hover img,
+    .category-item:hover,
+    .hero-cta:hover,
+    .product-card1:hover {
+      transform: none !important;
+    }
+  }
+  
+  /* 🖨️ Print Styles */
+  @media print {
+    .featured-categories-hero {
+      box-shadow: none;
+    }
+    
+    .hero-cta,
+    .category-item:hover,
+    .product-card1:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+</style>
+
+<div class="featured-categories-hero" id="featured-categories-{{ section.id }}">
+  <div class="page-width">
+    <div class="hero-grid">
+      
+      <!-- 📂 Left Sidebar - Categories -->
+      <div class="categories-sidebar">
+        {% if section.settings.sidebar_title != blank %}
+          <h2 class="sidebar-title">{{ section.settings.sidebar_title }}</h2>
+        {% endif %}
+        
+        <nav class="categories-list" aria-label="Product categories">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'category_item' %}
+                <a href="{{ block.settings.category_link | default: '#' }}" 
+                   class="category-item" 
+                   {{ block.shopify_attributes }}>
+                  {% if block.settings.category_icon != blank %}
+                    <div class="category-icon icon-{{ block.settings.category_icon }}" aria-hidden="true"></div>
+                  {% endif %}
+                  <span class="category-name">{{ block.settings.category_name }}</span>
+                </a>
+            {% endcase %}
+          {% endfor %}
+        </nav>
+      </div>
+
+      <!-- 🎨 Main Hero Image -->
+      <div class="hero-main">
+        {% if section.settings.hero_image != blank %}
+          <div class="hero-image-container">
+            {%- liquid
+              assign hero_alt = section.settings.hero_image.alt | default: section.settings.hero_heading
+              assign img_width = section.settings.hero_image.width
+              assign img_height = section.settings.hero_image.height
+            -%}
+            
+            <picture>
+              <source media="(max-width: 767px)" 
+                      type="image/webp"
+                      srcset="{{ section.settings.hero_image | image_url: width: 800, format: 'webp' }} 800w,
+                              {{ section.settings.hero_image | image_url: width: 600, format: 'webp' }} 600w,
+                              {{ section.settings.hero_image | image_url: width: 400, format: 'webp' }} 400w"
+                      sizes="100vw">
+              <source media="(min-width: 768px)" 
+                      type="image/webp"
+                      srcset="{{ section.settings.hero_image | image_url: width: 1200, format: 'webp' }} 1200w,
+                              {{ section.settings.hero_image | image_url: width: 800, format: 'webp' }} 800w"
+                      sizes="60vw">
+              <img src="{{ section.settings.hero_image | image_url: width: 800, format: 'webp' }}" 
+                   alt="{{ hero_alt }}"
+                   class="hero-image"
+                   width="{{ img_width }}"
+                   height="{{ img_height }}"
+                  
+                   fetchpriority="high"
+                   decoding="async">
+            </picture>
+            
+            {% if section.settings.hero_heading != blank or section.settings.hero_description != blank %}
+              <div class="hero-content">
+                {% if section.settings.hero_heading != blank %}
+                  <h1 class="hero-heading">{{ section.settings.hero_heading }}</h1>
+                {% endif %}
+                {% if section.settings.hero_description != blank %}
+                  <p class="hero-description">{{ section.settings.hero_description }}</p>
+                {% endif %}
+                {% if section.settings.hero_button_text != blank and section.settings.hero_link != blank %}
+                  <a href="{{ section.settings.hero_link }}" class="hero-cta">
+                    {{ section.settings.hero_button_text }}
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+            
+            {% if section.settings.hero_link != blank and section.settings.hero_button_text == blank %}
+              <a href="{{ section.settings.hero_link }}" 
+                 class="hero-overlay-link" 
+                 aria-label="{{ section.settings.hero_heading | default: 'Featured Collection' }}"></a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- 🛍️ Right Grid - Featured Products -->
+      <div class="product-grid">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'featured_product' %}
+              <article class="product-card1" {{ block.shopify_attributes }}>
+                {% if block.settings.product_image != blank %}
+                  <div class="product-image-wrapper">
+                    {%- liquid
+                      assign product_alt = block.settings.product_image.alt | default: block.settings.product_title
+                      assign prod_width = block.settings.product_image.width
+                      assign prod_height = block.settings.product_image.height
+                    -%}
+                    
+                    <picture>
+                      <source media="(max-width: 767px)" 
+                              type="image/webp"
+                              srcset="{{ block.settings.product_image | image_url: width: 400, format: 'webp' }} 400w,
+                                      {{ block.settings.product_image | image_url: width: 300, format: 'webp' }} 300w"
+                              sizes="50vw">
+                      <source media="(min-width: 768px)" 
+                              type="image/webp"
+                              srcset="{{ block.settings.product_image | image_url: width: 300, format: 'webp' }} 300w,
+                                      {{ block.settings.product_image | image_url: width: 200, format: 'webp' }} 200w"
+                              sizes="15vw">
+                      <img src="{{ block.settings.product_image | image_url: width: 300, format: 'webp' }}" 
+                           alt="{{ product_alt }}"
+                           class="product-image"
+                           width="{{ prod_width }}"
+                           height="{{ prod_height }}"
+                          
+                           decoding="async">
+                    </picture>
+                    
+                    {% if block.settings.product_title != blank or block.settings.product_description != blank %}
+                      <div class="product-content">
+                        {% if block.settings.product_title != blank %}
+                          <h3 class="product-heading">{{ block.settings.product_title }}</h3>
+                        {% endif %}
+                        {% if block.settings.product_description != blank %}
+                          <p class="product-description">{{ block.settings.product_description }}</p>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    
+                    {% if block.settings.product_link != blank %}
+                      <a href="{{ block.settings.product_link }}" 
+                         class="product-overlay-link" 
+                         aria-label="{{ block.settings.product_title }}"></a>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </article>
+          {% endcase %}
+        {% endfor %}
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Categories Hero",
+  "tag": "section",
+  "class": "featured-categories-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "  Hero Image & Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image",
+      "info": "  REQUIRED: 1200x750px WebP format | This is your LCP element - optimize it!"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Hero Heading (H1)",
+      "default": "Discover Modern Living",
+      "info": "  SEO Important - Include primary keyword"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_description",
+      "label": "Hero Description",
+      "default": "Explore our curated collection of contemporary furniture designed for modern homes",
+      "info": "  Keep under 150 characters for performance"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_text",
+      "label": "Call-to-Action Button",
+      "default": "Shop Collection",
+      "info": "  Leave empty to make entire image clickable"
+    },
+    {
+      "type": "url",
+      "id": "hero_link",
+      "label": "Hero Link"
+    },
+    {
+      "type": "header",
+      "content": "  Categories Sidebar"
+    },
+    {
+      "type": "text",
+      "id": "sidebar_title",
+      "label": "Sidebar Title",
+      "default": "SHOP BY CATEGORIES"
+    },
+    {
+      "type": "header",
+      "content": "  Color Customization"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg",
+      "label": "Image Placeholder Color",
+      "default": "#f0f0f0",
+      "info": "  Prevents CLS - Matches average image color"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_bg",
+      "label": "Sidebar Background",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_title_bg",
+      "label": "Sidebar Title Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sidebar_title_color",
+      "label": "Sidebar Title Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "category_text_color",
+      "label": "Category Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "category_hover_bg",
+      "label": "Category Hover Background",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "color",
+      "id": "category_icon_color",
+      "label": "Category Icon Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Product Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg",
+      "label": "CTA Button Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category_item",
+      "name": "Category Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category_name",
+          "label": "Category Name",
+          "default": "Category"
+        },
+        {
+          "type": "url",
+          "id": "category_link",
+          "label": "Category Link"
+        },
+        {
+          "type": "select",
+          "id": "category_icon",
+          "label": "Category Icon",
+          "options": [
+            { "value": "sofa", "label": "  Sofa" },
+            { "value": "chair", "label": "  Chair" },
+            { "value": "table", "label": "  Table" },
+            { "value": "lamp", "label": "  Lamp" },
+            { "value": "bed", "label": "  Bed" },
+            { "value": "storage", "label": "  Storage" },
+            { "value": "decor", "label": "  Decor" },
+            { "value": "office", "label": "  Office" }
+          ],
+          "default": "sofa"
+        }
+      ]
+    },
+    {
+      "type": "featured_product",
+      "name": "Featured Product",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Product Image",
+          "info": "  300x225px (4:3) WebP | Lazy loaded"
+        },
+        {
+          "type": "text",
+          "id": "product_title",
+          "label": "Product Title",
+          "default": "Product Name"
+        },
+        {
+          "type": "textarea",
+          "id": "product_description",
+          "label": "Product Description",
+          "default": "Brief description of the product",
+          "info": "  Max 60 characters for performance"
+        },
+        {
+          "type": "url",
+          "id": "product_link",
+          "label": "Product Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Categories Hero",
+      "blocks": [
+        {
+          "type": "category_item",
+          "settings": {
+            "category_name": "Living Room",
+            "category_icon": "sofa"
+          }
+        },
+        {
+          "type": "category_item",
+          "settings": {
+            "category_name": "Sofas & Couches",
+            "category_icon": "sofa"
+          }
+        },
+        {
+          "type": "category_item",
+          "settings": {
+            "category_name": "Home Decor",
+            "category_icon": "decor"
+          }
+        },
+        {
+          "type": "category_item",
+          "settings": {
+            "category_name": "Dining Room",
+            "category_icon": "table"
+          }
+        },
+        {
+          "type": "category_item",
+          "settings": {
+            "category_name": "Office Furniture",
+            "category_icon": "office"
+          }
+        },
+        {
+          "type": "featured_product",
+          "settings": {
+            "product_title": "Modern Office Collection",
+            "product_description": "Ergonomic workspace solutions"
+          }
+        },
+        {
+          "type": "featured_product",
+          "settings": {
+            "product_title": "Premium Sofa Series",
+            "product_description": "Luxury comfort & style"
+          }
+        },
+        {
+          "type": "featured_product",
+          "settings": {
+            "product_title": "Designer Mirrors",
+            "product_description": "Wall-mounted elegance"
+          }
+        },
+        {
+          "type": "featured_product",
+          "settings": {
+            "product_title": "Dining Sets",
+            "product_description": "Complete 6-piece collection"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

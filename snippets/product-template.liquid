@@ -1,0 +1,2148 @@
+{% comment %}
+  Parameters
+  context - used to determine whether on the featured product or main product template
+  mobile_layout
+{% endcomment %}
+
+
+
+      
+      {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag  }}
+
+
+
+      
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+
+  unless thumbnail_position
+    assign thumbnail_position = 'beside'
+  endunless
+
+  assign product_zoom_size = '1800x1800'
+  assign product_image_size = '620x'
+
+  case image_container_width
+    when 'small'
+      assign product_image_width = 'medium-up--two-fifths'
+      assign product_description_width = 'medium-up--three-fifths'
+      assign product_image_size = '480x'
+    when 'medium'
+      assign product_image_width = 'medium-up--one-half'
+      assign product_description_width = 'medium-up--one-half'
+      assign product_image_size = '620x'
+    when 'large'
+      assign product_image_width = 'medium-up--three-fifths'
+      assign product_description_width = 'medium-up--two-fifths'
+      assign product_image_size = '740x'
+  endcase
+
+  assign product_img_structure = product.featured_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.'
+-%}
+
+{%- liquid
+  assign connect_to_sizechart = false
+
+  for block in section.blocks
+    if block.type == 'size_chart'
+      assign sizechart_index = forloop.index0
+      assign next_block_index = sizechart_index | plus: 1
+      assign variant_block = section.blocks[next_block_index]
+
+      if variant_block.type == 'variant_picker' and variant_block.settings.picker_type == 'button' and product.has_only_default_variant == false
+        for option in product.options_with_values
+          assign size_trigger = 'products.general.size_trigger' | t | downcase
+          assign downcased_option = option.name | downcase
+
+          if downcased_option contains size_trigger
+            assign connect_to_sizechart = true
+          endif
+        endfor
+      endif
+
+    endif
+  endfor
+-%}
+
+<div id="ProductSection-{{ section_id }}-{{ product.id }}"
+  class="product-section"
+  data-section-id="{{ section_id }}"
+  data-product-id="{{ product.id }}"
+  data-section-type="product"
+  data-product-handle="{{ product.handle }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-url="{{ product.url   }}"
+  data-aspect-ratio="{{ 100 | divided_by: product.featured_media.aspect_ratio }}"
+  data-img-url="{{ product_img_structure }}"
+  {% unless isModal %}
+    data-history="true"
+  {% endunless %}
+  data-modal="{{ isModal }}">
+
+
+
+
+
+{{ 'product-tem.css' | asset_url | stylesheet_tag }}
+
+{% if template.suffix   %}
+  {{ 'product-tem-custom.css' | asset_url | stylesheet_tag }}
+{% endif%}
+
+
+
+
+
+
+
+
+  {%- render 'product-template-variables', product: product, current_variant: current_variant -%}
+
+  <div id="buy-now-buttons" class="page-content page-content--product">
+    <div class="page-width">
+
+      <div class="grid{% unless image_position == 'left' %} grid--product-images-right{% endunless %}{% if mobile_layout == 'partial' %} grid--product-images--partial{% endif %}">
+        {%- if image_position == 'left' -%}
+          <div class="grid__item {{ product_image_width }} product-single__sticky">
+            {%- render 'product-images',
+              section_id: section_id,
+              product: product,
+              isModal: isModal,
+              image_position: image_position,
+              product_zoom_enable: product_zoom_enable,
+              product_zoom_size: product_zoom_size,
+              product_image_size: product_image_size,
+              thumbnail_arrows: thumbnail_arrows,
+              thumbnail_height: thumbnail_height,
+              thumbnail_position: thumbnail_position,
+              video_looping: video_looping,
+              video_style: video_style,
+              context: context,
+              sizes: sizes,
+              sizeVariable: product_image_width,
+              fallback: fallback,
+              mobile_layout: mobile_layout,
+            -%}
+          </div>
+        {%- endif -%}
+
+        <div class="grid__item {{ product_description_width }}">
+
+          <div class="product-single__meta">
+            <div class="product-block product-block--header">
+
+           {% comment %}
+                 {%- if settings.show_breadcrumbs and isModal != true -%}
+                {%- render 'breadcrumbs' -%}
+              {%- endif -%}
+           {% endcomment %}   
+          
+
+              {%- if settings.vendor_enable -%}
+                <div class="product-single__vendor">
+                 
+                  {%- assign vendor_handle = product.vendor | handleize -%}
+                  {%- if collections[vendor_handle] != empty -%}
+                    <a href="{{ routes.collections_url }}/{{ collections[vendor_handle].handle }}">
+                      {{ collections[vendor_handle].title }}
+                    </a>
+                  {%- else -%}
+                    {{ product.vendor | link_to_vendor }}
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              {%- if isModal -%}
+                <p class="h2 product-single__title">
+                  {{ product.title }}
+                </p>
+              {%- else -%}
+                <h1 class="h2 product-single__title">
+                  {%- unless product.empty? -%}
+                    {{ product.title }}
+                  {%- else -%}
+                    {{ 'home_page.onboarding.product_title' | t }}
+                  {%- endunless -%}
+                </h1>
+                
+              {%- endif -%}
+
+  {%- if isModal -%}
+
+
+{% if product.metafields.custom.varified_product  and product.metafields.custom.verified_aprroved %}
+<a href="/pages/trufairs-verified-trusted-products"  target="_blank" class="custom-drawer-trigger"  >
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><g clip-path="url(#clip0_10114_171791)"><path d="M23.3305 10.3667L21.1651 8.20132V5.14165C21.1651 3.88213 20.1443 2.86128 18.8848 2.86128H15.8251L13.631 0.670049C12.7396 -0.221396 11.296 -0.221396 10.4045 0.670049L8.21331 2.86128H5.11338C3.85386 2.86128 2.83301 3.88213 2.83301 5.14165V8.24158L0.670537 10.4069C-0.220908 11.2984 -0.220908 12.7419 0.670537 13.6334L2.83301 15.7959V18.8555C2.83301 20.1151 3.85386 21.1359 5.11338 21.1359H8.17305L10.3672 23.33C11.2586 24.2215 12.7022 24.2215 13.5936 23.33L15.7877 21.1359H18.8876C20.1472 21.1359 21.168 20.1151 21.168 18.8555V15.7556L23.3334 13.5902C24.2248 12.6988 24.2248 11.2552 23.3334 10.3638" fill="white"></path><path d="M6.75781 10.9129H9.26824L10.7061 14.2256L14.2891 6.4873H17.0871L12.0001 17.2767H9.50979L6.75781 10.9129Z" fill="#000"></path></g><defs><clipPath id="clip0_10114_171791"><rect width="24" height="24" fill="white"></rect></clipPath></defs></svg>  
+This item is Trufairs Verified
+</a>
+
+{% elsif product.metafields.custom.trusted_product %}
+
+<a href="/pages/trufairs-verified-trusted-products"  target="_blank" class="custom-drawer-trigger"  >
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><path d="M8.069 0c.262 0 .52.017.76.057a4.1 4.1 0 0 1 .697.154c.228.069.451.155.674.263.217.103.44.229.663.366.377.24.748.434 1.126.589a7.537 7.537 0 0 0 2.331.525c.406.029.823.046 1.257.046v4c0 .76-.097 1.48-.291 2.166a8.996 8.996 0 0 1-.789 1.943 10.312 10.312 0 0 1-1.188 1.725 15.091 15.091 0 0 1-1.492 1.532 17.57 17.57 0 0 1-1.703 1.325c-.594.412-1.194.795-1.794 1.143l-.24.143-.24-.143a27.093 27.093 0 0 1-1.806-1.143 15.58 15.58 0 0 1-1.703-1.325 15.082 15.082 0 0 1-1.491-1.532 10.947 10.947 0 0 1-1.194-1.725 9.753 9.753 0 0 1-.789-1.943A7.897 7.897 0 0 1 .571 6V2c.435 0 .852-.017 1.258-.046a8.16 8.16 0 0 0 1.188-.171c.383-.086.766-.2 1.143-.354A6.563 6.563 0 0 0 5.28.846C5.72.56 6.166.349 6.606.21A4.79 4.79 0 0 1 8.069 0zm6.502 2.983a9.566 9.566 0 0 1-2.234-.377 7.96 7.96 0 0 1-2.046-.943A4.263 4.263 0 0 0 9.23 1.16 3.885 3.885 0 0 0 8.074.994a3.99 3.99 0 0 0-1.165.166 3.946 3.946 0 0 0-1.058.503A7.926 7.926 0 0 1 3.8 2.61c-.709.206-1.451.332-2.229.378v3.017c0 .663.086 1.297.258 1.908a8.58 8.58 0 0 0 .72 1.743 9.604 9.604 0 0 0 1.08 1.572c.417.491.862.948 1.342 1.382.48.435.983.835 1.509 1.206.531.372 1.063.709 1.594 1.017a22.397 22.397 0 0 0 1.589-1.017 15.389 15.389 0 0 0 1.514-1.206c.48-.434.926-.891 1.343-1.382a9.596 9.596 0 0 0 1.08-1.572 8.258 8.258 0 0 0 .709-1.743 6.814 6.814 0 0 0 .262-1.908V2.983z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.797 4.709l-.44-.378-.406.035-4.36 5.148-1.485-2.12-.4-.068-.463.331-.069.4 1.909 2.726.217.12.457.028.234-.102 4.835-5.715-.029-.405z"/></svg>
+
+This item is Trufairs Trusted
+</a>
+
+{% endif %}
+
+   {%- else -%}
+
+<div class="verified-sku-container">
+{% if product.metafields.custom.varified_product  and product.metafields.custom.verified_aprroved %}
+<button type="button" class="custom-drawer-trigger" id="openDrawer">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><g clip-path="url(#clip0_10114_171791)"><path d="M23.3305 10.3667L21.1651 8.20132V5.14165C21.1651 3.88213 20.1443 2.86128 18.8848 2.86128H15.8251L13.631 0.670049C12.7396 -0.221396 11.296 -0.221396 10.4045 0.670049L8.21331 2.86128H5.11338C3.85386 2.86128 2.83301 3.88213 2.83301 5.14165V8.24158L0.670537 10.4069C-0.220908 11.2984 -0.220908 12.7419 0.670537 13.6334L2.83301 15.7959V18.8555C2.83301 20.1151 3.85386 21.1359 5.11338 21.1359H8.17305L10.3672 23.33C11.2586 24.2215 12.7022 24.2215 13.5936 23.33L15.7877 21.1359H18.8876C20.1472 21.1359 21.168 20.1151 21.168 18.8555V15.7556L23.3334 13.5902C24.2248 12.6988 24.2248 11.2552 23.3334 10.3638" fill="white"></path><path d="M6.75781 10.9129H9.26824L10.7061 14.2256L14.2891 6.4873H17.0871L12.0001 17.2767H9.50979L6.75781 10.9129Z" fill="#000"></path></g><defs><clipPath id="clip0_10114_171791"><rect width="24" height="24" fill="white"></rect></clipPath></defs></svg>  
+This item is Trufairs Verified
+</button>
+{% elsif product.metafields.custom.trusted_product %}
+
+<button type="button" class="custom-drawer-trigger" id="openDrawer">
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="25px" height="25px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><path d="M8.069 0c.262 0 .52.017.76.057a4.1 4.1 0 0 1 .697.154c.228.069.451.155.674.263.217.103.44.229.663.366.377.24.748.434 1.126.589a7.537 7.537 0 0 0 2.331.525c.406.029.823.046 1.257.046v4c0 .76-.097 1.48-.291 2.166a8.996 8.996 0 0 1-.789 1.943 10.312 10.312 0 0 1-1.188 1.725 15.091 15.091 0 0 1-1.492 1.532 17.57 17.57 0 0 1-1.703 1.325c-.594.412-1.194.795-1.794 1.143l-.24.143-.24-.143a27.093 27.093 0 0 1-1.806-1.143 15.58 15.58 0 0 1-1.703-1.325 15.082 15.082 0 0 1-1.491-1.532 10.947 10.947 0 0 1-1.194-1.725 9.753 9.753 0 0 1-.789-1.943A7.897 7.897 0 0 1 .571 6V2c.435 0 .852-.017 1.258-.046a8.16 8.16 0 0 0 1.188-.171c.383-.086.766-.2 1.143-.354A6.563 6.563 0 0 0 5.28.846C5.72.56 6.166.349 6.606.21A4.79 4.79 0 0 1 8.069 0zm6.502 2.983a9.566 9.566 0 0 1-2.234-.377 7.96 7.96 0 0 1-2.046-.943A4.263 4.263 0 0 0 9.23 1.16 3.885 3.885 0 0 0 8.074.994a3.99 3.99 0 0 0-1.165.166 3.946 3.946 0 0 0-1.058.503A7.926 7.926 0 0 1 3.8 2.61c-.709.206-1.451.332-2.229.378v3.017c0 .663.086 1.297.258 1.908a8.58 8.58 0 0 0 .72 1.743 9.604 9.604 0 0 0 1.08 1.572c.417.491.862.948 1.342 1.382.48.435.983.835 1.509 1.206.531.372 1.063.709 1.594 1.017a22.397 22.397 0 0 0 1.589-1.017 15.389 15.389 0 0 0 1.514-1.206c.48-.434.926-.891 1.343-1.382a9.596 9.596 0 0 0 1.08-1.572 8.258 8.258 0 0 0 .709-1.743 6.814 6.814 0 0 0 .262-1.908V2.983z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M11.797 4.709l-.44-.378-.406.035-4.36 5.148-1.485-2.12-.4-.068-.463.331-.069.4 1.909 2.726.217.12.457.028.234-.102 4.835-5.715-.029-.405z"/></svg>
+
+This item is Trufairs Trusted
+</button>
+{% endif %}
+
+<div style="display:flex; gap:4px; align-items:center;">
+<p style="padding:0 !important;    margin-bottom: 5px;
+    font-size: 14px;"> SKU:</p>
+ <p data-sku class="product-single__sku">
+                  {%- if current_variant.sku -%}
+                 {{ current_variant.sku }}
+                  {%- endif -%}
+                </p>
+</div>
+
+
+</div>
+
+  {%- endif -%}
+
+<a href="#judgeme_product_reviews">
+
+{%- if product.metafields.reviews.rating.value != blank -%}
+  {% liquid
+    assign rating_obj = product.metafields.reviews.rating.value
+    assign raw_rating = rating_obj.rating | default: 0
+    assign scale_max = rating_obj.scale_max | default: 5
+
+    # Round to nearest 0.5 for display stars
+    assign rounded_half = raw_rating | times: 2 | round | divided_by: 2.0
+  %}
+
+  <div class="rating-wrapper">
+    <div
+      class="rating"
+      role="img"
+      aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: raw_rating, rating_max: scale_max }}"
+    >
+      <span
+        aria-hidden="true"
+        class="rating-star"
+        style="--rating: {{ rounded_half }}; --rating-max: {{ scale_max }};"
+      ></span>
+    </div>
+
+    <p class="rating-text caption">
+      <span aria-hidden="true">
+        {{- raw_rating }} / {{ scale_max -}}
+      </span>
+    </p>
+
+    <p class="rating-count caption">
+      <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
+      <span class="visually-hidden">
+        {{- product.metafields.reviews.rating_count }}
+        {{ 'accessibility.total_reviews' | t -}}
+      </span>
+    </p>
+  </div>
+{%- endif -%}
+</a>
+ {% if template.suffix %}
+{%- unless isModal -%}
+ <div class="viewer-container">
+ 
+  {% assign current_time = 'now' | date: '%s' %}
+  {% assign today_6am = 'today 06:00' | date: '%s' %}
+  {% assign tomorrow_6am = today_6am | plus: 86400 %}
+
+  {%- comment -%} Use metafields for bought count, with fallback defaults {%- endcomment -%}
+  {% assign min_count = product.metafields.custom.min_bought_count | default: 25 %}
+  {% assign max_count = product.metafields.custom.max_bought_count | default: 50 %}
+  {% assign range = max_count | minus: min_count %}
+
+  {%- comment -%} Use metafields for viewer count, with fallback defaults {%- endcomment -%}
+  {% assign min_viewers = product.metafields.custom.min_view_count | default: 10 %}
+  {% assign max_viewers = product.metafields.custom.max_view_count | default: 30 %}
+
+  {% if current_time < today_6am %}
+    {% assign fake_bought = min_count %}
+  {% else %}
+    {% assign elapsed_time = current_time | minus: today_6am %}
+    {% assign total_time = tomorrow_6am | minus: today_6am %}
+    {% assign increase = range | times: elapsed_time | divided_by: total_time %}
+    {% assign fake_bought = min_count | plus: increase %}
+  {% endif %}
+
+  <!-- Viewer Count -->
+  <div id="viewer-count" class="info-badge viewer-count">
+    <p>
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+        <defs></defs>
+        <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)">
+          <path d="M 45 73.264 c -14.869 0 -29.775 -8.864 -44.307 -26.346 c -0.924 -1.112 -0.924 -2.724 0 -3.836 C 15.225 25.601 30.131 16.737 45 16.737 c 14.868 0 29.775 8.864 44.307 26.345 c 0.925 1.112 0.925 2.724 0 3.836 C 74.775 64.399 59.868 73.264 45 73.264 z M 6.934 45 C 19.73 59.776 32.528 67.264 45 67.264 c 12.473 0 25.27 -7.487 38.066 -22.264 C 70.27 30.224 57.473 22.737 45 22.737 C 32.528 22.737 19.73 30.224 6.934 45 z" style="stroke: none; stroke-width: 1; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+          <path d="M 45 62 c -9.374 0 -17 -7.626 -17 -17 s 7.626 -17 17 -17 s 17 7.626 17 17 S 54.374 62 45 62 z M 45 34 c -6.065 0 -11 4.935 -11 11 s 4.935 11 11 11 s 11 -4.935 11 -11 S 51.065 34 45 34 z" style="stroke: none; stroke-width: 1; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+        </g>
+      </svg>
+      <span id="viewer_count">0</span> People are viewing this product.
+    </p>
+  </div>
+
+  <!-- Fake Bought Count -->
+  <div id="bought-count" class="info-badge">
+    <svg class="icon icon-accordion" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9.33649 13.2686C7.91465 13.0656 6.52082 12.8625 5.12 12.6665C4.94489 12.6385 4.76279 12.6245 4.58768 12.5825C3.97132 12.4494 3.71917 11.8333 4.08338 11.3151C4.58068 10.6009 5.09898 9.88672 5.60328 9.17953C7.69752 6.25273 9.78475 3.32593 11.879 0.399133C12.0891 0.105053 12.3553 -0.0489895 12.7195 0.0140277C13.0207 0.070043 13.2448 0.252093 13.3218 0.560177C13.3639 0.735224 13.3569 0.931278 13.3429 1.12033C13.1818 2.88481 13.0207 4.64929 12.8596 6.42077C12.7965 7.12797 12.7265 7.83516 12.6635 8.54235C12.6565 8.59837 12.6635 8.65438 12.6635 8.7314C13.2728 8.82243 13.8752 8.90645 14.4775 8.99748C15.4301 9.13752 16.3897 9.25655 17.3422 9.41059C18.0286 9.51562 18.2948 10.1668 17.8885 10.734C15.297 14.3679 12.6985 18.0019 10.1069 21.6289C9.8688 21.958 9.56762 22.07 9.23843 21.965C8.83919 21.832 8.62207 21.5589 8.65008 21.1388C8.70612 20.3126 8.79017 19.4933 8.86721 18.6741C8.97227 17.5118 9.08434 16.3495 9.1894 15.1802C9.23843 14.613 9.29446 14.0389 9.34349 13.4717C9.34349 13.4087 9.33649 13.3527 9.33649 13.2686Z" fill="#0A3174"></path>
+    </svg>
+    <strong>{{ fake_bought | round }}</strong>&nbsp; Bought this in 06 hours
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  /* Viewer count randomizer - using metafield values passed from Liquid */
+  const minViewers = {{ min_viewers }};
+  const maxViewers = {{ max_viewers }};
+  const viewerEl = document.getElementById("viewer_count");
+
+  function updateViewers() {
+    viewerEl.textContent =
+      Math.floor(Math.random() * (maxViewers - minViewers + 1)) + minViewers;
+  }
+
+  updateViewers();
+  setInterval(updateViewers, 4000);
+
+  /* Toggle sections */
+  const viewerBox = document.getElementById("viewer-count");
+  const boughtBox = document.getElementById("bought-count");
+
+  function toggle() {
+    const showViewer = viewerBox.style.display !== "none";
+    viewerBox.style.display = showViewer ? "none" : "flex";
+    boughtBox.style.display = showViewer ? "flex" : "none";
+    setTimeout(toggle, 5000);
+  }
+
+  viewerBox.style.display = "flex";
+  boughtBox.style.display = "none";
+  setTimeout(toggle, 5000);
+});
+</script>
+
+{% endunless %}
+{% endif %}
+
+              {%- if sku_enable -%}
+                <div class="sku-share-container">
+
+                    <p data-sku class="product-single__sku">
+                  {%- if current_variant.sku -%}
+                  SKU:  {{ current_variant.sku }}
+                  {%- endif -%}
+                </p>
+
+                 <div>
+                    <div class="social-sharing-wrapper">
+  <!-- Share Button -->
+  <button class="share-toggle-btn" onclick="toggleShareDropdown()" aria-label="Share this product">
+    <svg class="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="18" cy="5" r="3"/>
+      <circle cx="6" cy="12" r="3"/>
+      <circle cx="18" cy="19" r="3"/>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+    </svg>
+    <span>Share</span>
+  </button>
+
+  <!-- Share Dropdown -->
+  <div class="share-dropdown" id="shareDropdown">
+    <div class="share-dropdown-header">
+      <h4>Share this product</h4>
+      <button class="close-dropdown" onclick="toggleShareDropdown()" aria-label="Close share menu">×</button>
+    </div>
+    
+    <!-- Copy Link Section -->
+    <div class="copy-link-section">
+      <div class="link-input-wrapper">
+        <input type="text" id="shareLink" value="{{ shop.url }}{{ product.url }}" readonly>
+        <button class="copy-btn" onclick="copyShareLink()" id="copyBtn">
+       <svg class="copy-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path>
+          </svg>
+          Copy
+        </button>
+      </div>
+    </div>
+
+    <!-- Social Media Options -->
+    <div class="social-sharing">
+      <div class="social-grid">
+        {%- assign product_url = shop.url | append: product.url -%}
+        {%- assign product_title = product.title | url_param_escape -%}
+        {%- assign product_image = product.featured_media | img_url: '1024x1024' -%}
+        {%- assign product_description = product.description | strip_html | truncate: 150 | url_param_escape -%}
+
+        {%- if settings.share_facebook -%}
+          <a target="_blank" rel="noopener" href="//www.facebook.com/sharer.php?u={{ product_url }}&quote={{ product_title }}" class="social-sharing__link facebook" title="Share on Facebook">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-facebook" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            <span>Facebook</span>
+          </a>
+        {%- endif -%}
+
+        <!-- {%- if settings.share_messenger -%}
+          <a target="_blank" rel="noopener" href="//www.facebook.com/dialog/send?link={{ product_url }}&app_id=YOUR_APP_ID" class="social-sharing__link messenger" title="Share on Messenger">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-messenger" viewBox="0 0 24 24">
+              <path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111C24 4.975 18.627 0 12 0zm1.191 14.963l-3.055-3.26-5.963 3.26L10.732 8.1l3.13 3.26L19.752 8.1l-6.561 6.863z"/>
+            </svg>
+            <span>Messenger</span>
+          </a>
+        {%- endif -%} -->
+
+        {%- if settings.share_twitter -%}
+          <a target="_blank" rel="noopener" href="//twitter.com/intent/tweet?text={{ product_title }}%20{{ product_url }}&hashtags=product,shopping" class="social-sharing__link twitter" title="Share on Twitter/X">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-twitter" viewBox="0 0 24 24">
+              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+            </svg>
+            <span>Twitter</span>
+          </a>
+        {%- endif -%}
+
+        {%- if settings.share_pinterest -%}
+          <a target="_blank" rel="noopener" href="//pinterest.com/pin/create/button/?url={{ product_url }}&media={{ product_image }}&description={{ product_title }}%20-%20{{ product_description }}" class="social-sharing__link pinterest" title="Share on Pinterest">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-pinterest" viewBox="0 0 24 24">
+              <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.219-5.175 1.219-5.175s-.31-.629-.31-1.559c0-1.461.847-2.548 1.902-2.548.898 0 1.331.675 1.331 1.484 0 .905-.576 2.256-.873 3.509-.248 1.048.526 1.902 1.56 1.902 1.873 0 3.313-1.975 3.313-4.827 0-2.525-1.815-4.287-4.404-4.287-2.999 0-4.756 2.248-4.756 4.571 0 .905.349 1.873.786 2.401.086.105.099.198.073.307-.08.331-.256 1.073-.292 1.223-.047.198-.157.240-.362.145-1.351-.629-2.194-2.607-2.194-4.193 0-3.427 2.489-6.566 7.174-6.566 3.766 0 6.693 2.686 6.693 6.275 0 3.746-2.361 6.761-5.638 6.761-1.102 0-2.14-.574-2.491-1.259l-.676 2.574c-.244.943-.905 2.124-1.347 2.844.015-.003 1.173.441 2.733.441 6.624 0 11.99-5.367 11.99-11.987C24.007 5.367 18.641.001 12.017.001z"/>
+            </svg>
+            <span>Pinterest</span>
+          </a>
+        {%- endif -%}
+
+        {%- if settings.share_whatsapp -%}
+          <a target="_blank" rel="noopener" href="//api.whatsapp.com/send?text={{ product_title }}%20{{ product_url }}" class="social-sharing__link whatsapp" title="Share on WhatsApp">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-whatsapp" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.488"/>
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+        {%- endif -%}
+
+        {%- if settings.share_telegram -%}
+          <a target="_blank" rel="noopener" href="//t.me/share/url?url={{ product_url }}&text={{ product_title }}" class="social-sharing__link telegram" title="Share on Telegram">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-telegram" viewBox="0 0 24 24">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+            <span>Telegram</span>
+          </a>
+        {%- endif -%}
+
+        {%- if settings.share_linkedin -%}
+          <a target="_blank" rel="noopener" href="//www.linkedin.com/sharing/share-offsite/?url={{ product_url }}" class="social-sharing__link linkedin" title="Share on LinkedIn">
+            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-linkedin" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+        {%- endif -%}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+{{ 'share-button.js' | asset_url | script_tag }}
+
+ 
+                  </div>
+                </div>
+              
+              {%- endif -%}
+            </div>
+
+            <div data-product-blocks>
+              {%- capture form_id -%}AddToCartForm-{{ section_id }}-{{ product.id }}{%- endcapture -%}
+              {%- for block in blocks -%}
+                {%- case block.type -%}
+                  {%- when '@app' -%}
+                    {% render block %}
+                  {%- when 'separator' -%}
+                    <div class="product-block" {{ block.shopify_attributes }}><hr></div>
+                  {%- when 'text' -%}
+                    <div class="product-block" {{ block.shopify_attributes }}>
+                      {{ block.settings.text }}
+                    </div>
+                  {%- when 'tab' -%}
+                    {% assign tab_id = block.id | append: product.id %}
+                    {% capture tab_content %}
+                      {{ block.settings.content }}
+                      {{ block.settings.page.content }}
+                    {% endcapture %}
+                    {% unless tab_content == blank and block.settings.title == blank %}
+                      <div class="product-block product-block--tab" {{ block.shopify_attributes }}>
+                        {%- render 'tab', id: tab_id, title: block.settings.title, content: tab_content -%}
+                      </div>
+                    {% endunless %}
+                  {%- when 'contact' -%}
+                    <div class="product-block product-block--tab" {{ block.shopify_attributes }}>
+                      {% assign tab_id = block.id | append: product.id %}
+                      {%- render 'tab-contact', id: tab_id, block: block -%}
+                    </div>
+                  {%- when 'description' -%}
+                    <div class="product-block{% if block.settings.is_tab %} product-block--tab{% endif %}" {{ block.shopify_attributes }}>
+                      {%- assign id = block.id | append: product.id -%}
+                      {%- render 'product-description', id: id, product: product, is_tab: block.settings.is_tab -%}
+                    </div>
+                  {%- when 'price' -%}
+                    <div class="product-block product-block--price" {{ block.shopify_attributes }}>
+                      {%- assign hide_sale_price = true -%}
+                      {%- if product.compare_at_price_max > product.price -%}
+                        {%- if current_variant.compare_at_price > current_variant.price -%}
+                          {%- assign hide_sale_price = false -%}
+                        {%- endif -%}
+                        <span
+                          data-a11y-price
+                          class="visually-hidden"
+                          aria-hidden="{{ hide_sale_price }}">
+                            {{ 'products.general.regular_price' | t }}
+                        </span>
+                            <span data-product-price
+                        class="product__price{% if current_variant.compare_at_price > current_variant.price %} on-sale{% endif %}">
+                        {%- unless product.empty? -%}
+                          {{ current_variant.price | money }}
+                        {%- else -%}
+                          {{ 1999 | money }}
+                        {%- endunless -%}
+                      </span>
+                        <span data-product-price-wrap class="{% if hide_sale_price %} hide{% endif %}">
+                          <span data-compare-price class="product__price product__price--compare">
+                            {%- if current_variant.compare_at_price > current_variant.price -%}
+                              {{ current_variant.compare_at_price | money }}
+                            {%- endif -%}
+                          </span>
+                        </span>
+                        <span data-compare-price-a11y class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+                      {%- else -%}
+                        <span data-a11y-price class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+                      {%- endif -%}
+
+                  
+
+                      {%- if settings.product_save_amount -%}
+                        {%- if settings.product_save_type == 'dollar' -%}
+                          {%- capture saved_amount -%}{{ current_variant.compare_at_price | minus: current_variant.price | money }}{%- endcapture -%}
+                        {%- else -%}
+                          {%- capture saved_amount -%}{{ current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | round }}%{%- endcapture -%}
+                        {%- endif -%}
+                        <span data-save-price class="product__price-savings{% if hide_sale_price %} hide{% endif %}">
+                          {%- unless hide_sale_price -%}
+                            {{ 'products.general.save_html' | t: saved_amount: saved_amount }}
+                          {%- endunless -%}
+                        </span>
+                      {%- endif -%}
+
+                      <div
+                        data-unit-price-wrapper
+                        class="product__unit-price product__unit-price--spacing {% unless current_variant.unit_price_measurement %} hide{% endunless %}">
+                        {%- capture unit_price_base_unit -%}
+                          <span data-unit-base>
+                            {%- if current_variant.unit_price_measurement -%}
+                              {%- if current_variant.unit_price_measurement.reference_value != 1 -%}
+                                {{ current_variant.unit_price_measurement.reference_value }}
+                              {%- endif -%}
+                              {{ current_variant.unit_price_measurement.reference_unit }}
+                            {%- endif -%}
+                          </span>
+                        {%- endcapture -%}
+
+                        <span data-unit-price>{{ current_variant.unit_price | money }}</span>/{{ unit_price_base_unit }}
+                      </div>
+
+                      {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+                        <div class="product__policies rte small--text-center text-bold">
+                          {%- if shop.taxes_included -%}
+                            {{ 'products.product.include_taxes' | t }}
+                          {%- endif -%}
+                          {%- if shop.shipping_policy.body != blank -%}
+                           + Free shipping
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                    </div>
+              
+                
+
+{% if product.tags contains "S_China" %}
+  <p class="ship_china">Ship From China. Estimated Shipping Time: 30–40 Days.</p>
+{% endif %}
+
+{%- when 'video-reviews' -%}
+
+
+
+{%- style -%}
+  .video-reviews-block {
+    padding: {{ block.settings.padding_top }}px 0 {{ block.settings.padding_bottom }}px;
+    margin-top: {{ block.settings.margin_top }}px;
+    margin-bottom: {{ block.settings.margin_bottom }}px;
+  }
+  .video-reviews-block .section-header {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .video-reviews-block .section-header h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+.video-reviews-block .swiper-slide  {
+    max-width: 350px;
+}
+  .video-reviews-swiper-{{ block.id }} {
+    overflow: hidden;
+  }
+  .video-reviews-swiper-{{ block.id }} .swiper-slide {
+    height: auto;
+  }
+
+  .video-item {
+    width: 100%;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+  }
+  .video-item.vertical {
+    aspect-ratio: 9 / 16;
+  }
+  .video-item iframe,
+  .video-item video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+    object-fit: cover;
+    background: #000;
+  }
+
+  .video-reviews-swiper-{{ block.id }} .swiper-button-next,
+  .video-reviews-swiper-{{ block.id }} .swiper-button-prev {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .video-reviews-swiper-{{ block.id }} .swiper-button-next:after,
+  .video-reviews-swiper-{{ block.id }} .swiper-button-prev:after {
+    font-size: 14px;
+    color: #333;
+    font-weight: 700;
+  }
+
+  @media (max-width: 749px) {
+    .video-reviews-swiper-{{ block.id }} .swiper-button-next,
+    .video-reviews-swiper-{{ block.id }} .swiper-button-prev {
+      display: none;
+    }
+  }
+{%- endstyle -%}
+
+<div class="video-reviews-block" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank %}
+    <div class="section-header">
+      <h3>{{ block.settings.section_title }}</h3>
+    </div>
+  {% endif %}
+
+  <div class="swiper video-reviews-swiper-{{ block.id }}">
+    <div class="swiper-wrapper">
+      {% for i in (1..6) %}
+        {% liquid
+          assign url_key = 'video_url_' | append: i
+          assign orient_key = 'orientation_' | append: i
+
+          assign video_url = block.settings[url_key]
+          assign orientation = block.settings[orient_key]
+
+          assign video_type = 'file'
+          assign video_id = ''
+
+          if video_url contains 'youtube.com' or video_url contains 'youtu.be'
+            assign video_type = 'youtube'
+            if video_url contains 'youtu.be/'
+              assign video_id = video_url | split: 'youtu.be/' | last | split: '?' | first
+            else
+              assign video_id = video_url | split: 'v=' | last | split: '&' | first
+            endif
+          elsif video_url contains 'vimeo.com'
+            assign video_type = 'vimeo'
+            assign video_id = video_url | split: 'vimeo.com/' | last | split: '?' | first | split: '/' | first
+          endif
+        %}
+
+        {% if video_url != blank %}
+          <div class="swiper-slide">
+            <div class="video-item {% if orientation == 'vertical' %}vertical{% endif %}">
+              {% if video_type == 'youtube' %}
+                <iframe
+                  src="https://www.youtube.com/embed/{{ video_id }}?rel=0&modestbranding=1&playsinline=1"
+                  title="Customer video review"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                 >
+                </iframe>
+              {% elsif video_type == 'vimeo' %}
+                <iframe
+                  src="https://player.vimeo.com/video/{{ video_id }}?title=0&byline=0&portrait=0"
+                  title="Customer video review"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                 >
+                </iframe>
+              {% else %}
+                <video controls playsinline preload="metadata">
+                  <source src="{{ video_url }}" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('.video-reviews-swiper-{{ block.id }}', {
+      slidesPerView: {{ block.settings.mobile_slides }},
+      spaceBetween: {{ block.settings.space_between }},
+      pagination: {
+        el: '.video-reviews-swiper-{{ block.id }} .swiper-pagination',
+        clickable: true
+      },
+      navigation: {
+        nextEl: '.video-reviews-swiper-{{ block.id }} .swiper-button-next',
+        prevEl: '.video-reviews-swiper-{{ block.id }} .swiper-button-prev'
+      },
+      breakpoints: {
+        750: {
+          slidesPerView: {{ block.settings.tablet_slides }},
+          spaceBetween: {{ block.settings.space_between }}
+        },
+        990: {
+          slidesPerView: {{ block.settings.desktop_slides }},
+          spaceBetween: {{ block.settings.space_between }}
+        }
+      }
+    });
+  });
+</script>
+ 
+
+
+ 
+                  {%- when 'size_chart' -%}
+                    {% if connect_to_sizechart == false %}
+                      {%- capture size_chart_title -%}
+                        {{ 'products.general.size_chart' | t }}<svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-size-chart" viewBox="0 0 64 64"><path d="M22.39 33.53c-7.46 0-13.5-3.9-13.5-8.72s6-8.72 13.5-8.72 13.5 3.9 13.5 8.72a12 12 0 0 1-.22 1.73"/><ellipse cx="22.39" cy="24.81" rx="3.28" ry="2.12"/><path d="M8.89 24.81V38.5c0 7.9 6.4 9.41 14.3 9.41h31.92V33.53H22.39m24.39 0v7.44m-8.13-7.44v7.44m-8.13-7.44v7.44m-8.13-7.44v7.44"/></svg>
+                      {%- endcapture -%}
+
+                      <div class="size-chart__standalone" {{ block.shopify_attributes }}>
+                        {%- render
+                          'tool-tip-trigger',
+                          title: size_chart_title,
+                          content: block.settings.size_chart.content,
+                          context: 'size-chart'
+                        -%}
+                        {% style %}
+                          tool-tip-trigger {
+                            text-transform: uppercase;
+                          }
+                        {% endstyle %}
+                      </div>
+                    {% endif %}
+                  {%- when 'variant_picker' -%}
+                    <div class="product-block" {% if block.settings.product_dynamic_variants_enable %}data-dynamic-variants-enabled{% endif %} {{ block.shopify_attributes }}>
+                      {%- unless product.has_only_default_variant -%}
+                        {%- for option in product.options_with_values -%}
+                          {%- liquid
+                            if block.settings.color_swatches
+                              assign is_color = false
+                              assign color_option_index = 0
+                              assign swatch_trigger = 'products.general.color_swatch_trigger' | t | downcase
+                              assign color_option_index = forloop.index0
+                              assign downcased_option = option.name | downcase
+                              if downcased_option contains swatch_trigger
+                                assign is_color = true
+                              elsif swatch_trigger == 'color' and downcased_option contains 'colour'
+                                assign is_color = true
+                              endif
+                            endif
+                          -%}
+
+                          {%- if block.settings.picker_type == 'button' -%}
+                            {%- render 'variant-button',
+                              block: block,
+                              product: product,
+                              form_id: form_id,
+                              section_id: section_id,
+                              option: option,
+                              forloop: forloop,
+                              variant_labels: block.settings.variant_labels,
+                              is_color: is_color,
+                              color_option_index: color_option_index,
+                              connect_to_sizechart: connect_to_sizechart,
+                              sizechart_index: sizechart_index
+                            -%}
+                          {%- else -%}
+                            {%- render 'variant-dropdown',
+                              product: product,
+                              form_id: form_id,
+                              section_id: section_id,
+                              option: option,
+                              forloop: forloop,
+                              variant_labels: block.settings.variant_labels
+                            -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- endunless -%}
+                    </div>
+
+
+
+{% render 'color-option' %}
+
+
+{%- when 'attachment_group' -%}
+
+{%- comment -%}
+  ============================================================================
+  Attachment Group Section (New Version)
+  ============================================================================
+  - Author: Gemini
+  - Version: 3.0
+  - Description: This file contains the product grid for attachments. It works
+    with a separate, global order summary snippet.
+  - Features:
+    - Two-column layout on desktop.
+    - Communicates with a global summary via custom browser events.
+    - "Add to Order" button allows adding multiple variants of the same product.
+    - First block opens by default
+{%- endcomment -%}
+
+{{ 'attachment_group.css' | asset_url | stylesheet_tag }}
+
+
+{%- liquid
+  assign collection = block.settings.collection
+  assign heading = block.settings.heading | default: "Complete Your Order"
+  assign products_to_show = block.settings.products_to_show | default: 8
+  assign block_id = "attachment-group-" | append: block.id
+  
+  # Find the first attachment_group block to determine if this is the first one
+  assign is_first_block = false
+  assign first_attachment_block_id = ""
+  
+  for section_block in section.blocks
+    if section_block.type == 'attachment_group'
+      assign first_attachment_block_id = section_block.id
+      break
+    endif
+  endfor
+  
+  if block.id == first_attachment_block_id
+    assign is_first_block = true
+  endif
+-%}
+
+{%- if collection != blank and collection.products_count > 0 -%}
+<div id="{{ block_id }}" class="attachment-group-wrapper" data-block-id="{{ block.id }}" data-is-first="{{ is_first_block }}" {{ block.shopify_attributes }}>
+  <div class="attachment-group-container">
+
+    <div class="attachment-group-header">
+      <button type="button" class="attachment-toggle-btn" aria-expanded="{% if is_first_block %}true{% else %}false{% endif %}" aria-controls="attachments-container-{{ block.id }}">
+        <h3 class="attachment-group-heading">{{ heading }}</h3>
+        <p class="attachment-subtitle">{{ block.settings.subtext_attachment }}</p>
+        <span class="toggle-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </span>
+      </button>
+    </div>
+
+    <div class="attachments-container{% if is_first_block %} expanded{% endif %}" id="attachments-container-{{ block.id }}">
+      <div class="attachments-grid">
+        {%- for attachment in collection.products limit: products_to_show -%}
+          {%- if attachment.available -%}
+            <div class="attachment-card" data-product-id="{{ attachment.id }}">
+              <div class="attachment-card-image-wrapper">
+                <a href="{{ attachment.url   }}" class="attachment-card-link">
+                  {%- if attachment.featured_media -%}
+                    <img
+                      src="{{ attachment.featured_media | image_url: width: 400 }}"
+                      alt="{{ attachment.featured_media.alt | escape }}"
+                     
+                      class="attachment-card-image">
+                  {%- else -%}
+                    <div class="no-image-placeholder">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    </div>
+                  {%- endif -%}
+                </a>
+              </div>
+
+              <div class="attachment-card-details">
+                <h4 class="attachment-card-title">
+                  <a href="{{ attachment.url   }}">{{ attachment.title }}</a>
+                </h4>
+
+                <div class="attachment-price-display" data-price-container>
+                  {{ attachment.price | money }}
+                </div>
+
+                {%- if attachment.variants.size > 1 -%}
+                  <select class="attachment-variant-select" name="id" data-action="update-variant">
+                    {%- for variant in attachment.variants -%}
+                      <option
+                        value="{{ variant.id }}"
+                        data-price="{{ variant.price }}"
+                        data-title="{{ variant.title | escape }}"
+                        {% if variant == attachment.selected_or_first_available_variant %}selected="selected"{% endif %}>
+                        {{ variant.title }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                {%- else -%}
+                  <input type="hidden" name="id" class="attachment-variant-select" value="{{ attachment.variants.first.id }}" data-price="{{ attachment.variants.first.price }}" data-title="{{ attachment.variants.first.title | escape }}">
+                {%- endif -%}
+
+                <div class="attachment-card-actions">
+                  <div class="quantity-selector">
+                    <button type="button" class="quantity-btn" data-action="decrease-qty" aria-label="Decrease quantity">
+                      -
+                    </button>
+                    <input type="number" class="quantity-input" value="1" min="1" aria-label="Quantity" data-quantity-input>
+                    <button type="button" class="quantity-btn" data-action="increase-qty" aria-label="Increase quantity">
+                    +
+                    </button>
+                  </div>
+                  <button type="button" class="btn attachment-select-btn" data-action="add-attachment"
+                    data-product-title="{{ attachment.title | escape }}">
+                    <span class="btn-text">Add</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+
+
+
+ 
+
+
+ 
+
+
+
+                  
+                  {%- when 'buy_buttons' -%}
+                 
+ 
+
+ {% if block.settings.show_bundle_btn == 'true' %}
+     {%- comment -%}
+  This snippet should be included once in your main product template.
+  It creates the global order summary and manages the state for all
+  attachment blocks on the page.
+{%- endcomment -%}
+
+<div class="global-summary-wrapper" id="global-attachment-summary">
+  <div class="order-summary-section">
+    <div class="order-summary-header">
+      <h4>Order Summary</h4>
+      <span class="selected-count" data-summary-count>0 attachments selected</span>
+    </div>
+
+    <div class="summary-item main-product-item">
+      <div class="item-info">
+        <div class="item-title">{{ product.title }} (Main Product)</div>
+        <div class="item-variant">{{ product.selected_or_first_available_variant.title }}</div>
+        <div class="summary-item-controls">
+          <div class="summary-quantity-selector">
+            <button type="button" class="summary-quantity-btn" data-action="decrease-main-qty" aria-label="Decrease quantity">-</button>
+            <input type="number" class="summary-quantity-input" value="1" min="1" data-action="update-main-qty" data-main-product="true" aria-label="Quantity">
+            <button type="button" class="summary-quantity-btn" data-action="increase-main-qty" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="item-price" data-main-product-price>{{ product.price | money }}</div>
+    </div>
+
+    <div class="selected-attachments-summary" data-summary-items-container>
+      <p class="summary-placeholder" data-summary-placeholder>Select items above to add them here.</p>
+    </div>
+
+    <div class="checkout-section">
+      <div class="total-price-display">
+        <span class="total-label">Total:</span>
+        <span class="total-amount" data-summary-total>{{ product.price | money }}</span>
+      </div>
+      <button type="button" class="btn main-add-to-cart-btn" data-action="add-all-to-cart">
+        <span class="btn-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        </span>
+        <span data-add-to-cart-text>Add to Cart</span>
+      </button>
+      <p class="checkout-note"><small>All selected items will be added to your cart.</small></p>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="shopify-global-data">
+{
+  "mainProduct": {
+    "variantId": {{ product.selected_or_first_available_variant.id }},
+    "price": {{ product.price }}
+  },
+  "moneyFormat": {{ shop.money_format | json }}
+}
+</script>
+
+ 
+<script src="{{ 'attachment_group.js' | asset_url }}" defer="defer"></script>
+
+ 
+
+{% else %}
+            <div class="product-block" {{ block.shopify_attributes }}>
+                      {%- unless product.empty? -%}
+                        <div class="product-block">
+                          {%- render 'product-form',
+                            form_id: form_id,
+                            product: product,
+                            show_dynamic_checkout: block.settings.show_dynamic_checkout,
+                            current_variant: current_variant,
+                            block: block,
+                          -%}
+                        </div>
+                      {%- endunless -%}
+
+                      {%- if block.settings.surface_pickup_enable -%}
+                        <div data-store-availability-holder
+                          data-product-name="{{ product.title | escape }}"
+                          data-base-url="{{ shop.url }}{{ routes.root_url }}"
+                          ></div>
+                      {%- endif -%}
+                    </div>
+  {% endif %}
+
+                  
+                  {%- when 'sales_point' -%}
+                    {%- unless block.settings.text == blank -%}
+                      <div class="product-block product-block--sales-point" {{ block.shopify_attributes }}>
+                        <ul class="sales-points">
+                          <li class="sales-point">
+                            <span class="icon-and-text">
+                              {% case block.settings.icon %}
+                                {% when 'checkmark' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-circle-checkmark" viewBox="0 0 64 64"><path d="M52.68 24.48A22 22 0 1 1 47 15.93"/><path d="m21 32 8.5 8.5L57 13"/></svg>
+                                {% when 'gift' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-gift" viewBox="0 0 64 64"><path d="M9 20.23h46v8.68H9zm4.34 8.68h36.89v24.3H13.34zm14.48-8.25v32.98m8.09-32.76v32.98M20.52 11.43a3.73 3.73 0 0 0-.74 2.87 4.57 4.57 0 0 0 .8 2.27C22 18.09 25.15 20 32 20.23a12 12 0 0 0-2.43-7 7.52 7.52 0 0 0-5.66-3.12 4 4 0 0 0-3.39 1.32Z"/><path d="M43.37 11.43a3.73 3.73 0 0 1 .74 2.87 4.48 4.48 0 0 1-.8 2.27c-1.42 1.52-4.57 3.41-11.42 3.66a12.08 12.08 0 0 1 2.43-7A7.56 7.56 0 0 1 40 10.14a4 4 0 0 1 3.37 1.29Z"/></svg>
+                                {% when 'globe' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"/><path d="M13 21h38M10 32h44M13 43h38M32 10c-12 8-12 37 0 44m0-44c12 8 12 37 0 44"/></svg>
+                                {% when 'heart' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-heart" viewBox="0 0 64 64"><path d="M51.27 15.05a13 13 0 0 0-18.44 0l-.83.83-.83-.83a13 13 0 0 0-18.44 18.44l.83.83L32 52.77l18.44-18.45.83-.83a13 13 0 0 0 0-18.44Z"/></svg>
+                                {% when 'leaf' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-leaf" viewBox="0 0 64 64"><defs><style>.a{stroke-miterlimit:10}</style></defs><path class="a" d="M52 11 13 50m22-37v15h16"/><path class="a" d="M52 11c6 24-16.72 47.29-33 32C7 22 29 10 52 11Z"/></svg>
+                                {% when 'lock' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-lock" viewBox="0 0 64 64"><path d="M19.45 23.6v-3.2c0-7 5.89-11.75 12.55-11.75 7.21 0 12.55 5.49 12.55 11.75v3.2M10 23.6h44v31.75H10zm22 13.87v7.47"/><circle cx="32" cy="35.87" r="1.6"/></svg>
+                                {% when 'package' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-package" viewBox="0 0 64 64"><path d="M32 54.52 10 41.95v-19.9L32 9.48l22 12.57v19.9L32 54.52z"/><path d="M32 54.52v-19.9l22-12.57M32 34.62 10 22.05m31.7-7.03L21 28.33v8.38"/></svg>
+                                {% when 'phone' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-phone" viewBox="0 0 64 64"><path d="m18.4 9.65 10.2 10.2-6.32 6.32c2.1 7 6.89 12.46 15.55 15.55l6.32-6.32 10.2 10.2-8.75 8.75C25.71 50.3 13.83 38.21 9.65 18.4Z"/></svg>
+                                {% when 'ribbon' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-ribbon" viewBox="0 0 64 64"><path d="m28.57 42.31-8.36 13.07-2.6-7.17-7.61.65 8.35-13.07a17.05 17.05 0 0 0 8.12 5.94 17.3 17.3 0 0 0 1.74.5ZM54 48.86l-7.61-.65-2.61 7.17-8.36-13.07.37-.08a16.4 16.4 0 0 0 1.73-.5 17 17 0 0 0 8.12-5.93Z"/><path d="M49 25.64a16.79 16.79 0 0 1-3.14 9.85 3.55 3.55 0 0 1-.23.31 17 17 0 0 1-8.12 5.93 16.4 16.4 0 0 1-1.73.5l-.37.08a16.74 16.74 0 0 1-3.42.35 16.91 16.91 0 0 1-3.43-.35l-.36-.08a17.3 17.3 0 0 1-1.74-.5 17.05 17.05 0 0 1-8.12-5.94c-.07-.09-.15-.19-.22-.3A16.86 16.86 0 0 1 15 25.64a17 17 0 0 1 34 0Z"/><path d="m36.09 27.78.96 5.63L32 30.75l-5.05 2.66.96-5.63-4.09-3.98 5.65-.82L32 17.86l2.53 5.12 5.64.82-4.08 3.98z"/></svg>
+                                {% when 'shield' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-shield" viewBox="0 0 64 64"><path d="M21.18 31.69 28.54 39l15.91-15.88"/><path d="M53 12.54v15.24a31.41 31.41 0 0 1-3.7 14.95A25.46 25.46 0 0 1 32 56a25.46 25.46 0 0 1-17.3-13.27A31.41 31.41 0 0 1 11 27.78V12.54C24.88 13.67 32 8 32 8s7.12 5.67 21 4.54Z"/></svg>
+                                {% when 'tag' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-tag" viewBox="0 0 64 64"><path d="m46.69 10.34-10.55.07-25.8 25.8 17.45 17.45 25.8-25.8.07-10.55-6.97-6.97z"/><circle cx="43.95" cy="20.05" r="3.53"/><path d="M14.4 32.15 31.85 49.6"/></svg>
+                                {% when 'truck' %} <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-truck" viewBox="0 0 64 64"><defs><style>.a{stroke-miterlimit:10}</style></defs><path class="a" d="M16.5 43.22H6.88V16.5h33.14v26.72H23.94m21.48 0h-5.4V30.4h17.1v12.82h-4.23m4.23-12.82-6.41-8.56H40.02"/><circle class="a" cx="20.24" cy="43.76" r="3.74"/><path class="a" d="M45.42 43.23a3.82 3.82 0 1 1 0 .37v-.37"/></svg>
+                              {% endcase %}
+                              <span>{{ block.settings.text }}</span>
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    {%- endunless -%}
+                  {%- when 'inventory_status' -%}
+                    {%- render 'product-inventory', product: product, current_variant: current_variant, block: block -%}
+                  {%- when 'share' -%}
+                    <div class="product-block" {{ block.shopify_attributes }}>
+                      {%- render 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product -%}
+                    </div>
+                  {%- when 'complementary_products' -%}
+                    <div class="product-block" {{ block.shopify_attributes }}>
+                      {%- render 'product-complementary', block: block, product: product, type: 'block', image_style: block.settings.image_style -%}
+                    </div>
+                  {%- when 'trust_badge' -%}
+                    <div class="product-block" {{ block.shopify_attributes }}>
+                      <div class="aos-animate" style="max-width: {{ block.settings.trust_image.width }}px; margin: 0 auto;">
+                        <div class="image-wrap " style="height: 0; padding-bottom: {{ 100 | divided_by: block.settings.trust_image.aspect_ratio }}%;">
+                          {%- render 'image-element',
+                            img: block.settings.trust_image,
+                            widths: '360, 540, 700, 1024',
+                            sizeVariable: product_description_width,
+                          -%}
+                        </div>
+                      </div>
+                    </div>
+
+
+
+ {% when 'delivery_date' %}
+ 
+ 
+  {% unless isModal %}       
+
+{% assign min_delivery_days = block.settings.min_delivery_days | default: 5 %}
+{% assign max_delivery_days = block.settings.max_delivery_days | default: 7 %}
+
+<div class="delivery-date-container">
+  <button id="delivery-date-button" class="delivery-date-button">
+    <span class="delivery-free-label">Shipping Time</span>
+    <span id="delivery-date-text">Click to See Estimated Shipping Time 
+
+
+         
+   <!-- <span id="delivery-start-date"></span> - <span id="delivery-end-date"></span>  <span id="delivery-zip-code">{{ customer.default_address.zip }}</span> -->
+    
+    
+    </span>
+    <svg class="delivery-arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 6L15 12L9 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  
+  <div id="delivery-date-modal" class="delivery-date-modal">
+    <div class="delivery-date-modal-content">
+      <div class="delivery-date-modal-header">
+        <h2>Delivery Details</h2>
+        <button id="delivery-date-close" class="delivery-date-close">&times;</button>
+      </div>
+      <div class="delivery-date-modal-body">
+        <div class="delivery-free-section">
+          <!-- <h3>FREE Delivery</h3> -->
+
+
+<div class="shipping-info">
+  <h3>Estimated Shipping Time Based on Product Weight</h3>
+  <table class="shipping-table">
+    <thead>
+      <tr>
+        <th>Weight Range</th>
+        <th>Estimated Delivery</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Less than 50 lbs</td>
+        <td>7–10 Business Days</td>
+      </tr>
+      <tr>
+        <td>51 lbs – 100 lbs</td>
+        <td>2–4 Weeks</td>
+      </tr>
+      <tr>
+        <td>101 lbs and above</td>
+        <td>4–6 Weeks</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+       
+          <!-- <p>Get it <span id="modal-delivery-start-date"></span> - <span id="modal-delivery-end-date"></span>  <span id="modal-delivery-zip-code">{{ customer.default_address.zip }}</span></p> -->
+        </div>
+        <!-- <div class="delivery-methods-section">
+          <h3>Available Delivery Method(s)</h3>
+          <div class="delivery-method">
+            <h4>Ground Delivery</h4>
+            <p>Get it by <span id="modal-delivery-end-date2"></span></p>
+          </div>
+          <p class="delivery-note">Delivery dates and pricing will be confirmed at Checkout</p>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+ 
+{{ 'delivery-date.js' | asset_url | script_tag }}
+
+ 
+             
+ 
+{% endunless %}
+
+ {%- when 'bundle-purchase' -%}                              
+ 
+{% comment %} Bundle Drawer Full Implementation with Styles, Script, and Metafield Handling (Updated) {% endcomment %}
+
+{% assign first_bundle_product = nil %}
+{% assign bundle_items = '' %}
+{% assign bundle_count = 0 %}
+{% assign metafield_data = product.metafields.custom.bundle_products %}
+
+{% if metafield_data %}
+  {% assign metafield_type = metafield_data.type %}
+  {% if metafield_type == 'list.product_reference' %}
+    {% for bundle_item in metafield_data.value %}
+      {% if bundle_item != blank and bundle_item.available %}
+        {% assign bundle_count = bundle_count | plus: 1 %}
+        {% assign bundle_items = bundle_items | append: bundle_item.id | append: ',' %}
+        {% if first_bundle_product == nil %}
+          {% assign first_bundle_product = bundle_item %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% elsif metafield_type == 'product_reference' %}
+    {% assign single_bundle_product = metafield_data.value %}
+    {% if single_bundle_product != blank and single_bundle_product.available %}
+      {% assign first_bundle_product = single_bundle_product %}
+      {% assign bundle_items = single_bundle_product.id | append: ',' %}
+      {% assign bundle_count = 1 %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% if first_bundle_product and first_bundle_product.available %}
+ 
+<h3>Get Everything You Need:</h3>
+  <div class="bundle-products">
+    <div class="bundle-product">
+      <img src="{{ product.featured_image | img_url: '300x200' }}" alt="{{ product.title }}" height="200" width="200">
+      <p>{{ product.title | truncate: 45 }}</p>
+      <p>{{ product.price | money }}</p>
+    </div>
+    <div class="bundle-plus">+</div>
+       <a class="bundle-product" href="{{ first_bundle_product.url }}" >
+     
+      <img src="{{ first_bundle_product.featured_image | img_url: '300x200' }}" alt="{{ first_bundle_product.title }}" height="200" width="200">
+      <p>{{ first_bundle_product.title | truncate: 45 }}</p>
+      <p>{{ first_bundle_product.price | money }}</p>
+   
+       </a>
+      <button class="drawer-toggle-btn" onclick="openDrawer()">
+    Buy Both: {{ product.price | plus: first_bundle_product.price | money }}
+  </button>
+  </div>
+
+
+
+  <div class="drawer-overlay" onclick="closeDrawer()"></div>
+
+  <div class="bulk-purchase-drawer" id="bundleDrawer">
+    <div class="drawer-header">
+      <h3>Get Everything You May Need</h3>
+      <button class="close-btn" onclick="closeDrawer()">&times;</button>
+    </div>
+
+    <div class="drawer-title-heading">Current Product</div>
+    <div class="drawer-product">
+      <img src="{{ product.featured_image | img_url: '200x200' }}" alt="{{ product.title }}" height="200" width="200">
+      <div >
+        <p style="margin-bottom:5px; font-size:14px">{{ product.title | truncate: 50 }}</p>
+        <div class="price-quantity-container" style="margin-bottom:5px">
+        <p style="margin-bottom:5px">{{ product.price | money }}</p>
+<div class="quantity-controls"><button onclick="adjustQty('qty-main-{{ product.id }}', -1)">−</button>
+          <input type="number" id="qty-main-{{ product.id }}" value="1" min="1">
+          <button onclick="adjustQty('qty-main-{{ product.id }}', 1)">+</button></div>
+        </div>
+        <div >
+          
+          <button id="btn-main-{{ product.id }}" class="add-btn" onclick="addToCart({{ product.selected_or_first_available_variant.id }}, 'qty-main-{{ product.id }}', 'btn-main-{{ product.id }}')">
+            <span class="add-btn-spinner"></span> Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {% if metafield_data and bundle_count > 0 %}
+      <div class="drawer-title-heading">Compatible Items</div>
+      {% assign first_skipped = false %}
+      {% for bundle_item in metafield_data.value %}
+        {% if bundle_item != blank and bundle_item.available %}
+          {% unless first_skipped %}
+            {% assign first_skipped = true %}
+            {% continue %}
+          {% endunless %}
+            
+          <div class="drawer-product">
+               <a href="{{ bundle_item.url }}" class="drawer-img-container">
+            <img src="{{ bundle_item.featured_image | img_url: '200x200' }}" alt="{{ bundle_item.title }}" height="200" width="200">
+          </a>
+          <div class="drawer-product-info">
+            <a href="{{ bundle_item.url }}" >
+              <p style="margin-bottom:5px; font-size:14px;">{{ bundle_item.title | truncate: 50 }}</p>
+            </a>
+              <p style="margin-bottom:5px">{{ bundle_item.price | money }}</p>
+              <div >
+                <div class="quantity-controls" style="margin-bottom:5px"><button onclick="adjustQty('qty-bundle-{{ bundle_item.id }}', -1)">−</button>
+                <input type="number" id="qty-bundle-{{ bundle_item.id }}" value="1" min="1">
+                <button onclick="adjustQty('qty-bundle-{{ bundle_item.id }}', 1)">+</button></div>
+                <button id="btn-bundle-{{ bundle_item.id }}" class="add-btn" onclick="addToCart({{ bundle_item.selected_or_first_available_variant.id }}, 'qty-bundle-{{ bundle_item.id }}', 'btn-bundle-{{ bundle_item.id }}')">
+                  <span class="add-btn-spinner"></span> Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div class="popup-message" id="popupMessage">Product added to cart!</div>
+
+  
+{% endif %}
+
+
+
+
+ 
+ 
+                                  
+                                  
+{%- when 'zipcode_checker' -%}
+
+{% unless isModal %}
+
+
+  
+  
+  
+  <div id="zipcode-checker-{{ block.id }}" class="zipcode-checker" style="background-color: {{ block.settings.bg_color }}; border-color: {{ block.settings.border_color }};" {{ block.shopify_attributes }}>
+  <div class="zipcode-checker__container">
+    <h5 class="zipcode-checker__title" style="font-family:Inter, sans-serif;text-transform:uppercase;">{{ block.settings.title }}</h5>
+    <div class="zipcode-checker__form">
+      <div class="zipcode-checker__input-group">
+        <input 
+          type="text" 
+          id="zipcode-input-{{ block.id }}" 
+          class="zipcode-checker__input" 
+          placeholder="Enter your zipcode" 
+          maxlength="10"
+          aria-label="Enter your zipcode"
+        >
+        <button 
+          id="check-zipcode-btn-{{ block.id }}" 
+          class="zipcode-checker__button" 
+          aria-label="Check delivery availability"
+          style="background-color: {{ block.settings.button_color }};"
+        >
+          <span class="zipcode-checker__button-text">Check</span>
+          <span class="zipcode-checker__spinner" style="display: none;"></span>
+        </button>
+      </div>
+      <div id="zipcode-message-{{ block.id }}" class="zipcode-checker__message" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+ 
+
+ <script  > 
+  document.addEventListener('DOMContentLoaded', function() {
+  
+
+
+    // Use block-specific IDs to prevent conflicts with multiple instances
+    const blockId = "{{ block.id }}";
+    const checkZipcodeBtn = document.getElementById('check-zipcode-btn-' + blockId);
+    const zipcodeInput = document.getElementById('zipcode-input-' + blockId);
+    const zipcodeMessage = document.getElementById('zipcode-message-' + blockId);
+    const spinner = document.querySelector('#zipcode-checker-' + blockId + ' .zipcode-checker__spinner');
+    const buttonText = document.querySelector('#zipcode-checker-' + blockId + ' .zipcode-checker__button-text');
+    
+    // Get eligible zipcodes from block settings
+    const eligibleZipcodesString = "{{ block.settings.eligible_zipcodes }}";
+    const eligibleZipcodes = eligibleZipcodesString.split(',').map(zip => zip.trim());
+    
+    // Success and error messages from settings
+    const successMessage = "{{ block.settings.success_message }}";
+    const errorMessage = "{{ block.settings.error_message}}";
+    
+    // Check zipcode function
+    function checkZipcode() {
+      const zipcode = zipcodeInput.value.trim();
+      
+      // Validate input
+      if (!zipcode) {
+        showMessage('Please enter a zipcode.', 'info');
+        return;
+      }
+      
+      // Show loading state
+      showLoading(true);
+      
+      // Simulate network request (for a realistic user experience)
+      setTimeout(() => {
+        if (eligibleZipcodes.includes(zipcode)) {
+          showMessage(successMessage, 'success');
+        } else {
+          showMessage(errorMessage, 'error');
+        }
+        showLoading(false);
+      }, 800);
+    }
+    
+    // Show loading state
+    function showLoading(isLoading) {
+      if (isLoading) {
+        spinner.style.display = 'block';
+        buttonText.style.display = 'none';
+        checkZipcodeBtn.disabled = true;
+      } else {
+        spinner.style.display = 'none';
+        buttonText.style.display = 'block';
+        checkZipcodeBtn.disabled = false;
+      }
+    }
+    
+    // Show message
+    function showMessage(message, type) {
+      zipcodeMessage.textContent = message;
+      zipcodeMessage.className = 'zipcode-checker__message ' + type;
+    }
+    
+    // Event listeners
+    if (checkZipcodeBtn) {
+      checkZipcodeBtn.addEventListener('click', checkZipcode);
+      
+      if (zipcodeInput) {
+        zipcodeInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            checkZipcode();
+          }
+        });
+        
+        // Clear message when input changes
+        zipcodeInput.addEventListener('input', function() {
+          zipcodeMessage.textContent = '';
+          zipcodeMessage.className = 'zipcode-checker__message';
+        });
+      }
+    }
+
+
+ });
+
+ </script>
+  
+  
+  
+ {% endunless %}
+
+{%- when 'discount-showcase' -%}
+
+ 
+{% assign is_campaign_collection_handle = false %}
+
+ 
+
+{% for collection in product.collections %}
+  {% if collection.handle == block.settings.campaign_collection_handle %}
+    {% assign is_campaign_collection_handle = true %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+
+<div class="discount-section-{{ section.id }}">
+  <div class="coupons-container">
+    {% if is_campaign_collection_handle %}
+      <!-- Campaign Collection Discount -->
+      <div class="coupon-card back-to-school">
+        <div class="discount-badge">  <div class="discount-message-bold" > {{ block.settings.back_to_school_message }}   </div> 
+      
+      <div class="discount-description">
+       Use Coupon: {{ block.settings.back_to_school_coupon }}
+        </div>
+      
+      
+      </div>
+        
+        <div class="coupon-code-container">
+          <div class="copied-notification">Copied!</div>
+          {% comment %} <div class="coupon-code">{{ block.settings.back_to_school_coupon }}</div> {% endcomment %}
+          <button class="copy-btn" onclick="copyCoupon('{{ block.settings.back_to_school_coupon }}', this)">
+            <svg class="copy-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+            Copy
+          </button>
+        </div>
+      </div>
+    {% else %}
+      <!-- Other Products Discount -->
+      <div class="coupon-card other">
+        <div class="discount-badge">
+          
+          <div class="discount-message-bold">     {{ block.settings.other_message }}</div>
+       <div class="discount-description">
+         Use Coupon: {{ block.settings.other_coupon }}
+        </div>
+        
+        
+        </div>
+       
+        <div class="coupon-code-container">
+          <div class="copied-notification">Copied!</div>
+          {% comment %} <div class="coupon-code">{{ block.settings.other_coupon }}</div> {% endcomment %}
+          <button class="copy-btn" onclick="copyCoupon('{{ block.settings.other_coupon }}', this)">
+            <svg class="copy-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+            Copy
+          </button>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+ 
+
+  {%- when 'bundle_block' -%}
+
+{%- liquid
+  assign bundle_collection = product.metafields.custom.bundle_collection.value
+  assign bundle_discount = product.metafields.custom.bundle_discount.value | default: 0
+  assign bundle_minimum = product.metafields.custom.bundle_minimum_amount.value | times: 100 | default: 0  
+
+-%}
+
+
+{{ 'bundle_block.css' | asset_url | stylesheet_tag }}
+
+
+
+{%- if bundle_collection and bundle_collection.products.size > 0 -%}
+<div class="product-bundle" data-bundle-discount="{{ bundle_discount }}" data-bundle-minimum="{{ bundle_minimum }}">
+  <div class="bundle-header">
+    <h3 class="bundle-title">{{ block.settings.bundle_title | default: 'Create Your Bundle' }}</h3>
+    <p class="bundle-description">Buy ${{ product.metafields.custom.bundle_minimum_amount.value }} and above from this bundle and enjoy {{bundle_discount}}% discount.</p>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="bundle-progress-container" style="display: none;">
+    <div class="bundle-progress-bar">
+      <div class="bundle-progress-fill" style="width: 0%;"></div>
+    </div>
+    <p class="bundle-progress-text">Add <span class="remaining-amount">{{ bundle_minimum | money }}</span> more to unlock {{ bundle_discount }}% discount!</p>
+  </div>
+
+  <!-- Bundle Products Grid -->
+  <div class="bundle-products-grid">
+    {%- for bundle_product in bundle_collection.products -%}
+      <div class="bundle-product-card in-bundle" data-product-id="{{ bundle_product.id }}">
+        <div class="bundle-product-image">
+          <img 
+            src="{{ bundle_product.featured_image | image_url: width: 300 }}" 
+            alt="{{ bundle_product.featured_image.alt | default: bundle_product.title }}"
+            class="product-image"
+           
+          >
+        </div>
+        
+        <div class="bundle-product-info">
+          <h4 class="product-title">{{ bundle_product.title }}</h4>
+          
+          {%- if bundle_product.variants.size > 1 -%}
+            <div class="variant-selector">
+              <label for="variant-{{ bundle_product.id }}">Variant:</label>
+              <select class="variant-select" data-product-id="{{ bundle_product.id }}">
+                {%- for variant in bundle_product.variants -%}
+                  {%- if variant.available -%}
+                    <option 
+                      value="{{ variant.id }}" 
+                      data-price="{{ variant.price }}"
+                      data-compare-price="{{ variant.compare_at_price }}"
+                      data-image="{{ variant.image | default: bundle_product.featured_image | image_url: width: 300 }}"
+                      data-product-title="{{ bundle_product.title | escape }}"
+                      data-variant-title="{{ variant.title | escape }}"
+                      {% if forloop.first %}selected{% endif %}
+                    >
+                      {{ variant.title }} - {{ variant.price | money }}
+                    </option>
+                  {%- endif -%}
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- else -%}
+            <input type="hidden" 
+              class="variant-select" 
+              value="{{ bundle_product.first_available_variant.id }}" 
+              data-product-id="{{ bundle_product.id }}"
+              data-price="{{ bundle_product.first_available_variant.price }}"
+              data-compare-price="{{ bundle_product.first_available_variant.compare_at_price }}"
+              data-image="{{ bundle_product.first_available_variant.image | default: bundle_product.featured_image | image_url: width: 300 }}"
+              data-product-title="{{ bundle_product.title | escape }}"
+              data-variant-title="{{ bundle_product.first_available_variant.title | escape }}">
+          {%- endif -%}
+          
+          <div class="product-pricing">
+            <span class="current-price">{{ bundle_product.price | money }}</span>
+            {%- if bundle_product.compare_at_price > bundle_product.price -%}
+              <span class="compare-price">{{ bundle_product.compare_at_price | money }}</span>
+            {%- endif -%}
+          </div>
+          
+          <div class="quantity-selector">
+            <label>Quantity:</label>
+            <div class="quantity-controls">
+              <button type="button" class="quantity-btn quantity-minus" data-product-id="{{ bundle_product.id }}">-</button>
+              <input type="number" class="quantity-input" value="1" min="1" max="10" data-product-id="{{ bundle_product.id }}">
+              <button type="button" class="quantity-btn quantity-plus" data-product-id="{{ bundle_product.id }}">+</button>
+            </div>
+          </div>
+          
+          <button type="button" class="add-to-bundle-btn" data-product-id="{{ bundle_product.id }}" style="display: none;">
+            Add to Bundle
+          </button>
+      <a href="{{ bundle_product.url }}" target="_blank" class="view-product-details" style="margin-top:15px;">View Details</a>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <!-- Bundle Summary -->
+  <div class="bundle-summary">
+    <h3>Bundle Summary</h3>
+    <div class="bundle-items-list"></div>
+    
+    <div class="bundle-totals">
+      <div class="subtotal-row">
+        <span>Subtotal:</span>
+        <span class="bundle-subtotal">$0.00</span>
+      </div>
+      {%- if bundle_minimum > 0 -%}
+      <div class="minimum-row">
+        <span>Minimum Purchase Amount For Discount:</span>
+        <span class="bundle-minimum-display">{{ bundle_minimum | money }}</span>
+      </div>
+      {%- endif -%}
+      <div class="discount-row" style="display: none;">
+        <span>Discount (<span class="discount-percentage">{{ bundle_discount }}</span>%):</span>
+        <span class="bundle-discount-amount">-$0.00</span>
+      </div>
+      <div class="total-row">
+        <span>Bundle Total:</span>
+        <span class="bundle-total">$0.00</span>
+      </div>
+      <div class="savings-row" style="display: none;">
+        <span>You Save:</span>
+        <span class="bundle-savings">$0.00</span>
+      </div>
+    </div>
+    
+    <div class="bundle-actions">
+      <button type="button" class="add-bundle-to-cart-btn" disabled>
+        Add Bundle to Cart (<span class="bundle-item-count">0</span> items)
+      </button>
+    </div>
+  </div>
+</div>
+
+ 
+<script src="{{ 'bundle_block.js' | asset_url }}" defer="defer"></script>
+ 
+
+{%- endif -%}
+                  
+
+ {%- when 'text_highlight' -%}
+
+
+  <div class="product-block" {{ block.shopify_attributes }}>
+{% if block.settings.code_metafield %}
+<div>
+{{ block.settings.code_metafield }}
+
+</div>
+
+{% else %}
+
+<div>
+{{ product.metafields.custom.key_highlight }}
+
+</div>
+
+{% endif %}
+
+
+  </div>
+
+
+
+
+ {%- when 'custom' -%}
+     <div class="product-block" {{ block.shopify_attributes }}>
+                      {{ block.settings.code }}
+                    </div>
+                {%- endcase -%}
+              {%- else -%}
+                <div data-blocks-holder
+                     data-url="{{ product.url   }}"
+                     data-template="{{ product.template_suffix }}">
+                  <div class="placeholder-content" style="min-height: 86px;"></div>
+                </div>
+              {%- endfor -%}
+            </div>
+
+            {%- unless product.empty? -%}
+              <textarea class="hide" aria-hidden="true" aria-label="Product JSON" data-variant-json>
+                {{ product.variants | json }}
+              </textarea>
+              {%- if product.options.size >= 1 -%}
+                <textarea class="hide" aria-hidden="true" aria-label="Variant JSON" data-current-variant-json>
+                  {{ current_variant | json }}
+                </textarea>
+              {%- endif -%}
+            {%- endunless -%}
+          </div>
+        </div>
+
+        {%- unless image_position == 'left' -%}
+          <div class="grid__item {{ product_image_width }} product-single__sticky">
+            {%- render 'product-images',
+              section_id: section_id,
+              product: product,
+              isModal: isModal,
+              image_position: image_position,
+              product_zoom_enable: product_zoom_enable,
+              product_zoom_size: product_zoom_size,
+              product_image_size: product_image_size,
+              thumbnail_arrows: thumbnail_arrows,
+              thumbnail_position: thumbnail_position,
+              video_looping: video_looping,
+              video_style: video_style,
+              context: context,
+              sizes: sizes,
+              sizeVariable: product_image_width,
+              fallback: fallback,
+              mobile_layout: mobile_layout,
+            -%}
+          </div>
+        {%- endunless -%}
+      </div>
+    </div>
+  </div>
+
+{% unless isModal %}
+  {% render 'sticky-add-to-cart'    %}
+{% endunless %}
+
+
+  
+ 
+
+{% if product.metafields.custom.varified_product %}
+<div id="customDrawer" class="custom-drawer">
+  <div class="drawer-overlay1"></div>
+  <div class="drawer-content">
+    <div class="drawer-header">
+      <h2>About Trufairs Verified</h2>
+      <button type="button" class="drawer-close" id="closeDrawer">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="verified-section" id="verified-info">
+<img src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Add_a_heading_9.png?v=1762789071" alt="verified content" data-hb-id="Image" height="500" width="500" class="Verified-badge">
+
+
+  <h2 class="verified-heading text-center">Trufairs Verified - Trusted Quality You Can See</h2>
+  <p class="verified-text text-center">
+    Every Trufairs Verified product is personally inspected, tested, and photographed in real-life settings—no studio edits, just honest results. We ensure accurate descriptions, reliable quality, and easy installation guides, so you can shop with total confidence.
+  </p>
+
+  <h3 class="verified-subheading text-center">See it. Trust it. Love it.</h3>
+   
+
+  <p class="verified-link text-center">
+    <a
+      href="/pages/trufairs-verified-trusted-products"
+      title="Learn More"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-learn-more"
+    >
+      Learn More
+    </a>
+  </p>
+</div>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% elsif product.metafields.custom.trusted_product %}
+
+
+
+<div id="customDrawer" class="custom-drawer">
+  <div class="drawer-overlay1"></div>
+  <div class="drawer-content">
+    <div class="drawer-header">
+      <h2>About Trufairs Trusted</h2>
+      <button type="button" class="drawer-close" id="closeDrawer">
+        <svg width="20" height="20" viewBox="0 0 20 20">
+          <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+          <div class="verified-section" id="verified-info">
+<img src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Add_a_heading_10.png?v=1762796252" alt="verified content" data-hb-id="Image" height="500" width="500" class="Verified-badge">
+
+
+  <h2 class="verified-heading text-center">Trufairs Trusted - Chosen by Real Customers</h2>
+  <p class="verified-text text-center">
+  Trufairs Trusted products earn their badge through real customer feedback and repeat sales. Our team personally follows up after delivery to learn how each item performs in real homes. Only products with consistent satisfaction and proven quality make this list.
+  </p>
+
+  
+
+  <h3 class="verified-subheading text-center">Real homes. Real feedback. Real trust.</h3>
+  
+
+  <p class="verified-link text-center">
+    <a
+      href="/pages/trufairs-verified-trusted-products"
+      title="Learn More"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn-learn-more"
+    >
+      Learn More
+    </a>
+  </p>
+</div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+       <style>
+  .delivery-date-container,
+  div#zipcode-checker-zipcode_checker_UDJEkt-modal , .delivery-date-container{
+    display: none !important;
+  }
+
+ 
+
+
+  {% if template == 'product' %}
+  body:not(.quickshop-open) .delivery-date-container,
+  body:not(.quickshop-open) div#zipcode-checker-zipcode_checker_UDJEkt-modal , .delivery-date-container{
+    display: block !important;
+  }
+
+  .delivery-date-container{
+    display: flex !important;
+  }
+
+  {% endif %}
+</style>
+
+
+
+
+
+
+ 
+
+<script>
+(function () {
+  'use strict';
+
+  // Utilities
+  function safePostMessage(iframe, message) {
+    try {
+      iframe.contentWindow.postMessage(
+        typeof message === 'string' ? message : JSON.stringify(message),
+        '*'
+      );
+    } catch (e) {}
+  }
+
+  /* ------------------------------
+     1. NATIVE <video> FIX
+     ------------------------------ */
+  function processNativeVideo(video) {
+    try {
+      video.controls = true;
+      video.muted = false;
+      video.removeAttribute && video.removeAttribute('muted');
+      if (typeof video.volume !== 'undefined') video.volume = 1;
+      video.autoplay = false; // prevent autoplay
+      video.pause();          // ensure stopped
+    } catch (e) {}
+  }
+
+  /* ------------------------------
+     2. YOUTUBE FIX
+     ------------------------------ */
+  function ensureYouTubeApiEnabled(iframe) {
+    try {
+      let src = iframe.getAttribute('src') || '';
+      if (!/enablejsapi=1/.test(src)) {
+        const sep = src.includes('?') ? '&' : '?';
+        iframe.setAttribute('src', src + sep + 'enablejsapi=1');
+      }
+
+      // allow sound, do NOT autoplay
+      let allow = iframe.getAttribute('allow') || '';
+      iframe.setAttribute(
+        'allow',
+        (allow + '; encrypted-media').trim()
+      );
+    } catch (e) {}
+  }
+
+  function processYouTubeIframe(iframe) {
+    try {
+      ensureYouTubeApiEnabled(iframe);
+
+      // only unmute — DO NOT PLAY
+      const unmute = { event: 'command', func: 'unMute', args: [] };
+      const setVol = { event: 'command', func: 'setVolume', args: [100] };
+
+      const send = () => {
+        safePostMessage(iframe, unmute);
+        safePostMessage(iframe, setVol);
+      };
+
+      if (iframe.contentWindow) {
+        setTimeout(send, 300);
+        setTimeout(send, 1200);
+      } else {
+        iframe.addEventListener('load', () => {
+          setTimeout(send, 300);
+          setTimeout(send, 1200);
+        });
+      }
+    } catch (e) {}
+  }
+
+  /* ------------------------------
+     3. VIMEO FIX
+     ------------------------------ */
+  function processVimeoIframe(iframe) {
+    try {
+      // Allow audio, no autoplay
+      const allow = iframe.getAttribute('allow') || '';
+      iframe.setAttribute(
+        'allow',
+        (allow + '; encrypted-media').trim()
+      );
+
+      // Set volume only — DO NOT PLAY
+      const sendVol = () =>
+        safePostMessage(iframe, { method: 'setVolume', value: 1 });
+
+      if (iframe.contentWindow) {
+        setTimeout(sendVol, 300);
+        setTimeout(sendVol, 1200);
+      } else {
+        iframe.addEventListener('load', () => {
+          setTimeout(sendVol, 300);
+          setTimeout(sendVol, 1200);
+        });
+      }
+    } catch (e) {}
+  }
+
+  /* ------------------------------
+     4. MAIN PROCESSOR
+     ------------------------------ */
+  function processIframe(iframe) {
+    try {
+      iframe.setAttribute('data-controls-forced', 'true');
+
+      const src = (iframe.getAttribute('src') || '').toLowerCase();
+      const dataSrc = (iframe.getAttribute('data-src') || '').toLowerCase();
+
+      if (src.includes('youtube') || dataSrc.includes('youtube')) {
+        processYouTubeIframe(iframe);
+      } else if (src.includes('vimeo') || dataSrc.includes('vimeo')) {
+        processVimeoIframe(iframe);
+      }
+    } catch (e) {}
+  }
+
+  /* ------------------------------
+     5. SCANNER
+     ------------------------------ */
+  function scan(root) {
+    root = root || document;
+
+    root.querySelectorAll('video').forEach(processNativeVideo);
+    root.querySelectorAll('iframe').forEach(processIframe);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => scan(document));
+  } else {
+    scan(document);
+  }
+
+  /* ------------------------------
+     6. WATCH FOR NEW VIDEOS
+     ------------------------------ */
+  new MutationObserver(m => {
+    m.forEach(item => {
+      item.addedNodes.forEach(node => {
+        if (node.nodeType !== 1) return;
+        if (node.tagName === 'VIDEO') processNativeVideo(node);
+        else if (node.tagName === 'IFRAME') processIframe(node);
+        else scan(node);
+      });
+    });
+  }).observe(document.body, { childList: true, subtree: true });
+
+  window.addEventListener('load', () =>
+    setTimeout(() => scan(document), 300)
+  );
+})();
+</script> 
+{% if isModal %}
+<style>
+.discount-badge {
+  
+    padding: 14px !important;
+ 
+}
+
+   .modal--quick-shop  .discount-section-{{ section.id }} .coupon-code-container {
+   
+      padding: 33px 20px !important;
+    background: #e2c283;
+    
+  }
+
+.payment-buttons {
+    display: flex !important;
+    align-items: flex-start;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+.add-to-cart.btn--secondary {
+    width: 75% !important;
+}
+.shopify-payment-button {
+    width: 100% !important;
+}
+.shopify-payment-button {
+    margin-top: 0px !important;
+}
+
+
+
+@media (max-width: 480px) {
+  .discount-badge  {
+    
+    padding: 17px 7PX;
+}
+
+  .discount-badge  .discount-message-bold {
+    font-weight:700;
+    font-size: 15px;
+}
+    .coupon-code-container {
+    padding: 33px 5px !important;
+    
+}
+}
+
+</style>
+{% endif %}
+
+<style>
+@media screen and (min-width: 768px) {
+
+  
+.product__quantity {
+    width: 17%;
+    display: inline-block;
+}
+
+.payment-buttons {
+    display: flex !important;
+    align-items: flex-start;
+   justify-content:space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+
+.add-to-cart.btn--secondary {
+    width: 75% !important;
+}
+.shopify-payment-button {
+    width: 100% !important;
+}
+
+
+
+}
+
+  {% if product.handle == 'led-makeup-mirror' %}
+.page-content--product  .page-width {
+   max-width:1520px; 
+}
+
+  {% endif %}
+</style>
+
+{{ 'product-tem.js' | asset_url | script_tag }}
+
+{% if product.metafields.custom.varified_product  and product.metafields.custom.verified_aprroved %}
+{% render 'verified-drawer' %}
+
+{% elsif product.metafields.custom.trusted_product  %}
+{% render 'verified-drawer' %}
+
+{% else %}
+{% endif %}
+{% render 'policy-modal' %}
+{% render 'warranty-disclosure' %}
+</div>
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>

@@ -1,0 +1,375 @@
+<div class="scrolling-text-image-section">
+  <div class="scrolling-container">
+    <div class="scrolling-content">
+      {% for block in section.blocks %}
+        <div class="scroll-item" {{ block.shopify_attributes }}>
+          {% if block.settings.image %}
+            <div class="scroll-image">
+              {{ block.settings.image | image_url: width: 120 | image_tag: 
+                 alt: block.settings.image.alt, 
+                 loading: 'lazy',
+                 width: '120',
+                 height: '80' }}
+            </div>
+          {% endif %}
+          {% if block.settings.text != blank %}
+            <div class="scroll-text">
+              {{ block.settings.text }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      
+      <!-- Duplicate content for seamless loop -->
+      {% for block in section.blocks %}
+        <div class="scroll-item">
+          {% if block.settings.image %}
+            <div class="scroll-image">
+              {{ block.settings.image | image_url: width: 120 | image_tag: 
+                 alt: block.settings.image.alt, 
+                 loading: 'lazy',
+                 width: '120',
+                 height: '80' }}
+            </div>
+          {% endif %}
+          {% if block.settings.text != blank %}
+            <div class="scroll-text">
+              {{ block.settings.text }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+.scrolling-text-image-section {
+  background-color: {{ section.settings.background_color | default: '#8B4513' }};
+  padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.scrolling-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.scrolling-content {
+  display: inline-flex;
+  align-items: center;
+  animation: scroll-horizontal {{ section.settings.scroll_speed | default: 30 }}s linear infinite;
+  gap: {{ section.settings.item_spacing | default: 60 }}px;
+}
+
+.scroll-item {
+  display: inline-flex;
+  align-items: center;
+  gap: {{ section.settings.text_image_gap | default: 20 }}px;
+  flex-shrink: 0;
+}
+
+.scroll-text {
+  color: {{ section.settings.text_color | default: '#ffffff' }};
+  font-size: {{ section.settings.font_size | default: 36 }}px;
+  font-weight: {{ section.settings.font_weight | default: 'bold' }};
+  font-family: {{ section.settings.font_family | default: 'Arial, sans-serif' }};
+  white-space: nowrap;
+}
+
+.scroll-image {
+  flex-shrink: 0;
+}
+
+.scroll-image img {
+  border-radius: {{ section.settings.image_border_radius | default: 15 }}px;
+  object-fit: cover;
+ width: 160px;
+    height: 110px;
+}
+ 
+
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .scroll-text {
+    font-size: {{ section.settings.mobile_font_size | default: 24 }}px;
+  }
+  
+.scroll-image img {
+    max-width: 100px;
+    height: 70px;
+}
+  
+  .scroll-item {
+    gap: {{ section.settings.mobile_text_image_gap | default: 15 }}px;
+  }
+  
+  .scrolling-content {
+    gap: {{ section.settings.mobile_item_spacing | default: 40 }}px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .scroll-text {
+    font-size: {{ section.settings.mobile_small_font_size | default: 20 }}px;
+  }
+  
+ 
+  
+  .scroll-item {
+    gap: 10px;
+  }
+  
+  .scrolling-content {
+    gap: 30px;
+  }
+}
+
+/* Pause animation on hover */
+.scrolling-content:hover {
+  animation-play-state: {{ section.settings.pause_on_hover | default: true }};
+}
+</style>
+{% schema %}
+{
+  "name": "Scrolling Text & Image",
+  "tag": "section",
+  "class": "section-scrolling-text-image",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#8B4513"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Animation Settings"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Scroll Speed",
+      "default": 30,
+      "info": "Lower values = faster scrolling"
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on Hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text Settings"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size (Desktop)",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size (Mobile)",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_small_font_size",
+      "min": 12,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Font Size (Small Mobile)",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font Weight",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "bold",
+          "label": "Bold"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "300",
+          "label": "Light"
+        }
+      ],
+      "default": "bold"
+    },
+    {
+      "type": "text",
+      "id": "font_family",
+      "label": "Font Family",
+      "default": "Arial, sans-serif",
+      "info": "Use CSS font family format"
+    },
+    {
+      "type": "header",
+      "content": "Spacing Settings"
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 20,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Space Between Items (Desktop)",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_item_spacing",
+      "min": 15,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Space Between Items (Mobile)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_image_gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap Between Text & Image (Desktop)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_image_gap",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap Between Text & Image (Mobile)",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Image Border Radius",
+      "default": 15
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_image_item",
+      "name": "Text & Image Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Your Text Here"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling Text & Image",
+      "blocks": [
+        {
+          "type": "text_image_item",
+          "settings": {
+            "text": "Quality Furniture"
+          }
+        },
+        {
+          "type": "text_image_item",
+          "settings": {
+            "text": "Modern & Elegant"
+          }
+        },
+        {
+          "type": "text_image_item",
+          "settings": {
+            "text": "Premium Design"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

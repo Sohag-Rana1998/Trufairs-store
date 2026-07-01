@@ -1,0 +1,561 @@
+ 
+
+{%- liquid
+  assign per_row = section.settings.per_row
+  assign total_slides = section.blocks.size
+  assign carousel_id = 'carousel-' | append: section.id
+-%}
+
+{%- if section.settings.divider -%}<div class="section--divider">{%- endif -%}
+
+<style>
+/* ======================================================
+   COLLECTION CAROUSEL – SCOPED PER SECTION INSTANCE
+   Section ID: {{ carousel_id }}
+   ====================================================== */
+
+#{{ carousel_id }} {
+  --per-row: {{ per_row }};
+  --gap: clamp(0.75rem, 2vw, 2rem);
+  --radius: {{ section.settings.border_radius | default: 10 }}%;
+  padding: clamp(2rem, 4vw, 4rem) 0;
+  background: {{ section.settings.background_color | default: '#ffffff' }};
+  contain: layout style;
+}
+
+/* ===== Header ===== */
+#{{ carousel_id }} .collection-carousel__header {
+  text-align: left;
+  margin-bottom: clamp(1.5rem, 3vw, 3rem);
+}
+
+#{{ carousel_id }} .collection-carousel__title {
+  color: {{ section.settings.heading_color | default: '#000000' }};
+  text-align:center !important;
+}
+
+#{{ carousel_id }} .collection-carousel__subtitle {
+  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  color: {{ section.settings.subtitle_color | default: '#666666' }};
+  line-height: 1.5;
+}
+
+/* ===== Wrapper ===== */
+#{{ carousel_id }} .carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ======================================================
+   MOBILE – FLEX + HORIZONTAL SCROLL
+   ====================================================== */
+#{{ carousel_id }} .carousel-grid {
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 0.5rem 0 1.5rem;
+}
+
+#{{ carousel_id }} .carousel-grid::-webkit-scrollbar {
+  display: none;
+}
+
+#{{ carousel_id }} .carousel-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: calc((88% - var(--gap)) / 2);
+  max-width: 250px;
+}
+
+
+ 
+ 
+
+
+
+/* ======================================================
+   TABLET
+   ====================================================== */
+@media (min-width: 481px) and (max-width: 767px) {
+  #{{ carousel_id }} .carousel-item {
+    width: calc((100% - (var(--gap) * 2)) / 3);
+  }
+}
+
+/* ======================================================
+   DESKTOP – CSS GRID
+   ====================================================== */
+@media (min-width: 768px) {
+  #{{ carousel_id }} .carousel-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--per-row), 1fr);
+    overflow: visible;
+    scroll-snap-type: none;
+    padding: 0;
+  }
+
+  #{{ carousel_id }} .carousel-item {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Small Desktop */
+@media (min-width: 768px) and (max-width: 1023px) {
+  #{{ carousel_id }} .carousel-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Medium Desktop */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  #{{ carousel_id }} .carousel-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+  #{{ carousel_id }} .carousel-grid {
+    grid-template-columns: repeat(var(--per-row), 1fr);
+  }
+}
+
+/* ======================================================
+   ITEM STRUCTURE
+   ====================================================== */
+#{{ carousel_id }} .carousel-inner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#{{ carousel_id }} .carousel-image-wrapper {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: {{ section.settings.placeholder_bg | default: '#f5f5f5' }};
+  margin-bottom: 0.75rem;
+}
+
+#{{ carousel_id }} .carousel-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#{{ carousel_id }} .carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ======================================================
+   PLACEHOLDER
+   ====================================================== */
+#{{ carousel_id }} .carousel-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  width: 100%;
+  height: 100%;
+}
+
+#{{ carousel_id }} .carousel-placeholder svg {
+  width: 40%;
+  height: 40%;
+  opacity: 0.3;
+}
+
+/* ======================================================
+   TEXT OVER IMAGE
+   ====================================================== */
+#{{ carousel_id }} .carousel-content-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 1rem;
+}
+
+#{{ carousel_id }} .carousel-content-center h3 {
+  color: {{ section.settings.overlay_text_color | default: '#ffffff' }};
+  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: {{ section.settings.overlay_bg | default: 'rgba(0,0,0,0.6)' }};
+  border-radius: 0.5rem;
+  backdrop-filter: blur(8px);
+}
+
+/* ======================================================
+   TEXT BELOW IMAGE
+   ====================================================== */
+#{{ carousel_id }} .carousel-content-below {
+  text-align: center;
+}
+
+#{{ carousel_id }} .carousel-content-below h3 {
+  font-size: clamp(0.8125rem, 1.5vw, 0.9375rem);
+  font-weight: 600;
+  margin: 0 0 0.375rem;
+}
+
+#{{ carousel_id }} .carousel-content-below a {
+  color: {{ section.settings.title_color | default: '#000000' }};
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+#{{ carousel_id }} .carousel-count {
+  font-size: 0.75rem;
+  color: {{ section.settings.count_color | default: '#666666' }};
+}
+
+/* ======================================================
+   HOVER OVERLAY
+   ====================================================== */
+#{{ carousel_id }} .carousel-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#{{ carousel_id }} .carousel-overlay span {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 1.25rem;
+  border: 2px solid #fff;
+  border-radius: 0.375rem;
+}
+
+/* Desktop Hover Only */
+@media (hover: hover) and (min-width: 768px) {
+  #{{ carousel_id }} .carousel-link:hover .carousel-image {
+    transform: scale(1.05);
+  }
+
+  #{{ carousel_id }} .carousel-link:hover .carousel-overlay {
+    opacity: 1;
+  }
+
+  #{{ carousel_id }} .carousel-content-below a:hover {
+    color: {{ section.settings.title_hover | default: '#007bff' }};
+  }
+}
+
+/* ======================================================
+   ACCESSIBILITY
+   ====================================================== */
+@media (prefers-reduced-motion: reduce) {
+  #{{ carousel_id }} * {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+
+
+<section class="collection-carousel " id="{{ carousel_id }}" aria-label="Collection carousel">
+  {%- if section.settings.title != blank or section.settings.subtitle != blank -%}
+    <header class="collection-carousel__header page-width container">
+      {%- if section.settings.title != blank -%}
+        <h2 class="collection-carousel__title section-header__title ">{{ section.settings.title }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <p class="collection-carousel__subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+    </header>
+  {%- endif -%}
+  
+  <div class="carousel-wrapper page-width container">
+    <div class="carousel-grid" role="list">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign collection = collections[block.settings.collection]
+          assign custom_title = block.settings.title
+          assign custom_image = block.settings.custom_image
+          assign display_image = custom_image | default: collection.featured_image
+          assign display_title = custom_title | default: collection.title
+        -%}
+        
+        <article class="carousel-item" {{ block.shopify_attributes }} role="listitem">
+          <div class="carousel-inner">
+            <div class="carousel-image-wrapper">
+              {%- if display_image -%}
+                <a href="{{ collection.url | default: '#' }}" class="carousel-link" aria-label="{{ display_title }}">
+             {%- liquid
+  assign img_alt = display_image.alt | default: display_title | escape
+ 
+  assign desktop_size = 250
+-%}
+
+{{ display_image | image_url: width: desktop_size | image_tag:
+  class: 'carousel-image',
+  alt: img_alt,
+  sizes: '(max-width: 480px) 200px, (max-width: 768px) 250px, 400px',
+  widths: '200, 250, 400, 500',
+  loading: 'lazy',
+  decoding: 'async',
+  width: 250,
+  height: 250,
+  style: 'max-width:100%;'
+}}
+
+
+
+                  
+                  {%- if section.settings.text_center -%}
+                    <div class="carousel-content-center">
+                      <h3>{{ display_title }}</h3>
+                    </div>
+                  {%- endif -%}
+                  
+                  {%- if section.settings.show_overlay -%}
+                    <div class="carousel-overlay">
+                      <span>Shop Now</span>
+                    </div>
+                  {%- endif -%}
+                </a>
+              {%- else -%}
+                <a href="{{ collection.url | default: '#' }}" class="carousel-link carousel-placeholder" aria-label="{{ display_title }}">
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                </a>
+              {%- endif -%}
+            </div>
+            
+            {%- if section.settings.text_below -%}
+              <div class="carousel-content-below">
+                <h3>
+                  <a href="{{ collection.url | default: '#' }}">{{ display_title }}</a>
+                </h3>
+                {%- if section.settings.show_product_count and collection.all_products_count > 0 -%}
+                  <p class="carousel-count">
+                    {{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}
+                  </p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{%- if section.settings.divider -%}</div>{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection Carousel",
+  "tag": "section",
+  "class": "collection-carousel-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "  Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Shop by Collection"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "per_row",
+      "label": "Items per row (Large Desktop 1440px+)",
+      "default": 8,
+      "min": 4,
+      "max": 10,
+      "step": 1,
+      "info": "  Mobile: 2 (Flex Scroll) | Tablet: 3-4 | Desktop 768-1023px: 4 | Desktop 1024-1439px: 6 | Large Desktop: Your Setting"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 10,
+      "unit": "%"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show 'Shop Now' overlay on hover",
+      "default": true,
+      "info": "Desktop only - native hover effect"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "Show product count",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "  Text Display"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_center",
+      "label": "Show text on image (overlay)",
+      "default": false,
+      "info": "Text appears over the image"
+    },
+    {
+      "type": "checkbox",
+      "id": "text_below",
+      "label": "Show text below image",
+      "default": true,
+      "info": "Text appears underneath the image"
+    },
+    {
+      "type": "header",
+      "content": "  Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg",
+      "label": "Image placeholder",
+      "default": "#f5f5f5",
+      "info": "  Prevents layout shift"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Collection title",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "title_hover",
+      "label": "Title hover color",
+      "default": "#007bff"
+    },
+    {
+      "type": "color",
+      "id": "count_color",
+      "label": "Product count color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "overlay_text_color",
+      "label": "Overlay text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color_background",
+      "id": "overlay_bg",
+      "label": "Overlay background",
+      "default": "rgba(0,0,0,0.6)"
+    },
+    {
+      "type": "header",
+      "content": "  Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "divider",
+      "label": "Show section divider",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom title",
+          "info": "Leave blank to use collection title"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom image",
+          "info": "  400x400px WebP recommended | Leave blank to use collection image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Collection Carousel",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}

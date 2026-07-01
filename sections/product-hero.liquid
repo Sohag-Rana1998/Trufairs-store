@@ -1,0 +1,1605 @@
+{% comment %}
+  Section: Product Hero Section
+  Description: High-converting hero section with floating product image, gradient background, and trust badges
+{% endcomment %}
+
+{%- style -%}
+  #Hero-{{ section.id }} {
+    --hero-bg-start: {{ section.settings.gradient_start }};
+    --hero-bg-end: {{ section.settings.gradient_end }};
+    --hero-text-color: {{ section.settings.text_color }};
+    --hero-accent-color: {{ section.settings.accent_color }};
+    --hero-cta-bg: {{ section.settings.cta_bg_color }};
+    --hero-cta-text: {{ section.settings.cta_text_color }};
+    --hero-padding-top: {{ section.settings.padding_top }}px;
+    --hero-padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_price = current_variant.price | money
+  assign compare_price = current_variant.compare_at_price | money
+  
+  if current_variant.compare_at_price > current_variant.price
+    assign savings_amount = current_variant.compare_at_price | minus: current_variant.price
+    assign savings_percentage = savings_amount | times: 100.0 | divided_by: current_variant.compare_at_price | round
+  endif
+-%}
+
+<section id="Hero-{{ section.id }}" class="product-hero">
+  <div class="product-hero__background">
+    {%- if section.settings.background_image != blank -%}
+      <img
+        src="{{ section.settings.background_image | image_url: width: 1920 }}"
+        alt="{{ section.settings.background_image.alt | escape }}"
+        class="product-hero__bg-image"
+       
+        fetchpriority="high"
+        width="1920"
+        height="1080"
+      >
+    {%- endif -%}
+  </div>
+
+  <div class="product-hero__container page-width container">
+    <div class="product-hero__content">
+      <!-- Left Column: Text Content -->
+      <div class="product-hero__text-column">
+        {%- if section.settings.badge_text != blank -%}
+          <div class="product-hero__badge">
+            <span class="badge-icon1">
+              <svg width="25px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <rect id="view-box" width="24" height="24" fill="none"/>
+                <path d="M15.791,19.5,10.262,16.6,4.732,19.5a.75.75,0,0,1-1.088-.79L4.7,12.557.228,8.2a.75.75,0,0,1,.415-1.28l6.182-.9L9.589.419a.75.75,0,0,1,1.345,0l2.764,5.6,6.182.9A.751.751,0,0,1,20.3,8.2l-4.473,4.36,1.056,6.157a.748.748,0,0,1-1.088.79Z" transform="translate(1.739 1.25)" fill="#141124"/>
+              </svg>
+            </span>
+            <span class="badge-text">{{ section.settings.badge_text }}</span>
+          </div>
+        {%- endif -%}
+
+        <h2 class="product-hero__headline">
+          {{ section.settings.headline | default: product.title }}
+        </h2>
+
+        <p class="product-hero__subheadline">
+          {{ section.settings.subheadline }}
+        </p>
+
+        <p class="product-hero__description">
+          {{ section.settings.description | default: product.description }}
+        </p>
+
+        <!-- Price Display -->
+        <div class="product-hero__price-block">
+          <span class="price-current">{{ product_price }}</span>
+          {%- if current_variant.compare_at_price > current_variant.price -%}
+            <span class="price-compare">{{ compare_price }}</span>
+            <span class="price-savings">Save {{ savings_percentage }}%</span>
+          {%- endif -%}
+        </div>
+
+        <!-- Countdown Timer -->
+        {%- if section.settings.show_countdown -%}
+          <div class="product-hero__countdown" data-countdown="{{ section.settings.countdown_date }}">
+            <span class="countdown-label">{{ section.settings.countdown_label }}</span>
+            <div class="countdown-timer">
+              <div class="countdown-item">
+                <span class="countdown-value" data-days>00</span>
+                <span class="countdown-unit">Days</span>
+              </div>
+              <div class="countdown-separator">:</div>
+              <div class="countdown-item">
+                <span class="countdown-value" data-hours>00</span>
+                <span class="countdown-unit">Hours</span>
+              </div>
+              <div class="countdown-separator">:</div>
+              <div class="countdown-item">
+                <span class="countdown-value" data-minutes>00</span>
+                <span class="countdown-unit">Mins</span>
+              </div>
+              <div class="countdown-separator">:</div>
+              <div class="countdown-item">
+                <span class="countdown-value" data-seconds>00</span>
+                <span class="countdown-unit">Secs</span>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <!-- CTA Button with Add to Cart -->
+        <div class="product-hero__cta-wrapper">
+          <form method="post" action="{{ routes.cart_add_url }} " id="product-hero-form-{{ section.id }}" accept-charset="UTF-8" class="product-hero__form" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="{{ current_variant.id }}" />
+            <input type="hidden" name="quantity" value="1" />
+            
+            <button 
+              type="submit" 
+              name="add"
+              class="product-hero__cta-button"
+              {% unless current_variant.available %}disabled{% endunless %}
+            >
+              <span class="cta-text">
+                {% if current_variant.available %}
+                  {{ section.settings.cta_text | default: 'Add to Cart' }}
+                {% else %}
+                  Sold Out
+                {% endif %}
+              </span>
+              <span class="cta-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4.167 10h11.666M10 4.167L15.833 10 10 15.833" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+          </form>
+
+          {%- if section.settings.secondary_cta_text != blank -%}
+            <a href="{{ section.settings.secondary_cta_link }}" class="product-hero__secondary-cta">
+              {{ section.settings.secondary_cta_text }}
+            </a>
+          {%- endif -%}
+        </div>
+
+        <!-- Trust Badges -->
+        <div class="product-hero__trust-badges">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'trust_badge' -%}
+              <div class="trust-badge" {{ block.shopify_attributes }}>
+                <span class="trust-badge__icon">
+                  {%- if block.settings.badge_icon == 'shipping' -%}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="1" y="3" width="15" height="13"></rect>
+                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                  {%- elsif block.settings.badge_icon == 'guarantee' -%}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                      <polyline points="9 12 11 14 15 10"></polyline>
+                    </svg>
+                  {%- elsif block.settings.badge_icon == 'secure' -%}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                  {%- elsif block.settings.badge_icon == 'support' -%}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  {%- else -%}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  {%- endif -%}
+                </span>
+                <span class="trust-badge__text">{{ block.settings.badge_text }}</span>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        <!-- Social Proof -->
+        {%- if section.settings.show_social_proof -%}
+          <div class="product-hero__social-proof">
+            <div class="social-proof__avatars">
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'avatar_image' -%}
+                  {%- if block.settings.avatar_image != blank -%}
+                    <div class="avatar-circle avatar-circle--image">
+                      <img 
+                        src="{{ block.settings.avatar_image | image_url: width: 72 }}" 
+                        alt="Customer avatar"
+                        width="36"
+                        height="36"
+                       
+                      >
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+            <div class="social-proof__text">
+              <div class="social-proof__stars">
+                {%- for i in (1..5) -%}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFB800" stroke="#FFB800" stroke-width="1">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                {%- endfor -%}
+              </div>
+              <span class="social-proof__count">{{ section.settings.social_proof_text }}</span>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Right Column: Product Image -->
+      <div class="product-hero__image-column">
+        <div class="product-hero__image-wrapper">
+          {%- if section.settings.product_image != blank -%}
+            <img
+              src="{{ section.settings.product_image | image_url: width: 800 }}"
+              alt="{{ section.settings.product_image.alt | default: product.title | escape }}"
+              class="product-hero__product-image"
+             
+              fetchpriority="high"
+              width="800"
+              height="800"
+            >
+          {%- elsif product.featured_image -%}
+            <img
+              src="{{ product.featured_image | image_url: width: 800 }}"
+              alt="{{ product.featured_image.alt | default: product.title | escape }}"
+              class="product-hero__product-image"
+             
+              fetchpriority="high"
+              width="800"
+              height="800"
+            >
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'product-hero__placeholder-image' }}
+          {%- endif -%}
+
+          <!-- Floating Feature Callouts -->
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'feature_callout' -%}
+              <div 
+                class="feature-callout feature-callout--{{ block.settings.position }}" 
+                {{ block.shopify_attributes }}
+                style="--callout-top: {{ block.settings.top_position }}%; --callout-left: {{ block.settings.left_position }}%;"
+              >
+                <div class="feature-callout__dot"></div>
+                <div class="feature-callout__content">
+                  <span class="feature-callout__label">{{ block.settings.label }}</span>
+                  <span class="feature-callout__text">{{ block.settings.text }}</span>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+
+          <!-- Discount Badge -->
+          {%- if section.settings.show_discount_badge and savings_percentage -%}
+            <div class="product-hero__discount-badge">
+              <span class="discount-percentage">{{ savings_percentage }}%</span>
+              <span class="discount-label">OFF</span>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <!-- Mini Gallery Thumbnails -->
+        {%- if section.settings.show_thumbnails -%}
+          <div class="product-hero__thumbnails">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'thumbnail_image' -%}
+                <button 
+                  class="thumbnail-item {% if forloop.first %}thumbnail-item--active{% endif %}"
+                  data-thumbnail-index="{{ forloop.index }}"
+                  {{ block.shopify_attributes }}
+                >
+                  <img
+                    src="{{ block.settings.thumbnail | image_url: width: 100 }}"
+                    alt="{{ block.settings.thumbnail.alt | escape }}"
+                    width="80"
+                    height="80"
+                   
+                  >
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  {%- if section.settings.show_scroll_indicator -%}
+    <div class="product-hero__scroll-indicator">
+      <span class="scroll-text">Scroll to explore</span>
+      <div class="scroll-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+<style>
+  /* ============================================
+     PRODUCT HERO SECTION STYLES
+     ============================================ */
+
+  .product-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-top: var(--hero-padding-top, 80px);
+    padding-bottom: var(--hero-padding-bottom, 80px);
+    overflow: hidden;
+  }
+
+  /* Background Styles */
+  .product-hero__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .product-hero__bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.15;
+  }
+
+  /* Container */
+  .product-hero__container {
+    position: relative;
+    z-index: 2;
+ width:100%;
+     
+    margin: 0 auto;
+    
+  }
+
+  .product-hero__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+  }
+
+  /* ============================================
+     LEFT COLUMN: TEXT CONTENT
+     ============================================ */
+
+  .product-hero__text-column {
+    max-width: 660px;
+  }
+
+  /* Badge */
+  .product-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #FFF8E7 0%, #FFF0D4 100%);
+    border: 1px solid #E8D5B5;
+    border-radius: 50px;
+    margin-bottom: 10px;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .badge-icon1 {
+    display: flex;
+    color: #C9A962;
+  }
+
+  .badge-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #8B7355;
+    letter-spacing: 0.5px;
+  }
+
+  /* Headline */
+  .product-hero__headline {
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--hero-text-color, #2D2D2D);
+    margin: 0 0 8px 0;
+    animation: fadeInUp 0.6s ease-out 0.1s backwards;
+    text-align: justify;
+  }
+
+  /* Subheadline */
+  .product-hero__subheadline {
+    font-size: clamp(18px, 2.5vw, 20px);
+    font-weight: 500;
+    color: var(--hero-accent-color, #5C4033);
+    margin: 0 0 8px 0;
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
+    text-align: justify;
+  }
+
+  /* Description */
+  .product-hero__description {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #666666;
+    margin: 0 0 8px 0;
+    animation: fadeInUp 0.6s ease-out 0.3s backwards;
+    text-align: justify;
+  }
+
+  /* Price Block */
+  .product-hero__price-block {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    animation: fadeInUp 0.6s ease-out 0.35s backwards;
+  }
+
+  .price-current {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--hero-text-color, #2D2D2D);
+  }
+
+  .price-compare {
+    font-size: 20px;
+    color: #999999;
+    text-decoration: line-through;
+  }
+
+  .price-savings {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #E8F5E9;
+    color: #2E7D32;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+  }
+
+  /* Countdown Timer */
+  .product-hero__countdown {
+    background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEE 100%);
+    border: 1px solid #FFCDD2;
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.6s ease-out 0.4s backwards;
+  }
+
+  .countdown-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #C62828;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .countdown-timer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 50px;
+  }
+
+  .countdown-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #C62828;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown-unit {
+    font-size: 11px;
+    color: #666666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .countdown-separator {
+    font-size: 24px;
+    font-weight: 700;
+    color: #C62828;
+    margin-bottom: 18px;
+  }
+
+  /* CTA Wrapper */
+  .product-hero__cta-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    animation: fadeInUp 0.6s ease-out 0.45s backwards;
+  }
+
+  .product-hero__form {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  /* Primary CTA Button */
+  .product-hero__cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 18px 36px;
+    background: var(--hero-cta-bg, linear-gradient(135deg, #E86A33 0%, #D55A25 100%));
+    color: var(--hero-cta-text, #FFFFFF);
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(232, 106, 51, 0.35);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-hero__cta-button:disabled {
+    background: #CCCCCC;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .product-hero__cta-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .product-hero__cta-button:not(:disabled):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(232, 106, 51, 0.45);
+  }
+
+  .product-hero__cta-button:not(:disabled):hover::before {
+    opacity: 1;
+  }
+
+  .product-hero__cta-button:active {
+    transform: translateY(-1px);
+  }
+
+  .cta-icon {
+    display: flex;
+    transition: transform 0.3s ease;
+  }
+
+  .product-hero__cta-button:hover .cta-icon {
+    transform: translateX(4px);
+  }
+
+  /* Secondary CTA */
+  .product-hero__secondary-cta {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--hero-accent-color, #5C4033);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.3s ease;
+  }
+
+  .product-hero__secondary-cta:hover {
+    color: var(--hero-text-color, #2D2D2D);
+  }
+
+  .product-hero__trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+        margin: 25px 0px;
+    animation: fadeInUp 0.6s ease-out 0.5s backwards;
+  }
+
+.trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #daefdb;
+  
+    padding: 7px;
+    border-radius: 11px;
+}
+
+  .trust-badge__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #E8F5E9;
+    border-radius: 50%;
+    color: #4CAF50;
+  }
+
+  .trust-badge__text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555555;
+  }
+
+  /* Social Proof */
+  .product-hero__social-proof {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    animation: fadeInUp 0.6s ease-out 0.55s backwards;
+  }
+
+  .social-proof__avatars {
+    display: flex;
+  }
+
+  .avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555555;
+    margin-left: -10px;
+    overflow: hidden;
+  }
+
+  .avatar-circle:first-child {
+    margin-left: 0;
+  }
+
+  .avatar-circle--image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .social-proof__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .social-proof__stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .social-proof__count {
+    font-size: 13px;
+    color: #666666;
+  }
+
+  /* ============================================
+     RIGHT COLUMN: PRODUCT IMAGE
+     ============================================ */
+
+  .product-hero__image-column {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInRight 0.8s ease-out 0.3s backwards;
+  }
+
+  .product-hero__image-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-left:auto;
+  }
+
+  .product-hero__product-image {
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.12);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .product-hero__image-wrapper:hover .product-hero__product-image {
+    transform: scale(1.02) translateY(-5px);
+  }
+
+  .product-hero__placeholder-image {
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    background: #F5F5F5;
+  }
+
+  /* Discount Badge */
+  .product-hero__discount-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #C62828 0%, #B71C1C 100%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(198, 40, 40, 0.4);
+    animation: pulse 2s infinite;
+  }
+
+  .discount-percentage {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .discount-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  /* Feature Callouts */
+  .feature-callout {
+    position: absolute;
+    top: var(--callout-top, 50%);
+    left: var(--callout-left, 50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  .feature-callout--right {
+    flex-direction: row-reverse;
+  }
+
+  .feature-callout--right .feature-callout__content {
+    text-align: right;
+  }
+
+  .feature-callout__dot {
+    width: 16px;
+    height: 16px;
+    background: #FFFFFF;
+    border: 3px solid var(--hero-accent-color, #5C4033);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(92, 64, 51, 0.2);
+    animation: dotPulse 2s infinite;
+    flex-shrink: 0;
+  }
+
+  .feature-callout__content {
+    background: #FFFFFF;
+    padding: 10px 14px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px
+);
+    animation: fadeInUp 0.6s ease-out 0.5s backwards;
+  }
+
+  .feature-callout--right .feature-callout__content {
+    transform: translateX(10px);
+  }
+
+  .product-hero__image-wrapper:hover .feature-callout__content {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .feature-callout__label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--hero-accent-color, #5C4033);
+    margin-bottom: 2px;
+  }
+
+  .feature-callout__text {
+    font-size: 11px;
+    color: #888888;
+  }
+
+  /* Thumbnails */
+  .product-hero__thumbnails {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .thumbnail-item {
+    width: 70px;
+    height: 70px;
+    padding: 4px;
+    background: #FFFFFF;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .thumbnail-item:hover,
+  .thumbnail-item--active {
+    border-color: var(--hero-accent-color, #5C4033);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .thumbnail-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  /* Scroll Indicator */
+  .product-hero__scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: bounce 2s infinite;
+    z-index: 2;
+  }
+
+  .scroll-text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #888888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .scroll-arrow {
+    color: #888888;
+  }
+
+  /* ============================================
+     ANIMATIONS
+     ============================================ */
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes dotPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 4px rgba(92, 64, 51, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(92, 64, 51, 0.1);
+    }
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateX(-50%) translateY(0);
+    }
+    40% {
+      transform: translateX(-50%) translateY(-10px);
+    }
+    60% {
+      transform: translateX(-50%) translateY(-5px);
+    }
+  }
+
+  /* ============================================
+     RESPONSIVE STYLES
+     ============================================ */
+
+  @media screen and (max-width: 1024px) {
+    .product-hero__content {
+      gap: 20px;
+    }
+
+    .product-hero__headline {
+      font-size: clamp(32px, 4.5vw, 48px);
+    }
+
+    .feature-callout {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+ .product-hero {
+    min-height: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+    .product-hero__content {
+      grid-template-columns: 1fr;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .product-hero__text-column {
+      max-width: 100%;
+      order: 2;
+    }
+
+    .product-hero__image-column {
+      order: 1;
+    }
+
+    .product-hero__badge {
+      justify-content: flex-start;
+    }
+
+    .product-hero__headline,
+    .product-hero__subheadline,
+    .product-hero__description {
+      text-align: left;
+    }
+
+    .product-hero__price-block {
+      justify-content: flex-start;
+    }
+
+    .product-hero__countdown {
+      text-align: left;
+    }
+
+    .countdown-timer {
+      justify-content: flex-start;
+    }
+
+ 
+
+    .product-hero__form {
+      width: 100%;
+    }
+
+    .product-hero__cta-button {
+      width: 100%;
+      justify-content: center;
+      padding: 16px 28px;
+    }
+
+    .product-hero__trust-badges {
+      justify-content: flex-start;
+    }
+
+    .product-hero__social-proof {
+      justify-content: flex-start;
+    }
+
+    .product-hero__image-wrapper {
+      max-width: 400px;
+    }
+
+    .product-hero__discount-badge {
+      width: 65px;
+      height: 65px;
+      top: -5px;
+      right: -5px;
+    }
+
+    .discount-percentage {
+      font-size: 18px;
+    }
+
+    .product-hero__scroll-indicator {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .product-hero__container {
+      padding: 0 16px;
+    }
+
+    .trust-badge {
+ 
+    width: 100%;
+  
+}
+
+    .product-hero__headline {
+      font-size: 30px;
+    }
+
+    .product-hero__subheadline {
+      font-size: 16px;
+    }
+
+    .product-hero__description {
+      font-size: 14px;
+    }
+
+    .price-current {
+      font-size: 28px;
+    }
+
+    .countdown-value {
+      font-size: 22px;
+    }
+
+    .countdown-item {
+      min-width: 40px;
+    }
+
+    .product-hero__trust-badges {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .product-hero__thumbnails {
+      gap: 8px;
+    }
+
+    .thumbnail-item {
+      width: 55px;
+      height: 55px;
+    }
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .product-hero__badge,
+    .product-hero__headline,
+    .product-hero__subheadline,
+    .product-hero__description,
+    .product-hero__price-block,
+    .product-hero__countdown,
+    .product-hero__cta-wrapper,
+    .product-hero__trust-badges,
+    .product-hero__social-proof,
+    .product-hero__image-column {
+      animation: none;
+    }
+
+    .product-hero__discount-badge,
+    .product-hero__scroll-indicator,
+    .feature-callout__dot {
+      animation: none;
+    }
+
+    .product-hero__cta-button,
+    .product-hero__product-image,
+    .thumbnail-item,
+    .feature-callout__content {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Countdown Timer
+    const countdownElements = document.querySelectorAll('[data-countdown]');
+    
+    countdownElements.forEach(function(countdown) {
+      const targetDate = new Date(countdown.dataset.countdown).getTime();
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        
+        if (distance < 0) {
+          countdown.style.display = 'none';
+          return;
+        }
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        const daysEl = countdown.querySelector('[data-days]');
+        const hoursEl = countdown.querySelector('[data-hours]');
+        const minutesEl = countdown.querySelector('[data-minutes]');
+        const secondsEl = countdown.querySelector('[data-seconds]');
+        
+        if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+        if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+
+    // Add to Cart Functionality
+    const productForm = document.getElementById('product-hero-form-{{ section.id }}');
+    if (productForm) {
+      productForm.addEventListener('submit', function(e) {
+        {% comment %} e.preventDefault(); {% endcomment %}
+        
+        const formData = new FormData(this);
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.querySelector('.cta-text').textContent;
+        
+        // Disable button and show loading state
+        submitButton.disabled = true;
+        submitButton.querySelector('.cta-text').textContent = 'Adding...';
+        
+        {% comment %} fetch('/cart/add.js', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Success - show added message
+          submitButton.querySelector('.cta-text').textContent = 'Added to Cart!';
+          
+          // Trigger cart drawer/notification if available
+          if (typeof window.theme !== 'undefined' && window.theme.cart) {
+            window.theme.cart.refresh();
+          }
+          
+          // Dispatch custom event for cart update
+          document.dispatchEvent(new CustomEvent('cart:updated'));
+          
+          // Reset button after 2 seconds
+          setTimeout(() => {
+            submitButton.disabled = false;
+            submitButton.querySelector('.cta-text').textContent = originalText;
+          }, 2000);
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+          submitButton.querySelector('.cta-text').textContent = 'Error - Try Again';
+          submitButton.disabled = false;
+          
+          setTimeout(() => {
+            submitButton.querySelector('.cta-text').textContent = originalText;
+          }, 2000);
+        }); {% endcomment %}
+      });
+    }
+
+    {% comment %} // Thumbnail Gallery
+    const thumbnails = document.querySelectorAll('.thumbnail-item');
+    const mainImage = document.querySelector('.product-hero__product-image');
+    
+    thumbnails.forEach(function(thumb) {
+      thumb.addEventListener('click', function() {
+        // Remove active class from all thumbnails
+        thumbnails.forEach(t => t.classList.remove('thumbnail-item--active'));
+        // Add active class to clicked thumbnail
+        this.classList.add('thumbnail-item--active');
+        
+        // Update main image
+        const newSrc = this.querySelector('img').src.replace('width=100', 'width=800');
+        if (mainImage) {
+          mainImage.style.opacity = '0';
+          setTimeout(() => {
+            mainImage.src = newSrc;
+            mainImage.style.opacity = '1';
+          }, 200);
+        }
+      });
+    }); {% endcomment %}
+
+    // Smooth scroll for scroll indicator
+    const scrollIndicator = document.querySelector('.product-hero__scroll-indicator');
+    if (scrollIndicator) {
+      scrollIndicator.addEventListener('click', function() {
+        const heroSection = document.querySelector('.product-hero');
+        const nextSection = heroSection.nextElementSibling;
+        if (nextSection) {
+          nextSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Hero",
+  "tag": "section",
+  "class": "section-product-hero",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image (Optional)"
+    },
+    {
+      "type": "color",
+      "id": "gradient_start",
+      "label": "Gradient Start Color",
+      "default": "#FAF7F2"
+    },
+    {
+      "type": "color",
+      "id": "gradient_end",
+      "label": "Gradient End Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#2D2D2D"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#5C4033"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "CTA Background Color",
+      "default": "#E86A33"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Best Seller"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "info": "Leave empty to use product title",
+      "default": "Work, Read & Relax—Right From Your Bed"
+    },
+    {
+      "type": "text",
+      "id": "subheadline",
+      "label": "Subheadline",
+      "default": "The Height-Adjustable Overbed Table That Moves With You"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "info": "Leave empty to use product description",
+      "default": "Effortlessly roll your workspace wherever comfort calls. Our tilting laptop stand adapts from 26\" to 38\", featuring a walnut finish, hidden wheels, and rock-solid stability."
+    },
+    {
+      "type": "header",
+      "content": "Countdown Timer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Show Countdown Timer",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "countdown_label",
+      "label": "Countdown Label",
+      "default": "🔥 Limited Time Offer Ends In:"
+    },
+    {
+      "type": "text",
+      "id": "countdown_date",
+      "label": "Countdown End Date",
+      "info": "Format: YYYY-MM-DD HH:MM:SS",
+      "default": "2025-12-31 23:59:59"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary CTA Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_link",
+      "label": "Secondary CTA Link"
+    },
+    {
+      "type": "header",
+      "content": "Product Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product Image",
+      "info": "Leave empty to use product featured image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_discount_badge",
+      "label": "Show Discount Badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show Thumbnail Gallery",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Social Proof"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_proof",
+      "label": "Show Social Proof",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "social_proof_text",
+      "label": "Social Proof Text",
+      "default": "2,400+ Happy Customers"
+    },
+    {
+      "type": "header",
+      "content": "Scroll Indicator"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_indicator",
+      "label": "Show Scroll Indicator",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_badge",
+      "name": "Trust Badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "badge_icon",
+          "label": "Badge Icon",
+          "options": [
+            { "value": "check", "label": "Checkmark" },
+            { "value": "shipping", "label": "Shipping Truck" },
+            { "value": "guarantee", "label": "Shield/Guarantee" },
+            { "value": "secure", "label": "Lock/Secure" },
+            { "value": "support", "label": "Support/Chat" }
+          ],
+          "default": "check"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text",
+          "default": "Free Fast Shipping"
+        }
+      ]
+    },
+    {
+      "type": "avatar_image",
+      "name": "Avatar Image",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Avatar Image"
+        }
+      ]
+    },
+    {
+      "type": "feature_callout",
+      "name": "Feature Callout",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Feature Label",
+          "default": "Tilting Panel"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Feature Description",
+          "default": "Find your perfect viewing angle"
+        },
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Callout Position",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "top_position",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Top Position",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "left_position",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "label": "Left Position",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "thumbnail_image",
+      "name": "Thumbnail Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "thumbnail",
+          "label": "Thumbnail Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Hero",
+      "blocks": [
+        {
+          "type": "trust_badge",
+          "settings": {
+            "badge_icon": "shipping",
+            "badge_text": "Free Fast Shipping"
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "badge_icon": "guarantee",
+            "badge_text": "30-Day Satisfaction Guarantee"
+          }
+        },
+        {
+          "type": "trust_badge",
+          "settings": {
+            "badge_icon": "secure",
+            "badge_text": "Secure Checkout"
+          }
+        },
+        {
+          "type": "feature_callout",
+          "settings": {
+            "label": "Tilting Panel",
+            "text": "Find your perfect viewing angle",
+            "position": "left",
+            "top_position": 25,
+            "left_position": 15
+          }
+        },
+        {
+          "type": "feature_callout",
+          "settings": {
+            "label": "Height Adjustable",
+            "text": "26\" to 38\" in seconds",
+            "position": "right",
+            "top_position": 50,
+            "left_position": 85
+          }
+        },
+        {
+          "type": "feature_callout",
+          "settings": {
+            "label": "Hidden Wheels",
+            "text": "Glides silently, stops securely",
+            "position": "left",
+            "top_position": 75,
+            "left_position": 20
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,395 @@
+{% schema %}
+{
+  "name": "Tabbed  Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Collections"
+    },
+        {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_compare_at",
+      "label": "Show compare-at price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_review",
+      "label": "Show reviews",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buttons",
+      "label": "Show action buttons (wishlist, quick view, add to cart)",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab name",
+          "default": "Collection Tab"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+      {
+  "type": "range",
+  "id": "product_limit",
+  "label": "Product limit",
+  "min": 2,
+  "max": 50,
+  "step": 1,
+  "default": 8
+}
+
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Tabbed Collection Products",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="tabbed-collection-products container" style="
+  padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px 0;
+  background-color: {{ section.settings.background_color }};
+">
+    <div class="header-container-tab ">
+  {% if section.settings.heading != blank %}
+    <h2 class="main-heading tcp-heading">{{ section.settings.heading }}</h2>
+  {% endif %}
+
+
+ 
+
+  {% assign show_compare_at = section.settings.show_compare_at %}
+  {% assign show_reviews = section.settings.show_reviews %}
+  {% assign show_buttons = section.settings.show_buttons %}
+  {% assign products_per_row = section.settings.products_per_row | default: 4 %}
+
+  <div class="tcp-tabs ">
+    <ul class="tcp-tab-list" role="tablist">
+      {% for block in section.blocks %}
+        <li class="tcp-tab{% if forloop.first %} active{% endif %}" 
+            role="tab" 
+            tabindex="0"
+            data-tab-index="{{ forloop.index0 }}">
+          {{ block.settings.tab_title | escape }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+  <div class="tcp-tab-contents ">
+    {% for block in section.blocks %}
+      {% assign collection = collections[block.settings.collection] %}
+      <div class="tcp-tab-content{% if forloop.first %} active{% endif %}" data-tab-index="{{ forloop.index0 }}">
+        {% if collection != blank %}
+          <div class="tcp-products-grid tcp-products-per-row-{{ products_per_row }}">
+            {% for product in collection.products limit: block.settings.product_limit %}
+             {%- render 'product-grid-item-2',
+                            product: product,
+                            per_row: block.settings.per_row,
+                            quick_shop_enable: settings.quick_shop_enable
+                          -%}
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No collection selected for this tab.</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+
+
+.medium-up--one-quarter {
+    width: 23%;
+}
+
+.tcp-heading {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.tcp-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.tcp-tab-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap:wrap;
+  gap: .5rem;
+  border-bottom: 2px solid #eee;
+}
+.tcp-tab {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-weight: 600;
+  color: #333;
+  border-radius: 6px 6px 0 0;
+  transition: background 0.2s;
+  margin-right:5px;
+}
+.tcp-tab.active, .tcp-tab:focus {
+  background: #f7f7f7;
+  color: #000;
+  border-bottom: 2px solid #000;
+  outline: none;
+}
+.tcp-tab-content {
+  display: none;
+  animation: fadeIn 0.3s;
+}
+
+
+
+.header-container-tab{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+}
+
+.tcp-products-grid .grid__item {
+    padding-left: 0;
+}
+
+
+.tcp-tab-content.active {
+  display: block;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.tcp-products-grid {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+  
+    justify-content: space-between;
+}
+
+
+
+.tcp-products-per-row-2 { grid-template-columns: repeat(2, 1fr); }
+.tcp-products-per-row-3 { grid-template-columns: repeat(3, 1fr); }
+.tcp-products-per-row-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 767px) {
+.tcp-products-grid {
+   
+    overflow-x:scroll;
+ 
+}
+  .tcp-products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+.tcp-products-grid { 
+    flex-wrap: nowrap;
+}
+
+.medium-up--one-quarter {
+    min-width: 80%;
+    width:80%;
+}
+
+.tcp-products-grid .grid__item {
+    padding-left: 0;
+}
+.header-container-tab{
+flex-direction:column;
+}
+
+}
+.tcp-product-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s;
+}
+.tcp-product-card:hover {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.tcp-product-image {
+  display: block;
+  position: relative;
+  aspect-ratio: 1/1;
+  background: #fafafa;
+}
+.tcp-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tcp-sale-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #e53935;
+  color: #fff;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+.tcp-product-info {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.tcp-product-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  text-decoration: none;
+  margin-bottom: 0.3rem;
+}
+.tcp-product-reviews {
+  font-size: 0.95rem;
+  color: #fbc02d;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.tcp-stars {
+  display: inline-block;
+}
+.tcp-star {
+  font-size: 1rem;
+  color: #fbc02d;
+}
+.tcp-star-filled {
+  color: #fbc02d;
+}
+.tcp-rating-number {
+  color: #888;
+  font-size: 0.9em;
+}
+.tcp-product-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.tcp-product-price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #222;
+}
+.tcp-product-compare-at {
+  font-size: 1rem;
+  color: #e53935;
+  text-decoration: line-through;
+}
+.tcp-product-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.tcp-btn {
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s, border 0.2s;
+}
+.tcp-btn:hover {
+  background: #222;
+  color: #fff;
+  border-color: #222;
+}
+.tcp-btn-addtocart {
+  background: #222;
+  color: #fff;
+  border: none;
+}
+.tcp-btn-addtocart:hover {
+  background: #000;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var tabs = document.querySelectorAll('.tabbed-collection-products .tcp-tab');
+  var contents = document.querySelectorAll('.tabbed-collection-products .tcp-tab-content');
+  tabs.forEach(function(tab, idx) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      contents.forEach(function(c) { c.classList.remove('active'); });
+      tab.classList.add('active');
+      contents[idx].classList.add('active');
+    });
+    tab.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        tab.click();
+      }
+    });
+  });
+});
+</script>

@@ -1,0 +1,318 @@
+<style>
+  .nitrocare-commitment {
+    padding: 60px 20px;
+    background-color: #f8f8f8;
+  }
+
+  .commitment-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .commitment-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .commitment-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+    line-height: 1.2;
+  }
+
+.commitment-subtitle {
+    width: 54%;
+    font-size: 18px;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    display: inline-block;
+}
+
+  .commitment-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .features-left,
+  .features-right {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+
+.feature-item1 {
+    text-align: center;
+    background: white;
+    padding: 15px;
+    border-radius: 25px;
+}
+
+.center-image img {
+    
+    border-radius: 25px;
+}
+
+  .feature-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    background-color: #e8eef5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .feature-icon img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+  }
+
+  .feature-title {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .feature-description {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .center-image {
+    text-align: center;
+  }
+
+  .center-image img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 1024px) {
+    .commitment-content {
+      gap: 30px;
+    }
+
+    .feature-title {
+      font-size: 24px;
+    }
+
+    .commitment-title {
+      font-size: 40px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nitrocare-commitment {
+      padding: 40px 15px;
+    }
+
+
+.commitment-subtitle {
+    width: 80%;
+     
+}
+
+
+    .commitment-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .features-left,
+    .features-right {
+      gap: 40px;
+    }
+
+    .commitment-title {
+      font-size: 32px;
+    }
+
+    .commitment-subtitle {
+      font-size: 16px;
+    }
+
+    .feature-title {
+      font-size: 22px;
+    }
+
+    .feature-description {
+      font-size: 14px;
+    }
+
+    .feature-icon {
+      width: 80px;
+      height: 80px;
+    }
+
+    .feature-icon img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+</style>
+
+<section class="nitrocare-commitment">
+  <div class="commitment-container">
+    <div class="commitment-header">
+      <h2 class="commitment-title">{{ section.settings.main_title }}</h2>
+      <p class="commitment-subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <div class="commitment-content">
+      <div class="features-left">
+        {% for block in section.blocks %}
+          {% if block.settings.position == 'left' %}
+            <div class="feature-item1" {{ block.shopify_attributes }}>
+              <div class="feature-icon">
+                {% if block.settings.icon != blank %}
+                  <img src="{{ block.settings.icon | img_url: '100x' }}" alt="{{ block.settings.title }}">
+                {% endif %}
+              </div>
+              <h3 class="feature-title">{{ block.settings.title }}</h3>
+              <p class="feature-description">{{ block.settings.description }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="center-image">
+        {% if section.settings.center_image != blank %}
+          <img src="{{ section.settings.center_image | img_url: 'master' }}" alt="{{ section.settings.main_title }}">
+        {% endif %}
+      </div>
+
+      <div class="features-right">
+        {% for block in section.blocks %}
+          {% if block.settings.position == 'right' %}
+            <div class="feature-item1" {{ block.shopify_attributes }}>
+              <div class="feature-icon">
+                {% if block.settings.icon != blank %}
+                  <img src="{{ block.settings.icon | img_url: '100x' }}" alt="{{ block.settings.title }}">
+                {% endif %}
+              </div>
+              <h3 class="feature-title">{{ block.settings.title }}</h3>
+              <p class="feature-description">{{ block.settings.description }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Features",
+  "settings": [
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main Title",
+      "default": "The Nitrocare Commitment"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Empowering Care Through Innovation and Trust."
+    },
+    {
+      "type": "image_picker",
+      "id": "center_image",
+      "label": "Center Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "position",
+          "label": "Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Feature Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Feature Description",
+          "default": "Feature description goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Features",
+      "category": "Custom",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "title": "FDA-Approved",
+            "description": "Our products comply with FDA standards, ensuring safety, efficacy, and quality for global patient care devices."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "left",
+            "title": "Advanced Patient Safety",
+            "description": "Anti-decubitus viscoelastic foam adapts to body shape, reduces pressure points, and includes U-shaped edges to prevent falls in sitting positions."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "title": "Global Standards Certified",
+            "description": "Certified under ISO 13485 and CE marking, our equipment meets top international standards for reliability and performance."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "position": "right",
+            "title": "Industry Leading Warranty",
+            "description": "Comprehensive 2-year warranty covers material and workmanship defects when instructions are followed."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

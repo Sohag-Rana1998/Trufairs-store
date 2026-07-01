@@ -1,0 +1,582 @@
+<style>
+  .premium-banner {
+    background-color: {{ section.settings.background_color }};
+    padding: 60px 20px;
+    border-radius: 24px;
+    margin: 40px auto;
+    max-width: 1440px;
+  }
+.premium-banner__container {
+    display: flex;
+ 
+    gap: 30px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+ .premium-banner__content, .premium-banner__image-wrapper {
+    width: 48%;
+}  
+
+  .premium-banner__title {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: 700;
+    color: {{ section.settings.title_color }};
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .premium-banner__subtitle {
+    font-size: {{ section.settings.subtitle_size }}px;
+    color: {{ section.settings.subtitle_color }};
+    margin-bottom: 15px;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+
+  .premium-banner__rating {
+    display: inline-flex;
+    align-items: center;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .premium-banner__rating-label {
+    font-weight: 600;
+    color: #00b67a;
+    margin-right: 12px;
+    font-size: 14px;
+  }
+
+  .premium-banner__stars {
+    display: flex;
+    gap: 4px;
+    margin-right: 12px;
+  }
+
+  .premium-banner__rating-text {
+    font-size: 14px;
+    color: #333;
+    font-weight: 700;
+  }
+
+  .premium-banner__price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 15px;
+  }
+
+  .premium-banner__price {
+    font-size: {{ section.settings.price_size }}px;
+    font-weight: 700;
+    color: {{ section.settings.price_color }};
+  }
+
+  .premium-banner__compare-price {
+    font-size: {{ section.settings.compare_price_size }}px;
+    color: {{ section.settings.compare_price_color }};
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .premium-banner__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+  }
+
+  .premium-banner__features svg {
+    height: 20px;
+    width: 20px;
+}
+
+
+  .premium-banner__feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: {{ section.settings.feature_size }}px;
+    color: {{ section.settings.feature_color }};
+  }
+
+  .premium-banner__feature-icon {
+    flex-shrink: 0;
+  }
+
+  .premium-banner__button {
+    display: inline-block;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-size: {{ section.settings.button_size }}px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .premium-banner__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    background-color: {{ section.settings.button_hover_color }};
+  }
+
+  .premium-banner__image-wrapper {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .premium-banner__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 989px) {
+.premium-banner__container {
+   margin: 0 auto;
+    padding: 0px;
+    flex-direction: column-reverse;
+}
+ 
+.premium-banner__content, .premium-banner__image-wrapper {
+    width: 100%;
+}
+    .premium-banner__title {
+      font-size: calc({{ section.settings.title_size }}px * 0.8);
+    }
+
+    .premium-banner__subtitle {
+      font-size: calc({{ section.settings.subtitle_size }}px * 0.9);
+    }
+
+    .premium-banner__price {
+      font-size: calc({{ section.settings.price_size }}px * 0.85);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .premium-banner {
+      padding: 40px 16px;
+      border-radius: 16px;
+      margin: 20px 16px;
+    }
+
+.premium-banner__container {
+   margin: 0 auto;
+      padding: 0px 0px;
+    flex-direction: column-reverse;
+}
+ 
+.premium-banner__content, .premium-banner__image-wrapper {
+    width: 100%;
+}
+
+.premium-banner__rating-label {
+   
+    margin-right: 6px;
+    
+}
+
+    .premium-banner__title {
+      font-size: calc({{ section.settings.title_size }}px * 0.65);
+    }
+
+    .premium-banner__subtitle {
+      font-size: calc({{ section.settings.subtitle_size }}px * 0.85);
+    }
+
+    .premium-banner__price {
+      font-size: calc({{ section.settings.price_size }}px * 0.75);
+    }
+
+    .premium-banner__compare-price {
+      font-size: calc({{ section.settings.compare_price_size }}px * 0.8);
+    }
+
+    .premium-banner__button {
+      width: 100%;
+      text-align: center;
+      padding: 14px 32px;
+    }
+
+  .premium-banner__rating {
+    padding: 8px 6px !important;
+}
+  }
+</style>
+
+<div class="premium-banner">
+  <div class="premium-banner__container">
+    <div class="premium-banner__content">
+      {% if section.settings.title != blank %}
+        <h2 class="premium-banner__title">{{ section.settings.title }}</h2>
+      {% endif %}
+
+      {% if section.settings.subtitle != blank %}
+        <p class="premium-banner__subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+
+      {% if section.settings.show_rating %}
+        <div class="premium-banner__rating">
+          <span class="premium-banner__rating-label">{{ section.settings.rating_label }}</span>
+      
+          <a href="#judgeme_product_reviews">
+
+{%- if product.metafields.reviews.rating.value != blank -%}
+  {% liquid
+    assign rating_obj = product.metafields.reviews.rating.value
+    assign raw_rating = rating_obj.rating | default: 0
+    assign scale_max = rating_obj.scale_max | default: 5
+
+    # Round to nearest 0.5 for display stars
+    assign rounded_half = raw_rating | times: 2 | round | divided_by: 2.0
+  %}
+
+  <div class="rating-wrapper">
+    <div
+      class="rating"
+      role="img"
+      aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: raw_rating, rating_max: scale_max }}"
+    >
+      <span
+        aria-hidden="true"
+        class="rating-star"
+        style="--rating: {{ rounded_half }}; --rating-max: {{ scale_max }};"
+      ></span>
+    </div>
+
+    <p class="rating-text caption">
+      <span aria-hidden="true">
+        {{- raw_rating }} / {{ scale_max -}}
+      </span>
+    </p>
+
+    <p class="rating-count caption">
+      <span aria-hidden="true">({{ product.metafields.reviews.rating_count }})</span>
+      <span class="visually-hidden">
+        {{- product.metafields.reviews.rating_count }}
+        {{ 'accessibility.total_reviews' | t -}}
+      </span>
+    </p>
+  </div>
+{%- endif -%}
+</a>
+          {% comment %} <span class="premium-banner__rating-text">{{ section.settings.rating_text }}</span> {% endcomment %}
+        </div>
+      {% endif %}
+
+      <div class="premium-banner__price-wrapper">
+        {% if section.settings.price != blank %}
+          <span class="premium-banner__price">{{ section.settings.price }}</span>
+        {% endif %}
+        {% if section.settings.compare_price != blank %}
+          <span class="premium-banner__compare-price">{{ section.settings.compare_price }}</span>
+        {% endif %}
+      </div>
+
+      {% if section.blocks.size > 0 %}
+        <ul class="premium-banner__features">
+          {% for block in section.blocks %}
+            <li class="premium-banner__feature" {{ block.shopify_attributes }}>
+              <span class="premium-banner__feature-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="24" height="24" rx="4" fill="{{ section.settings.checkmark_bg_color }}"/>
+                  <path d="M7 12L10.5 15.5L17 9" stroke="{{ section.settings.checkmark_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span>{{ block.settings.feature_text }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="premium-banner__button">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="premium-banner__image-wrapper">
+      {% if section.settings.image != blank %}
+        {{ section.settings.image | image_url: width: 800 | image_tag: class: 'premium-banner__image', loading: 'lazy' }}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'premium-banner__image' }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Premium Banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#7a9082"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "See What 1X Can't — 30X Magnifying Mirror with True-Tone Light"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title Font Size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Pro-level precision anywhere: premium HD glass, 60 LED ring, 360° adjustable stand, and compact travel size."
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle Font Size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Subtitle Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Rating Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show Rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_label",
+      "label": "Rating Label",
+      "default": "Excellent"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating Text",
+      "default": "4.5 out of 5"
+    },
+    {
+      "type": "header",
+      "content": "Price Settings"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price",
+      "default": "$53.88"
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "label": "Price Font Size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "compare_price",
+      "label": "Compare at Price",
+      "default": "$107.77"
+    },
+    {
+      "type": "range",
+      "id": "compare_price_size",
+      "label": "Compare Price Font Size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "color",
+      "id": "compare_price_color",
+      "label": "Compare Price Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Feature List Settings"
+    },
+    {
+      "type": "range",
+      "id": "feature_size",
+      "label": "Feature Font Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "feature_color",
+      "label": "Feature Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "checkmark_bg_color",
+      "label": "Checkmark Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "checkmark_color",
+      "label": "Checkmark Color",
+      "default": "#7a9082"
+    },
+    {
+      "type": "header",
+      "content": "Button Settings"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "label": "Button Font Size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button Hover Color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Banner Image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_text",
+          "label": "Feature Text",
+          "default": "30X premium high-definition glass"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium Banner",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "feature_text": "30X premium high-definition glass"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_text": "60 LED ring with adjustable brightness"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "feature_text": "360° rotating stand for perfect angles"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

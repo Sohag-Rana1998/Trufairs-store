@@ -1,0 +1,170 @@
+{% schema %}
+{
+  "name": "Banner Promo",
+  "tag": "section",
+  "class": "banner-promo-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Enable Full Width",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "button_url",
+      "label": "Enable Mouse Pointer",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 40
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "label": "Sub-Top Heading",
+      "default": "Enjoy 5% off your first order"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main Heading",
+      "default": "Explore Quality & Style Now!"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Short Description",
+      "default": "Get 5% off your first order as a welcome gift! Use Coupon: NEW05. Discover stylish furniture, elegant decor, and more – perfect pieces for every space."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link",
+      "default": "/collections/all"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Banner Promo"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.banner-promo-section {
+  position: relative;
+}
+.banner-promo__image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.banner-promo__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+  z-index: 1;
+}
+.banner-promo__content {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  padding: 1.5rem;
+}
+.banner-promo__subheading {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.banner-promo__heading {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.banner-promo__description {
+  font-size: 1rem;
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+}
+.banner-promo__btn {
+  display: inline-block;
+  background-color: #fff;
+  color: #000;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+
+ 
+
+ 
+  
+@media screen and (max-width: 749px) {
+  .banner-promo__heading {
+    font-size: 1.5rem;
+  }
+  .banner-promo__description {
+    font-size: 0.9rem;
+  }
+}
+{% endstyle %}
+
+{% assign image_src = section.settings.desktop_image | image_url: width: 2000 %}
+{% assign image_mobile_src = section.settings.mobile_image | image_url: width: 800 %}
+
+<div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+   <a href="{{ section.settings.button_link }}" class="link_hover" style="  cursor: {% if section.settings.button_url %}pointer{% else %}default{% endif %} !important;">
+  <div class="banner-promo-section">
+    <picture>
+      <source media="(max-width: 749px)" srcset="{{ image_mobile_src }}">
+      <img src="{{ image_src }}" alt="Banner Image" class="banner-promo__image" width="1920" height="600">
+    </picture>
+    <div class="banner-promo__overlay"></div>
+    <div class="banner-promo__content">
+      {% if section.settings.sub_heading != blank %}
+        <div class="banner-promo__subheading">{{ section.settings.sub_heading }}</div>
+      {% endif %}
+      {% if section.settings.main_heading != blank %}
+        <div class="banner-promo__heading">{{ section.settings.main_heading }}</div>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <div class="banner-promo__description">{{ section.settings.description }}</div>
+      {% endif %}
+      {% if section.settings.button_text != blank and section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" class="banner-promo__btn">{{ section.settings.button_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+   </a>
+</div>

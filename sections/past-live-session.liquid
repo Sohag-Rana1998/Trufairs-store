@@ -1,0 +1,337 @@
+{% schema %}
+{
+  "name": "Past Session Recordings",
+  "tag": "section",
+  "class": "section past-sessions-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Past Session Recordings"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Section Description",
+      "default": "Missed a session? Don't worry! Browse our past recordings to catch up on previous discussions."
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View All Link",
+    
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All Text",
+      "default": "View All Past Recordings"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_card",
+      "name": "Video Card",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "text",
+          "id": "date",
+          "label": "Date",
+          "default": "JANUARY 1, 2025"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Session Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "YouTube Video URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Past Session Recordings",
+      "blocks": [
+        {
+          "type": "video_card"
+        },
+        {
+          "type": "video_card"
+        },
+        {
+          "type": "video_card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div class="past-sessions-container page-width">
+  <div class="past-sessions-header text-center">
+    {% if section.settings.title != blank %}
+      <h2 class="past-sessions-title">{{ section.settings.title }}</h2>
+    {% endif %}
+    
+    {% if section.settings.description != blank %}
+      <div class="past-sessions-description">
+        {{ section.settings.description }}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="past-sessions-grid">
+    {% for block in section.blocks %}
+      <div class="past-sessions-card" {{ block.shopify_attributes }}>
+        <div class="video-iframe-container">
+          {% if block.settings.video_url != blank %}
+            {% assign video_url = block.settings.video_url %}
+            {% if video_url contains "youtube.com" or video_url contains "youtu.be" %}
+              {% assign youtube_id = "" %}
+              {% if video_url contains "youtube.com/watch?v=" %}
+                {% assign youtube_id = video_url | split: "watch?v=" | last | split: "&" | first %}
+              {% elsif video_url contains "youtu.be/" %}
+                {% assign youtube_id = video_url | split: "youtu.be/" | last | split: "?" | first %}
+              {% elsif video_url contains "youtube.com/embed/" %}
+                {% assign youtube_id = video_url | split: "youtube.com/embed/" | last | split: "?" | first %}
+              {% endif %}
+              
+              {% if youtube_id != "" %}
+                <iframe
+                  src="https://www.youtube.com/embed/{{ youtube_id }}"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                  title="{{ block.settings.title }}"
+                  loading="lazy"
+                ></iframe>
+              {% endif %}
+            {% endif %}
+          {% else %}
+            <div class="video-placeholder">
+              <svg class="icon icon-video" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="24" height="24" fill="#EEEEEE"/>
+                <path d="M8 5.14V19.14L19 12.14L8 5.14Z" fill="#AAAAAA"/>
+              </svg>
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="past-sessions-card-content">
+          {% if block.settings.date != blank %}
+            <div class="past-sessions-date">{{ block.settings.date }}</div>
+          {% endif %}
+          
+          {% if block.settings.title != blank %}
+            <h3 class="past-sessions-card-title">{{ block.settings.title }}</h3>
+          {% endif %}
+          
+          {% if block.settings.description != blank %}
+            <div class="past-sessions-card-description">{{ block.settings.description }}</div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if section.settings.view_all_link != blank and section.settings.view_all_text != blank %}
+    <div class="past-sessions-view-all">
+      <a href="{{ section.settings.view_all_link }}" class="view-all-link" target="_blank">
+        {{ section.settings.view_all_text }}
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+.past-sessions-container {
+  padding: 20px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.past-sessions-header {
+  margin-bottom: 40px;
+}
+
+.past-sessions-title {
+  font-size: 2.6rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: capitalize !important;
+}
+
+.past-sessions-description {
+  font-size: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.past-sessions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.past-sessions-card {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.past-sessions-card:hover {
+  transform: translateY(-5px);
+}
+
+.video-iframe-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.video-iframe-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.video-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.past-sessions-card-content {
+  padding: 8px 0;
+}
+
+.past-sessions-date {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.past-sessions-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.past-sessions-card-description {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.past-sessions-view-all {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.view-all-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #f44336;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.view-all-link:hover {
+  opacity: 0.8;
+}
+
+.view-all-link svg {
+  margin-left: 8px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 990px) {
+  .past-sessions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .past-sessions-title {
+    font-size: 32px;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .past-sessions-container {
+    padding: 40px 15px;
+  }
+  
+  .past-sessions-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  .past-sessions-title {
+    font-size: 28px;
+  }
+  
+  .video-play-button {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .icon-play {
+    width: 25px;
+    height: 25px;
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  // Add responsive iframe resizing if needed
+  function resizeIframes() {
+    const videoContainers = document.querySelectorAll('.video-iframe-container');
+    videoContainers.forEach(container => {
+      // Make sure iframes maintain aspect ratio on window resize
+      const width = container.offsetWidth;
+      const height = width * 0.5625; // 16:9 aspect ratio
+    });
+  }
+  
+  // Call on load and resize
+  window.addEventListener('resize', resizeIframes);
+  resizeIframes();
+});
+{% endjavascript %}

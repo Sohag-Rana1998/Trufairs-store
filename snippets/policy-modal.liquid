@@ -1,0 +1,308 @@
+ 
+<div class="tfsp-overlay" data-tfsp-overlay hidden>
+  <div class="tfsp-modal" role="dialog" aria-modal="true" aria-labelledby="tfsp-title" tabindex="-1">
+    <div class="tfsp-header">
+      <h2 class="tfsp-title" id="tfsp-title">Shipping Policy</h2>
+      <button type="button" class="tfsp-close" data-tfsp-close aria-label="Close">&times;</button>
+    </div>
+
+    <div class="tfsp-body">
+      <div class="tfsp-loader2" style="display:flex !important; width:100%; justify-content: center;align-items: center; min-height: 500px;" data-tfsp-loader hidden>
+      <div class="tfsp-loader"  >
+        <span class="tfsp-spinner" aria-hidden="true"></span>
+        <span class="tfsp-loader-text">Loading…</span>
+      </div>
+  </div>
+      <div class="tfsp-content" data-tfsp-content></div>
+
+      <div class="tfsp-error" data-tfsp-error hidden>
+        Sorry, we couldn’t load the policy. Please try again.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<style>/* Ensure hidden always works */
+.tfsp-overlay[hidden] { display: none !important; }
+
+html.tfsp-lock, body.tfsp-lock { overflow: hidden; }
+
+ 
+
+.tfsp-overlay{
+  position:fixed; inset:0; z-index:999999;
+  background:rgba(0,0,0,.65);
+  display:flex; align-items:center; justify-content:center;
+  padding:16px;
+}
+
+.tfsp-modal{
+  width:min(980px, 100%);
+  height:min(85vh, 900px);
+  background:#fff; border-radius:10px; overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+  display:flex; flex-direction:column;
+}
+
+.tfsp-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; border-bottom:1px solid rgba(0,0,0,.08);
+}
+
+.tfsp-title{ margin:0; font-size:18px; }
+.tfsp-close{ background:transparent; border:0; font-size:30px; cursor:pointer; line-height:1; }
+
+.tfsp-body{
+  position:relative;
+  flex:1;
+  overflow:auto;
+  padding:18px;
+}
+
+.tfsp-loader{
+  display:inline-flex !important; align-items:center; gap:10px;
+  padding:10px 12px;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:8px;
+  background:#fafafa;
+  margin-bottom:12px;
+}
+
+.tfsp-spinner{
+  width:18px; height:18px; border-radius:999px;
+  border:2px solid rgba(0,0,0,.15);
+  border-top-color:rgba(0,0,0,.65);
+  animation: tfsp-spin .8s linear infinite;
+}
+@keyframes tfsp-spin { to { transform: rotate(360deg); } }
+
+.tfsp-error{ color:#b00020; margin-top:12px; }
+.tfsp-content *{ max-width:100%; }
+
+ 
+/* Hard guarantee: if hidden attribute is present, it must not show */
+{% comment %} .tfsp-loader[hidden],
+.tfsp-is-hidden {
+  display: none !important;
+} {% endcomment %}
+
+
+</style>
+  <script defer>
+(() => {
+  const SEL = {
+    open: '[data-tfsp-open]',
+    overlay: '[data-tfsp-overlay]',
+    modal: '.tfsp-modal',
+    close: '[data-tfsp-close]',
+    loader: '[data-tfsp-loader]',
+    content: '[data-tfsp-content]',
+    error:  '[data-tfsp-error]',
+    title:  '#tfsp-title',
+  };
+
+  let controller = null;
+  let safetyTimer = null;
+
+  // Optional: cache loaded policy HTML by URL (faster on second open)
+  const cache = new Map();
+
+  const qs = (root, sel) => root.querySelector(sel);
+
+
+function tfspDecodeCloudflareEmails(root) {
+  if (!root) return;
+
+  const nodes = root.querySelectorAll('.__cf_email__, a[href*="/cdn-cgi/l/email-protection"]');
+
+  nodes.forEach((node) => {
+    // Cloudflare usually stores the encrypted email here:
+    const cf = node.getAttribute('data-cfemail') || node.dataset?.cfemail;
+
+    // If it's an <a> with only the /email-protection href, it may still have a nested span with data-cfemail
+    let cfHex = cf;
+    if (!cfHex && node.querySelector) {
+      const inner = node.querySelector('.__cf_email__');
+      cfHex = inner?.getAttribute('data-cfemail') || inner?.dataset?.cfemail;
+    }
+    if (!cfHex || cfHex.length < 4) return;
+
+    // Decode algorithm: first byte is key, rest XOR key
+    const key = parseInt(cfHex.substr(0, 2), 16);
+    let email = '';
+    for (let i = 2; i < cfHex.length; i += 2) {
+      const code = parseInt(cfHex.substr(i, 2), 16) ^ key;
+      email += String.fromCharCode(code);
+    }
+
+    // Replace display text
+    if (node.classList.contains('__cf_email__')) {
+      node.textContent = email;
+      // If parent is a link, fix it too
+      if (node.parentElement && node.parentElement.tagName === 'A') {
+        node.parentElement.setAttribute('href', 'mailto:' + email);
+      }
+    } else if (node.tagName === 'A') {
+      node.setAttribute('href', 'mailto:' + email);
+      // If the visible text is still obfuscated, update it
+      if (node.textContent.includes('[email') || node.textContent.trim() === '') {
+        node.textContent = email;
+      }
+    }
+  });
+}
+
+
+
+  function showLoader(overlay) {
+    const loader = qs(overlay, SEL.loader);
+    if (!loader) return;
+
+    loader.hidden = false;
+    loader.classList.remove('tfsp-is-hidden');
+
+    // Because your loader has inline "display:flex !important", override with important too
+    loader.style.setProperty('display', 'flex', 'important');
+  }
+
+  function hideLoader(overlay) {
+    const loader = qs(overlay, SEL.loader);
+    if (!loader) return;
+
+    loader.hidden = true;
+    loader.classList.add('tfsp-is-hidden');
+
+    // Hard hide (beats inline important issues)
+    loader.style.setProperty('display', 'none', 'important');
+  }
+
+  function setError(overlay, show) {
+    const err = qs(overlay, SEL.error);
+    if (!err) return;
+    err.hidden = !show;
+  }
+
+  function setTitle(overlay, text) {
+    const t = qs(overlay, SEL.title);
+    if (t && text) t.textContent = text;
+  }
+
+  function openModal(overlay) {
+    overlay.hidden = false;
+    document.documentElement.classList.add('tfsp-lock');
+    document.body.classList.add('tfsp-lock');
+
+    const modal = qs(overlay, SEL.modal);
+    if (modal) modal.focus();
+  }
+
+  function closeModal(overlay) {
+    overlay.hidden = true;
+    document.documentElement.classList.remove('tfsp-lock');
+    document.body.classList.remove('tfsp-lock');
+
+    if (controller) {
+      controller.abort();
+      controller = null;
+    }
+    if (safetyTimer) {
+      clearTimeout(safetyTimer);
+      safetyTimer = null;
+    }
+  }
+
+  async function loadPolicy(overlay, url) {
+    const content = qs(overlay, SEL.content);
+    if (!content || !url) return;
+
+    setError(overlay, false);
+    content.innerHTML = '';
+    showLoader(overlay);
+
+    // Your requested fallback: visible for 1500ms then hide no matter what
+    if (safetyTimer) clearTimeout(safetyTimer);
+    safetyTimer = setTimeout(() => hideLoader(overlay), 1500);
+
+    // If cached, render immediately and hide loader
+    if (cache.has(url)) {
+      content.innerHTML = cache.get(url);
+      requestAnimationFrame(() => hideLoader(overlay));
+      return;
+    }
+
+    controller = new AbortController();
+
+    try {
+      const res = await fetch(url, {
+        signal: controller.signal,
+        credentials: 'same-origin',
+        headers: { 'Accept': 'text/html' },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+
+      const policyNode =
+        doc.querySelector('.shopify-policy__container') ||
+        doc.querySelector('main') ||
+        doc.body;
+
+      const finalHtml = policyNode ? policyNode.innerHTML : html;
+
+      cache.set(url, finalHtml);
+      content.innerHTML = finalHtml;
+tfspDecodeCloudflareEmails(content);
+
+      requestAnimationFrame(() => hideLoader(overlay));
+      controller = null;
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      hideLoader(overlay);
+      setError(overlay, true);
+      controller = null;
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const overlay = document.querySelector(SEL.overlay);
+    if (!overlay) return;
+
+    // Open ONLY on click
+    const trigger = e.target.closest(SEL.open);
+    if (trigger) {
+      e.preventDefault();
+
+      const url = trigger.getAttribute('data-tfsp-url');
+      const title = trigger.getAttribute('data-tfsp-title') || 'Policy';
+
+      setTitle(overlay, title);
+      openModal(overlay);
+      loadPolicy(overlay, url);
+      return;
+    }
+
+    // Close button
+    if (e.target.closest(SEL.close)) {
+      e.preventDefault();
+      closeModal(overlay);
+      return;
+    }
+
+    // Close on outside click
+    if (!overlay.hidden && e.target === overlay) {
+      closeModal(overlay);
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const overlay = document.querySelector(SEL.overlay);
+    if (!overlay || overlay.hidden) return;
+    if (e.key === 'Escape') closeModal(overlay);
+  });
+})();
+
+
+  </script>

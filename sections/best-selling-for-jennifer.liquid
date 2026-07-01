@@ -1,0 +1,431 @@
+<div class="psvideo-section" id="section-{{ section.id }}">
+  <div class="psvideo-container container">
+    <div class="psvideo-header">
+      {% if section.settings.heading != blank %}
+        <h2 class="psvideo-title">{{ section.settings.heading }}</h2>
+      {% endif %}
+      
+   <!-- Desktop Navigation -->
+      <div class="psvideo-nav desktop-nav1">
+        <div class="psvideo-nav-prev desktop-prev1">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="psvideo-nav-next desktop-next1">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="psvideo-content">
+      <!-- Left side video -->
+      <div class="psvideo-media">
+        {% if section.settings.video_url != blank %}
+          {% if section.settings.video_type == 'mp4' %}
+            <video 
+              {% if section.settings.autoplay %}autoplay{% endif %}
+              {% if section.settings.muted %}muted{% endif %}
+              {% if section.settings.loop %}loop{% endif %}
+              {% if section.settings.controls %}controls{% endif %}
+              playsinline
+              class="psvideo-player"
+            >
+              <source src="{{ section.settings.video_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% elsif section.settings.video_type == 'youtube' %}
+            <div class="psvideo-embed">
+              {% assign youtube_id = section.settings.video_url | split: 'watch?v=' | last | split: '&' | first %}
+              {% if youtube_id == section.settings.video_url %}
+                {% assign youtube_id = section.settings.video_url | split: 'youtu.be/' | last | split: '?' | first %}
+              {% endif %}
+              {% if youtube_id == section.settings.video_url %}
+                {% assign youtube_id = section.settings.video_url | split: 'embed/' | last | split: '?' | first %}
+              {% endif %}
+              <iframe 
+                src="https://www.youtube.com/embed/{{ youtube_id }}?autoplay={{ section.settings.autoplay | default: 0 }}&mute={{ section.settings.muted | default: 0 }}&loop={{ section.settings.loop | default: 0 }}&controls={{ section.settings.controls | default: 1 }}{% if section.settings.loop %}&playlist={{ youtube_id }}{% endif %}"
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                class="psvideo-iframe">
+              </iframe>
+            </div>
+          {% elsif section.settings.video_type == 'vimeo' %}
+            <div class="psvideo-embed">
+              <iframe 
+                src="https://player.vimeo.com/video/{{ section.settings.video_url | split: '/' | last }}?autoplay={{ section.settings.autoplay | default: 0 }}&muted={{ section.settings.muted | default: 0 }}&loop={{ section.settings.loop | default: 0 }}&controls={{ section.settings.controls | default: 1 }}"
+                frameborder="0" 
+                allow="autoplay; fullscreen; picture-in-picture" 
+                allowfullscreen
+                class="psvideo-iframe">
+              </iframe>
+            </div>
+          {% endif %}
+        {% else %}
+          <!-- Placeholder video -->
+          <div class="psvideo-placeholder">
+            <svg width="100" height="100" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 5V19L19 12L8 5Z" fill="#ccc"/>
+            </svg>
+            <p>Add a video to showcase your products</p>
+          </div>
+        {% endif %}
+      </div>
+      
+      <!-- Right side product slider -->
+      <div class="psvideo-products">
+        <div class="swiper psvideo-swiper">
+          <div class="swiper-wrapper">
+            {% if section.settings.collection != blank %}
+              {% assign collection = collections[section.settings.collection] %}
+              
+              {% for product in collection.products %}
+                <div class="swiper-slide">
+                  <div class="psvideo-item">
+                    {%- render 'product-card-custom',
+                            product: product,
+                            collection: collection,
+                            per_row: 3,
+                            quick_shop_enable: true,
+                            slider_item: true
+                          -%}
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <!-- Placeholder products -->
+              {% for i in (1..6) %}
+                <div class="swiper-slide">
+                  <div class="psvideo-item">
+                    <div class="psvideo-placeholder-product">
+                      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                      <h3>Sample Product {{ i }}</h3>
+                      <p>$99.99</p>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% endif %}
+            
+          </div>
+ <!-- Mobile Navigation -->
+          <div class="psvideo-nav mobile-nav1" style="display:none;">
+            <div class="psvideo-nav-prev mobile-prev1">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="psvideo-nav-next mobile-next1">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    <!-- Quick shop modals -->
+    {% if section.settings.collection != blank %}
+      {% assign collection = collections[section.settings.collection] %}
+      {% for product in collection.products %}
+        {%- render 'quick-shop-modal', product: product -%}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const psvideoSwiper = new Swiper('.psvideo-swiper', {
+    slidesPerView: 3,
+    spaceBetween: 24,
+    grabCursor: true,
+    navigation: {
+      nextEl: '.desktop-next1', // desktop arrows
+      prevEl: '.desktop-prev1',
+    },
+    breakpoints: {
+      320: { slidesPerView: 2, spaceBetween: 15 },
+      480: { slidesPerView: 2, spaceBetween: 20 },
+      768: { slidesPerView: 2, spaceBetween: 20 },
+      1024: { slidesPerView: 2.5, spaceBetween: 24 },
+      1200: { slidesPerView: 3, spaceBetween: 24 }
+    }
+  });
+
+  // 👇 Manually bind mobile arrows
+  document.querySelector('.mobile-next1').addEventListener('click', () => psvideoSwiper.slideNext());
+  document.querySelector('.mobile-prev1').addEventListener('click', () => psvideoSwiper.slidePrev());
+
+  // Handle MP4 autoplay + pause when offscreen
+  const videos = document.querySelectorAll('.psvideo-player[autoplay]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      if (entry.isIntersecting) {
+        video.play().catch(()=>{});
+      } else {
+        video.pause();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  videos.forEach(video => observer.observe(video));
+});
+</script>
+
+
+
+
+
+
+
+<style>
+  .psvideo-section {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+    background: {{ section.settings.background_color | default: '#fff' }};
+  }
+
+
+.psvideo-products .medium-up--one-third {
+    width: 100%;
+}
+
+  .psvideo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .psvideo-title {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 600;
+    color: {{ section.settings.heading_color | default: '#333' }};
+    margin: 0;
+  }
+
+  .psvideo-nav {
+    display: flex;
+    gap: 12px;
+  }
+
+  .psvideo-nav-prev,
+  .psvideo-nav-next {
+    width: 48px;
+    height: 48px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+    color: #666;
+  }
+
+  .psvideo-nav-prev:hover,
+  .psvideo-nav-next:hover {
+    border-color: #333;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .psvideo-nav-prev.swiper-button-disabled,
+  .psvideo-nav-next.swiper-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .psvideo-content {
+    display: grid;
+    grid-template-columns: {{ section.settings.video_width }}% 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .psvideo-media {
+    position: sticky;
+    top: 20px;
+  }
+
+  .psvideo-player {
+    width: 100%;
+    height: {{ section.settings.video_height }}px;
+    object-fit: cover;
+    border-radius: {{ section.settings.video_border_radius }}px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  .psvideo-embed {
+    position: relative;
+    width: 100%;
+    height: {{ section.settings.video_height }}px;
+    border-radius: {{ section.settings.video_border_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  .psvideo-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .psvideo-placeholder {
+    width: 100%;
+    height: {{ section.settings.video_height }}px;
+    background: #f5f5f5;
+    border-radius: {{ section.settings.video_border_radius }}px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #999;
+  }
+
+  .psvideo-products {
+    overflow: hidden;
+  }
+
+  .psvideo-swiper {
+    overflow: visible;
+  }
+
+  .psvideo-item {
+    width: 100%;
+    height: 100%;
+  }
+
+  .psvideo-placeholder-product {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+  }
+
+  .psvideo-placeholder-product svg {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 15px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .psvideo-content {
+      grid-template-columns: 40% 1fr;
+      gap: 30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+
+
+    .desktop-nav1{
+    display:none;
+    }
+
+    .mobile-nav1{
+    display: flex !important;
+    gap: 12px;
+    margin-left: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+
+  .psvideo-nav-next {
+ 
+    background: #ffffff;
+  
+    position: absolute;
+    bottom: 55%;
+    z-index: 3;
+    right: 0px;
+}
+ .psvideo-nav-prev {
+    background: #ffffff;
+    position: absolute;
+    bottom: 55%;
+    z-index: 3;
+    left: 0px;
+}
+
+    .psvideo-content {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .psvideo-media {
+      position: static;
+    }
+    
+    .psvideo-title {
+      font-size: 28px;
+    }
+    
+    .psvideo-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .psvideo-container {
+      padding: 0 15px;
+    }
+    
+    .psvideo-content {
+      gap: 20px;
+    }
+  }
+</style>
+
+
+
+{% schema %}
+{
+  "name": "Product Slider with Video",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "header", "content": "Section Settings" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Best selling items" },
+    { "type": "range", "id": "heading_size", "min": 20, "max": 60, "step": 2, "unit": "px", "label": "Heading size", "default": 40 },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#333333" },
+    { "type": "color", "id": "background_color", "label": "Background color", "default": "#ffffff" },
+
+    { "type": "header", "content": "Video Settings" },
+    { "type": "select", "id": "video_type", "label": "Video type", "options": [ { "value": "mp4", "label": "MP4 Video" }, { "value": "youtube", "label": "YouTube" }, { "value": "vimeo", "label": "Vimeo" } ], "default": "mp4" },
+    { "type": "url", "id": "video_url", "label": "Video URL", "info": "For MP4: Upload video to Files and paste URL. For YouTube/Vimeo: Paste the full video URL" },
+    { "type": "range", "id": "video_width", "min": 25, "max": 60, "step": 5, "unit": "%", "label": "Video width", "default": 40 },
+    { "type": "range", "id": "video_height", "min": 200, "max": 600, "step": 20, "unit": "px", "label": "Video height", "default": 400 },
+    { "type": "range", "id": "video_border_radius", "min": 0, "max": 30, "step": 2, "unit": "px", "label": "Video border radius", "default": 12 },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay video", "default": true },
+    { "type": "checkbox", "id": "muted", "label": "Mute video", "default": true, "info": "Required for autoplay on most browsers" },
+    { "type": "checkbox", "id": "loop", "label": "Loop video", "default": true },
+    { "type": "checkbox", "id": "controls", "label": "Show video controls", "default": false },
+
+    { "type": "header", "content": "Product Settings" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+
+    { "type": "header", "content": "Section padding" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Top padding", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 4, "unit": "px", "label": "Bottom padding", "default": 60 }
+  ],
+  "presets": [ { "name": "Product Slider with Video" } ]
+}
+{% endschema %}

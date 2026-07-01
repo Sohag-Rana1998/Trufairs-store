@@ -1,0 +1,126 @@
+<!-- Custom Liquid Section -->
+<div class="custom-liquid-section">
+  {% unless section.settings.full_width %}
+    <div class="container" style="max-width: {{ section.settings.max_width }}px; margin: 0 auto; padding: 0 15px;">
+  {% endunless %}
+  
+  {% if section.settings.section_padding_top != blank %}
+    <style>
+      .custom-liquid-section {
+        padding-top: {{ section.settings.section_padding_top }}px;
+      }
+    </style>
+  {% endif %}
+  
+  {% if section.settings.section_padding_bottom != blank %}
+    <style>
+      .custom-liquid-section {
+        padding-bottom: {{ section.settings.section_padding_bottom }}px;
+      }
+    </style>
+  {% endif %}
+
+  {% if section.settings.custom_css != blank %}
+    <style>
+      {{ section.settings.custom_css }}
+    </style>
+  {% endif %}
+
+  <!-- Custom Liquid Code Area -->
+  {% if section.settings.custom_liquid != blank %}
+    <div class="custom-liquid-content">
+      {{ section.settings.custom_liquid }}
+    </div>
+  {% else %}
+    {% if request.design_mode %}
+      <div style="padding: 40px; text-align: center; border: 2px dashed #ddd; background: #f9f9f9; color: #666;">
+        <p>Add your custom Liquid code in the theme editor to see it here.</p>
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% unless section.settings.full_width %}
+    </div>
+  {% endunless %}
+</div>
+
+{% schema %}
+{
+  "name": "Custom Liquid",
+  "tag": "section",
+  "class": "custom-liquid-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Custom Liquid Code"
+    },
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "Custom Liquid Code",
+      "info": "Add your custom Liquid, HTML, CSS, or JavaScript code here. Use Liquid variables and filters as needed."
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width",
+      "default": false,
+      "info": "Enable to make the section span the full width of the screen"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Container Max Width",
+      "default": 1200,
+      "info": "Only applies when Full Width is disabled"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Custom Styling"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "Custom CSS",
+      "info": "Add custom CSS styles for this section. Don't include <style> tags."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Liquid"
+    }
+  ]
+}
+{% endschema %}

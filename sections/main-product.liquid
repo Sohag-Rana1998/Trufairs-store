@@ -1,0 +1,1012 @@
+
+
+ 
+
+
+
+{%- liquid
+  assign isModal = false
+  if template == 'product.modal'
+    assign isModal = true
+  endif
+-%}
+
+{%- render 'product-template',
+  product: product,
+  section_id: section.id,
+  blocks: section.blocks,
+  image_position: section.settings.image_position,
+  image_container_width: section.settings.image_size,
+  product_zoom_enable: section.settings.product_zoom_enable,
+  sku_enable: section.settings.sku_enable,
+  isModal: isModal,
+  thumbnail_position: section.settings.thumbnail_position,
+  thumbnail_height: section.settings.thumbnail_height,
+  thumbnail_arrows: section.settings.thumbnail_arrows,
+  mobile_layout: section.settings.mobile_layout,
+  video_looping: section.settings.enable_video_looping,
+  video_style: section.settings.product_video_style,
+  context: 'main-product',
+-%}
+
+
+<style>
+
+  
+@media (max-width:768px){
+  
+
+[data-type_headers_align_text=true] .breadcrumb {
+   
+    display: none ;
+}
+
+.product-slideshow .flickity-page-dots {  
+    height: 15px !important;
+    overflow: hidden !important;
+}
+
+
+ .collapsible-trigger-btn  {
+    
+    margin-top: 25px !important;
+   
+} 
+  
+}
+
+.info-label{
+  background-color:unset !important;
+}
+  
+</style>
+
+
+
+ 
+
+
+{% schema %}
+{
+  "name": "t:sections.main-product.name",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "sku_enable",
+      "label": "t:sections.main-product.settings.sku_enable.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-product.settings.header_media"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-product.settings.content"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:sections.main-product.settings.image_position.label",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.main-product.settings.image_position.options.left.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.main-product.settings.image_position.options.right.label"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_size",
+      "label": "t:sections.main-product.settings.image_size.label",
+      "default": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.main-product.settings.image_size.options.small.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.main-product.settings.image_size.options.medium.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.main-product.settings.image_size.options.large.label"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "product_zoom_enable",
+      "label": "t:sections.main-product.settings.product_zoom_enable.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_position",
+      "label": "t:sections.main-product.settings.thumbnail_position.label",
+      "default": "beside",
+      "options": [
+        {
+          "value": "beside",
+          "label": "t:sections.main-product.settings.thumbnail_position.options.beside.label"
+        },
+        {
+          "value": "below",
+          "label": "t:sections.main-product.settings.thumbnail_position.options.below.label"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_height",
+      "label": "t:sections.main-product.settings.thumbnail_height.label",
+      "info": "t:sections.main-product.settings.thumbnail_height.info",
+      "default": "flexible",
+      "options": [
+        {
+          "value": "fixed",
+          "label": "t:sections.main-product.settings.thumbnail_height.options.fixed.label"
+        },
+        {
+          "value": "flexible",
+          "label": "t:sections.main-product.settings.thumbnail_height.options.flexible.label"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "thumbnail_arrows",
+      "label": "t:sections.main-product.settings.thumbnail_arrows.label"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "t:sections.main-product.settings.mobile_layout.label",
+      "default": "partial",
+      "options": [
+        {
+          "value": "partial",
+          "label": "t:sections.main-product.settings.mobile_layout.options.partial.label"
+        },
+        {
+          "value": "full",
+          "label": "t:sections.main-product.settings.mobile_layout.options.full.label"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "t:sections.main-product.settings.enable_video_looping.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "product_video_style",
+      "label": "t:sections.main-product.settings.product_video_style.label",
+      "default": "muted",
+      "options": [
+        {
+          "value": "muted",
+          "label": "t:sections.main-product.settings.product_video_style.options.muted.label"
+        },
+        {
+          "value": "unmuted",
+          "label": "t:sections.main-product.settings.product_video_style.options.unmuted.label"
+        }
+      ],
+      "info": "t:sections.main-product.settings.product_video_style.info"
+    }
+  ],
+  "blocks": [{
+  "type": "@app"
+},
+{
+  "type": "price",
+  "name": "t:product_block.price.name",
+  "limit": 1
+},
+{
+  "type": "quantity_selector",
+  "name": "t:product_block.quantity_selector.name",
+  "limit": 1
+},
+{
+  "type": "complementary_products",
+  "name": "Complementary products",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.product-complementary.settings.paragraph.content"
+    },
+    {
+      "type": "text",
+      "id": "product_complementary_heading",
+      "label": "t:sections.product-complementary.settings.product_complementary_heading.label",
+      "default": "Pairs well with"
+    },
+    {
+      "type": "range",
+      "id": "complementary_count",
+      "label": "t:sections.product-complementary.settings.complementary_count.label",
+      "default": 4,
+      "min": 2,
+      "max": 10,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "per_slide",
+      "label": "t:sections.product-complementary.settings.per_slide.label",
+      "default": 2,
+      "min": 2,
+      "max": 4,
+      "step": 1
+    },
+    {
+      "type": "select",
+      "id": "control_type",
+      "label": "t:sections.product-complementary.settings.control_type.label",
+      "options": [
+        {
+          "value": "dots",
+          "label": "t:sections.product-complementary.settings.control_type.options.dots.label"
+        },
+        {
+          "value": "arrows",
+          "label": "t:sections.product-complementary.settings.control_type.options.arrows.label"
+        }
+      ],
+      "default": "dots"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.product-complementary.settings.header.content"
+    },
+    {
+      "type": "select",
+      "id": "image_style",
+      "label": "t:sections.product-complementary.settings.image_style.label",
+      "options": [
+        {
+          "value": "default",
+          "label": "t:sections.product-complementary.settings.image_style.options.default.label"
+        },
+        {
+          "value": "circle",
+          "label": "t:sections.product-complementary.settings.image_style.options.circle.label"
+        }
+      ],
+      "default": "default"
+    }
+  ]
+},
+{
+  "type": "size_chart",
+  "name": "t:product_block.size_chart.name",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "page",
+      "id": "size_chart",
+      "label": "t:product_block.size_chart.settings.page.label"
+    }
+  ]
+},
+{
+  "type": "video-reviews",
+  "name": "Customer video ",
+  "limit": 1,
+  "settings": [
+    { "type": "text", "id": "section_title", "label": "Title", "default": "Customer video reviews" },
+
+    { "type": "range", "id": "mobile_slides", "label": "Slides per view (mobile)", "min": 1, "max": 3, "step": 1, "default": 1 },
+    { "type": "range", "id": "tablet_slides", "label": "Slides per view (tablet)", "min": 1, "max": 3, "step": 1, "default": 2 },
+    { "type": "range", "id": "desktop_slides", "label": "Slides per view (desktop)", "min": 1, "max": 4, "step": 1, "default": 3 },
+    { "type": "range", "id": "space_between", "label": "Space between slides (px)", "min": 0, "max": 40, "step": 2, "default": 12 },
+
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 80, "step": 4, "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 80, "step": 4, "default": 0 },
+    { "type": "range", "id": "margin_top", "label": "Margin top", "min": 0, "max": 80, "step": 4, "default": 16 },
+    { "type": "range", "id": "margin_bottom", "label": "Margin bottom", "min": 0, "max": 80, "step": 4, "default": 16 },
+
+    { "type": "header", "content": "Videos" },
+
+    { "type": "text", "id": "video_url_1", "label": "Video URL 1", "info": "YouTube, Vimeo, or MP4 URL" },
+    { "type": "select", "id": "orientation_1", "label": "Orientation 1", "default": "horizontal", "options": [
+      { "value": "horizontal", "label": "16:9" },
+      { "value": "vertical", "label": "9:16" }
+    ]},
+
+    { "type": "text", "id": "video_url_2", "label": "Video URL 2" },
+    { "type": "select", "id": "orientation_2", "label": "Orientation 2", "default": "horizontal", "options": [
+      { "value": "horizontal", "label": "16:9" },
+      { "value": "vertical", "label": "9:16" }
+    ]},
+
+    { "type": "text", "id": "video_url_3", "label": "Video URL 3" },
+    { "type": "select", "id": "orientation_3", "label": "Orientation 3", "default": "horizontal", "options": [
+      { "value": "horizontal", "label": "16:9" },
+      { "value": "vertical", "label": "9:16" }
+    ]},
+
+    { "type": "text", "id": "video_url_4", "label": "Video URL 4" },
+    { "type": "select", "id": "orientation_4", "label": "Orientation 4", "default": "horizontal", "options": [
+      { "value": "horizontal", "label": "16:9" },
+      { "value": "vertical", "label": "9:16" }
+    ]},
+
+    { "type": "text", "id": "video_url_5", "label": "Video URL 5" },
+    { "type": "select", "id": "orientation_5", "label": "Orientation 5", "default": "horizontal", "options": [
+      { "value": "horizontal", "label": "16:9" },
+      { "value": "vertical", "label": "9:16" }
+    ]},
+
+    { "type": "text", "id": "video_url_6", "label": "Video URL 6" },
+    { "type": "select", "id": "orientation_6", "label": "Orientation 6", "default": "horizontal", "options": [
+      { "value": "horizontal", "label": "16:9" },
+      { "value": "vertical", "label": "9:16" }
+    ]}
+  ]
+}
+,
+
+{
+  "type": "variant_picker",
+  "name": "Variant picker",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "variant_labels",
+      "label": "t:product_block.variant_picker.settings.variant_labels.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "picker_type",
+      "label": "t:product_block.variant_picker.settings.picker_type.label",
+      "options": [
+        {
+          "value": "button",
+          "label": "t:product_block.variant_picker.settings.picker_type.options.button.label"
+        },
+        {
+          "value": "dropdown",
+          "label": "t:product_block.variant_picker.settings.picker_type.options.dropdown.label"
+        }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "checkbox",
+      "id": "product_dynamic_variants_enable",
+      "label": "t:product_block.variant_picker.settings.product_dynamic_variants_enable.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "color_swatches",
+      "label": "Enable color swatches",
+      "info": "Requires type to be set to 'Buttons'. [Learn how to set up swatches](https://archetypethemes.co/blogs/impulse/how-do-i-set-up-color-swatches)"
+    }
+  ]
+},
+{
+  "type": "description",
+  "name": "t:product_block.description.name",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "is_tab",
+      "label": "t:product_block.description.settings.is_tab.label"
+    }
+  ]
+},
+  
+{
+  "type": "buy_buttons",
+  "name": "t:product_block.buy_buttons.name",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "t:product_block.buy_buttons.settings.show_dynamic_checkout.label",
+      "info": "t:product_block.buy_buttons.settings.show_dynamic_checkout.info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "surface_pickup_enable",
+      "label": "t:product_block.buy_buttons.settings.surface_pickup_enable.label",
+      "info": "t:product_block.buy_buttons.settings.surface_pickup_enable.info",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gift_card_recipient",
+      "default": false,
+      "label": "t:common.gift_card.show_gift_card_recipient.label",
+      "info": "t:common.gift_card.show_gift_card_recipient.info"
+    },
+    {
+  "type": "select",
+  "id": "show_bundle_btn",
+  "label": "Show bundle button",
+  "options": [
+    {
+      "value": "true",
+      "label": "True"
+    },
+    {
+      "value": "false",
+      "label": "False"
+    }
+  ],
+  "default": "false"
+}
+
+    ,
+  ]
+},
+
+
+      
+{
+  "type": "inventory_status",
+  "name": "t:product_block.inventory_status.name",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "range",
+      "id": "inventory_threshold",
+      "label": "t:product_block.inventory_status.settings.inventory_threshold.label",
+      "default": 10,
+      "min": 0,
+      "max": 20,
+      "step": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "inventory_transfers_enable",
+      "label": "t:product_block.inventory_status.settings.inventory_transfers_enable.label",
+      "info": "t:product_block.inventory_status.settings.inventory_transfers_enable.info",
+      "default": true
+    }
+  ]
+},
+{
+  "type": "sales_point",
+  "name": "t:product_block.sales_point.name",
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:product_block.sales_point.settings.icon.label",
+      "default": "globe",
+      "options": [
+        {
+          "value": "checkmark",
+          "label": "t:product_block.sales_point.settings.icon.options.checkmark.label"
+        },
+        {
+          "value": "gift",
+          "label": "t:product_block.sales_point.settings.icon.options.gift.label"
+        },
+        {
+          "value": "globe",
+          "label": "t:product_block.sales_point.settings.icon.options.globe.label"
+        },
+        {
+          "value": "heart",
+          "label": "t:product_block.sales_point.settings.icon.options.heart.label"
+        },
+        {
+          "value": "leaf",
+          "label": "t:product_block.sales_point.settings.icon.options.leaf.label"
+        },
+        {
+          "value": "lock",
+          "label": "t:product_block.sales_point.settings.icon.options.lock.label"
+        },
+        {
+          "value": "package",
+          "label": "t:product_block.sales_point.settings.icon.options.package.label"
+        },
+        {
+          "value": "phone",
+          "label": "t:product_block.sales_point.settings.icon.options.phone.label"
+        },
+        {
+          "value": "ribbon",
+          "label": "t:product_block.sales_point.settings.icon.options.ribbon.label"
+        },
+        {
+          "value": "shield",
+          "label": "t:product_block.sales_point.settings.icon.options.shield.label"
+        },
+        {
+          "value": "tag",
+          "label": "t:product_block.sales_point.settings.icon.options.tag.label"
+        },
+        {
+          "value": "truck",
+          "label": "t:product_block.sales_point.settings.icon.options.truck.label"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:product_block.sales_point.settings.text.label",
+      "default": "Free worldwide shipping"
+    }
+  ]
+},
+{
+  "type": "text",
+  "name": "t:product_block.text.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "default": "Text block",
+      "label": "t:product_block.text.settings.text.label"
+    }
+  ]
+},
+{
+  "type": "trust_badge",
+  "name": "t:product_block.trust_badge.name",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "trust_image",
+      "label": "t:product_block.trust_badge.settings.trust_image.label"
+    }
+  ]
+},
+{
+  "type": "tab",
+  "name": "t:product_block.tab.name",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:product_block.tab.settings.title.label",
+      "default": "Shipping information"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "t:product_block.tab.settings.content.label",
+      "default": "<p>Use collapsible tabs for more detailed information that will help customers make a purchasing decision.</p><p>Ex: Shipping and return policies, size guides, and other common questions.</p>"
+    },
+    {
+      "type": "page",
+      "id": "page",
+      "label": "t:product_block.tab.settings.page.label"
+    }
+  ]
+},
+{
+  "type": "share",
+  "name": "t:product_block.share_on_social.name",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:product_block.share_on_social.settings.content"
+    }
+  ]
+},
+{
+  "type": "separator",
+  "name": "t:product_block.separator.name"
+},
+{
+  "type": "contact",
+  "name": "t:product_block.contact_form.name",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:product_block.contact_form.settings.content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:product_block.contact_form.settings.title.label",
+      "default": "Ask a question"
+    },
+    {
+      "type": "checkbox",
+      "id": "phone",
+      "label": "t:product_block.contact_form.settings.phone.label"
+    }
+  ]
+},
+
+{
+  "type": "discount-showcase",
+  "name": "Discount and Coupon",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Campaign Sale Settings"
+    },
+    {
+      "type": "number",
+      "id": "back_to_school_discount",
+      "label": "Campaign Discount %",
+      "default": 10,
+      "info": "Discount percentage for Campaign collection products"
+    },
+{
+      "type": "collection",
+      "id": "campaign_collection_handle",
+      "label": "Select Campaign Collection"
+    },
+    {
+      "type": "text",
+      "id": "back_to_school_coupon",
+      "label": "Offer Coupon Code",
+      "default": "SCHOOL10",
+      "info": "Coupon code for Campaign collection"
+    },
+    {
+      "type": "text",
+      "id": "back_to_school_message",
+      "label": "Campaign Offer Text",
+      "default": "Enjoy Special offer",
+      "info": "Message displayed for campaign products"
+    },
+    {
+      "type": "text",
+      "id": "back_to_school_icon",
+      "label": "Offer Icon",
+      "default": "🎒",
+      "info": "Icon/emoji for offer"
+    },
+    {
+      "type": "header",
+      "content": "Other Products Settings"
+    },
+    {
+      "type": "number",
+      "id": "other_discount",
+      "label": "Other Products Discount %",
+      "default": 5,
+      "info": "Discount percentage for non-campaign products"
+    },
+    {
+      "type": "text",
+      "id": "other_coupon",
+      "label": "Other Products Coupon Code",
+      "default": "NEW05",
+      "info": "Coupon code for other products"
+    },
+    {
+      "type": "text",
+      "id": "other_message",
+      "label": "Other Products Message",
+      "default": "Enjoy Extra 5% Off On Your First Order.",
+      "info": "Message displayed for other products"
+    },
+    {
+      "type": "text",
+      "id": "other_icon",
+      "label": "Other Products Icon",
+      "default": "🎉",
+      "info": "Icon/emoji for other products offer"
+    },
+    {
+      "type": "header",
+      "content": "Back to School Design Settings"
+    },
+    {
+      "type": "color",
+      "id": "back_to_school_bg_start",
+      "label": "Back to School Background Start Color",
+      "default": "#fff3cd"
+    },
+    {
+      "type": "color",
+      "id": "back_to_school_bg_end",
+      "label": "Back to School Background End Color",
+      "default": "#d4edda"
+    },
+    {
+      "type": "color",
+      "id": "back_to_school_border",
+      "label": "Back to School Border Color",
+      "default": "#17a2b8"
+    },
+    {
+      "type": "color",
+      "id": "back_to_school_text",
+      "label": "Back to School Text Color",
+      "default": "#0c5460"
+    },
+    {
+      "type": "header",
+      "content": "Other Products Design Settings"
+    },
+    {
+      "type": "color",
+      "id": "other_bg_start",
+      "label": "Other Products Background Start Color",
+      "default": "#f8d7da"
+    },
+    {
+      "type": "color",
+      "id": "other_bg_end",
+      "label": "Other Products Background End Color",
+      "default": "#d1ecf1"
+    },
+    {
+      "type": "color",
+      "id": "other_border",
+      "label": "Other Products Border Color",
+      "default": "#dc3545"
+    },
+    {
+      "type": "color",
+      "id": "other_text",
+      "label": "Other Products Text Color",
+      "default": "#721c24"
+    },
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top Margin",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Bottom Margin",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    }
+  ]
+}
+,
+{
+  "type": "custom",
+  "name": "t:product_block.html.name",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "code",
+      "label": "t:product_block.html.settings.code.label",
+      "default": "<h4>Custom code block</h4><p>Use this advanced section to add custom HTML, app scripts, or liquid.</p>",
+      "info": "t:product_block.html.settings.code.info"
+    }
+  ]
+},
+{
+  "type": "text_highlight",
+  "name": "Key Points",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "code_metafield",
+      "label": "t:product_block.html.settings.code.label",
+      "default": "<h4>Custom code block</h4><p>Use this advanced section to add custom HTML, app scripts, or liquid.</p>",
+      "info": "t:product_block.html.settings.code.info"
+    }
+  ]
+},
+        {
+"type": "bundle-purchase",
+  "name": "Bundle purchase",
+  
+  "settings": [
+    {
+      "type": "text",
+      "id": "bundle_title",
+      "label": "Bundle Title",
+      "default": "Get Everything You Need"
+    },
+    {
+      "type": "text",
+      "id": "bundle_subtitle",
+      "label": "Bundle Subtitle",
+      "default": "Complete your setup with this perfect combination"
+    },
+    {
+      "type": "number",
+      "id": "bundle_discount",
+      "label": "Bundle Discount Amount (in cents)",
+      "info": "Enter the discount amount in cents (e.g., 1599 for $15.99)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Instructions"
+    },
+    {
+      "type": "paragraph",
+      "content": "To use this block: 1. Create a metafield with namespace 'custom' and key 'bundle_product_handle' of type 'Product reference'. 2. Set this metafield on products where you want to show the bundle. 3. The metafield value should reference the product you want to bundle with the current product."
+    }
+  ]
+},
+     {
+  "type": "attachment_group",
+  "name": "Attachment Group",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Add Attachments"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext_attachment",
+      "label": "Add short text for this block",
+      "default": "<p>Choose additional items to enhance your purchase</p>"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Select the collection of attachments to display."}
+   ,
+   
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 24,
+      "step": 2,
+      "label": "Products to show",
+      "default": 8
+    },
+ {
+  "type": "color",
+  "id": "main-button-color",
+  "label": "Add to cart button color",
+  "default": "#000000"
+}
+
+  ]
+},
+        {
+  "type": "zipcode_checker",
+  "name": "Zipcode Checker",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Block Title",
+      "default": "Check Delivery Availability"
+    },
+    {
+      "type": "textarea",
+      "id": "eligible_zipcodes",
+      "label": "Eligible Zipcodes",
+      "default": "90210,10001,60601,33139,94103,98101,20001,77002,80202,30303",
+      "info": "Enter comma-separated zipcodes"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "Great news! We deliver to your area. This product is eligible for shipping to your location."
+    },
+    {
+      "type": "text",
+      "id": "error_message",
+      "label": "Error Message",
+      "default": "We're sorry, but we currently don't deliver to this zipcode. Please check back later as we're expanding our delivery areas."
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Color",
+      "default": "#4a90e2"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e8e8e8"
+    }
+  ]
+},
+     {
+      "type": "delivery_date",
+      "name": "Delivery Date",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Delivery Date Settings"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_delivery_date",
+          "label": "Show delivery date",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "min_delivery_days",
+          "min": 1,
+          "max": 14,
+          "step": 1,
+          "default": 5,
+          "label": "Minimum delivery days"
+        },
+        {
+          "type": "range",
+          "id": "max_delivery_days",
+          "min": 1,
+          "max": 14,
+          "step": 1,
+          "default": 7,
+          "label": "Maximum delivery days"
+        }
+      ]
+    },
+    {
+  "type": "bundle_block",
+  "name": "Product Bundle Block",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "text",
+      "id": "bundle_title",
+      "label": "Bundle Title",
+      "default": "Create Your Bundle"
+    },
+    {
+      "type": "html",
+      "id": "bundle_description",
+      "label": "Bundle Description",
+      "default": "<span>Buy $2000 and above from this bundle and enjoy 15% discount.</span>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress_bar",
+      "label": "Show Progress Bar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_individual_cart",
+      "label": "Enable Individual Add to Cart",
+      "default": true
+    }
+  ],
+    },
+]
+}
+{% endschema %}

@@ -1,0 +1,591 @@
+{% comment %}
+  Product Videos Section - Block Based (Unlimited Videos)
+  Videos play inline at their own position
+{% endcomment %}
+
+{{ 'product-videos.css' | asset_url | stylesheet_tag }}
+
+<div class="product-videos-section">
+  <div class="product-videos-container container page-width">
+
+    {% if section.settings.section_subtitle != blank %}
+      <span class="section-subtitle pf-eyebrow">{{ section.settings.section_subtitle }}</span>
+    {% endif %}
+
+    {% if section.settings.section_title != blank %}
+      <h2 class="section-title">{{ section.settings.section_title }}</h2>
+    {% endif %}
+
+    {% if section.settings.section_description != blank %}
+      <p class="section-description">{{ section.settings.section_description }}</p>
+    {% endif %}
+
+    <div
+      class="videos-grid"
+      style="--grid-gap: {{ section.settings.grid_gap }}px;"
+      data-columns="{{ section.settings.columns_desktop }}"
+    >
+      {% for block in section.blocks %}
+        {% if block.settings.video_url != blank %}
+          <div class="video-column" {{ block.shopify_attributes }}>
+            <div class="video-card">
+              <div class="video-wrapper" data-video-id="video-{{ block.id }}" role="region" aria-label="Product video {{ forloop.index }}">
+
+                <!-- Thumbnail -->
+                <div class="video-thumbnail-container" tabindex="0" aria-label="Play video {{ block.settings.title | default: 'Product Video' }}" role="button" aria-controls="video-{{ block.id }}">
+                  {% if block.settings.thumbnail != blank %}
+                    <img
+                      src="{{ block.settings.thumbnail | image_url: width:   section.settings.thumbnail_desktop   }}"
+                      alt="{{ block.settings.title | default: 'Product Video' }}"
+                      class="video-thumbnail-image"
+                     
+                      width="800"
+                      height="800"
+                    >
+                  {% else %}
+                    <div class="video-thumbnail-placeholder">
+                      <span>Product Video</span>
+                    </div>
+                  {% endif %}
+
+                  <button
+                    class="play-button"
+                    aria-label="Play video"
+                    aria-controls="video-{{ block.id }}"
+                    data-target="video-{{ block.id }}"
+                    type="button"
+                  >
+                    <span class="play-button-circle" aria-hidden="true">
+                      <span class="play-button-icon" aria-hidden="true"></span>
+                    </span>
+                  </button>
+                </div>
+
+                <!-- Video Player -->
+                <div class="video-player-container" id="video-{{ block.id }}" style="display:none;">
+                  <video
+                    class="inline-video-player"
+                    controls
+                    playsinline
+                    preload="metadata"
+                    poster="{{ block.settings.thumbnail | image_url: width: 800 }}"
+                  >
+                    <source src="{{ block.settings.video_url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+
+              </div>
+
+              <!-- Video Info -->
+              <div class="video-info">
+                {% if block.settings.badge != blank %}
+                  <span class="video-badge">{{ block.settings.badge }}</span>
+                {% endif %}
+                {% if block.settings.title != blank %}
+                  <h3 class="video-title">{{ block.settings.title }}</h3>
+                {% endif %}
+                {% if block.settings.description != blank %}
+                  <p class="video-description">{{ block.settings.description }}</p>
+                {% endif %}
+              </div>
+
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.bottom_text != blank %}
+      <p class="section-bottom-text">{{ section.settings.bottom_text }}</p>
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+
+  p.section-bottom-text {
+    margin-top: 25px;
+}
+.product-videos-section {
+  padding: {{ section.settings.padding_top }}px 15px {{ section.settings.padding_bottom }}px;
+  background-color: {{ section.settings.background_color }};
+}
+p.section-bottom-text {
+    margin-top: 25px;
+}
+.pf-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--pf-accent-light) 0%, #FFFFFF 100%);
+    border: 1px solid var(--pf-accent);
+    border-radius: 50px;
+    color: var(--pf-accent);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.product-videos-container {
+  margin: 0 auto;
+  text-align: center;
+}
+
+{% comment %} .section-subtitle {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: {{ section.settings.accent_color }};
+  margin-bottom: 10px;
+  padding: 6px 16px;
+  background-color: {{ section.settings.accent_color | color_modify: 'alpha', 0.1 }};
+  border-radius: 20px;
+} {% endcomment %}
+
+.section-title {
+  font-size: clamp(24px, 5vw, 36px);
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+  margin-bottom: 15px;
+}
+
+.section-description {
+  font-size: 16px;
+  color: {{ section.settings.text_color | color_modify: 'alpha', 0.75 }};
+  max-width: 650px;
+  margin: 0 auto 40px;
+}
+
+/* Grid with dynamic columns on desktop (2 or 3) and 1 column on mobile */
+.videos-grid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+}
+@media (max-width: 768px) {
+  .videos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.video-card {
+  background: {{ section.settings.card_background }};
+  border-radius: {{ section.settings.card_border_radius }}px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.video-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0,0,0,.12);
+}
+
+.video-wrapper {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #000;
+}
+
+.video-thumbnail-container {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  z-index: 2;
+  display: block;
+  outline: none;
+}
+.video-thumbnail-container:focus-visible .play-button-circle {
+  box-shadow: 0 0 0 3px {{ section.settings.accent_color | color_modify: 'alpha', 0.4 }};
+}
+
+.video-thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Border-only play button (ring + triangle via CSS borders) */
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.play-button-circle {
+  width: {{ section.settings.play_button_size }}px;
+  height: {{ section.settings.play_button_size }}px;
+  background: transparent; /* border-only ring */
+  border: {{ section.settings.play_button_border_width }}px solid {{ section.settings.play_button_border_color }};
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s ease;
+}
+.play-button:hover .play-button-circle {
+  transform: scale(1.05);
+}
+.play-button-icon {
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  pointer-events: none;
+  border-style: solid;
+  border-width: {{ section.settings.play_icon_size }}px 0 {{ section.settings.play_icon_size }}px {{ section.settings.play_icon_width }}px;
+  border-color: transparent transparent transparent {{ section.settings.play_icon_color }};
+}
+
+.video-player-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.inline-video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-info {
+  padding: 20px 24px;
+  text-align: left;
+}
+
+.video-badge {
+  font-size: 11px;
+  font-weight: 700;
+  background: {{ section.settings.accent_color }};
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.video-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: {{ section.settings.text_color }};
+}
+
+.video-description {
+  font-size: 14px;
+  color: {{ section.settings.text_color | color_modify: 'alpha', 0.7 }};
+}
+
+/* State helpers */
+.video-thumbnail-container.hidden { display: none; }
+.video-player-container.active { display: block !important; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const wrappers = document.querySelectorAll('.video-wrapper');
+  const allVideos = document.querySelectorAll('.inline-video-player');
+
+  function resetWrapper(wrapper) {
+    const thumb = wrapper.querySelector('.video-thumbnail-container');
+    const player = wrapper.querySelector('.video-player-container');
+    const video = player ? player.querySelector('video') : null;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+    if (thumb) thumb.classList.remove('hidden');
+    if (player) {
+      player.classList.remove('active');
+      player.style.display = 'none';
+    }
+  }
+
+  function pauseAllExcept(currentWrapper) {
+    wrappers.forEach(function (wrap) {
+      if (wrap !== currentWrapper) resetWrapper(wrap);
+    });
+  }
+
+  function playInWrapper(wrapper) {
+    const thumb = wrapper.querySelector('.video-thumbnail-container');
+    const player = wrapper.querySelector('.video-player-container');
+    const video = player ? player.querySelector('video') : null;
+    if (!video) return;
+
+    pauseAllExcept(wrapper);
+
+    thumb.classList.add('hidden');
+    player.classList.add('active');
+    player.style.display = 'block';
+
+    // Attempt to play (some browsers may require user gesture; this is called from a click/keypress)
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        // If play fails (e.g., autoplay policy), just show controls and leave it visible
+      });
+    }
+  }
+
+  // Click handlers for both the thumbnail area and the play button
+  document.querySelectorAll('.video-thumbnail-container, .play-button').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      const wrapper = this.closest('.video-wrapper');
+      if (wrapper) playInWrapper(wrapper);
+    });
+
+    // Keyboard accessibility for thumbnail container
+    if (el.classList.contains('video-thumbnail-container')) {
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const wrapper = this.closest('.video-wrapper');
+          if (wrapper) playInWrapper(wrapper);
+        }
+      });
+    }
+  });
+
+  // When a video ends, restore its thumbnail
+  allVideos.forEach(function (video) {
+    video.addEventListener('ended', function () {
+      const wrapper = this.closest('.video-wrapper');
+      if (wrapper) resetWrapper(wrapper);
+    });
+
+    // If a video starts playing (e.g., via native controls), pause others
+    video.addEventListener('play', function () {
+      const wrapper = this.closest('.video-wrapper');
+      pauseAllExcept(wrapper);
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Product Videos",
+  "tag": "section",
+  "class": "product-videos-section-wrapper",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "Verified Quality"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "See It In Action"
+    },
+    {
+      "type": "textarea",
+      "id": "section_description",
+      "label": "Section Description",
+      "default": "Watch real videos including unboxing, usage, and assembling."
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom Text",
+      "default": "✓ All videos are filmed in-house"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2,
+      "info": "Choose 2 or 3 columns on desktop. Mobile remains 1 column."
+    },
+    {
+      "type": "range",
+      "id": "thumbnail_desktop",
+      "label": "Thumbnail Size",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "default": 800,
+  
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid Gap",
+      "min": 15,
+      "max": 50,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card Radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f8fafc"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1e293b"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#2563eb"
+    },
+    {
+      "type": "header",
+      "content": "Play Button"
+    },
+    {
+      "type": "range",
+      "id": "play_button_size",
+      "label": "Play button size",
+      "min": 36,
+      "max": 120,
+      "step": 2,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "play_button_border_width",
+      "label": "Play button border width",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "play_button_border_color",
+      "label": "Play button border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "play_icon_size",
+      "label": "Play icon triangle height",
+      "min": 6,
+      "max": 24,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "play_icon_width",
+      "label": "Play icon triangle width",
+      "min": 8,
+      "max": 32,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "play_icon_color",
+      "label": "Play icon color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Product Video",
+      "settings": [
+        {
+          "type": "url",
+          "id": "video_url",
+          "label": "Video URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "thumbnail",
+          "label": "Thumbnail"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Video"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Product Video"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Watch this product in action."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Product Videos",
+      "category": "Video"
+    }
+  ]
+}
+{% endschema %}

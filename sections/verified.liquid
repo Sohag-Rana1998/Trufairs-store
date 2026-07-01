@@ -1,0 +1,340 @@
+<section class="premium-verified-section color-mode-{{ section.settings.color_mode }}">
+  <div class="premium-verified-wrapper">
+
+    {% if section.settings.show_icon %}
+      <div class="premium-icon">
+        {% if section.settings.icon_image != blank %}
+        
+
+   {% if product.metafields.custom.verified_aprroved %}
+
+          <span class="trufairs-featured-picks__badge-2">
+        <img
+                title="This item is trufairs verified"
+                class="verified-white-logo"
+                style="max-width:35px;"
+                src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Verified_Logo_Main.png?v=1777415405"
+                height="35"
+                width="35"
+                alt=""
+              >
+                    Verified Selection
+                  </span>   
+           
+{% else %}
+
+ <span class="trufairs-featured-picks__badge-2">
+        <img
+                title="This item is trufairs verified"
+                class="verified-white-logo"
+                style="max-width:35px;"
+                src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Trufairs_Trusted_Icon_Transparent.png?v=1762834274"
+                height="35"
+                width="35"
+                alt=""
+              >
+                    Trusted Selection
+                  </span>
+
+{% endif %}
+
+
+        {% elsif section.settings.icon_svg != blank %}
+          {{ section.settings.icon_svg }}
+        {% endif %}
+      </div>
+    {% endif %}
+   {% if product.metafields.custom.verified_aprroved %}
+      <h2 class="premium-heading">
+      What "Trufairs Verified" Means
+      </h2>
+      <p class="premium-text">
+        {% if product.metafields.custom.verified_means %}
+{{ product.metafields.custom.verified_means }}
+        {% else %}
+    We don’t list everything — we select what works. Each product is reviewed to meet our standards for quality, usability, and consistency. So you can shop without second-guessing your purchase.
+    
+        {% endif %}
+     </p>
+    {% else %}
+  <h2 class="premium-heading">
+      Trufairs Trusted
+      </h2>
+      <p class="premium-text">
+    We don't pick favorites — our customers do. Each Trusted Pick earned its place through high demand, top ratings, and real purchase validation. So you can shop knowing others already love it. </p>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} .premium-verified-section {
+    width: 100%;
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .premium-verified-section.color-mode-light {
+    background: {{ section.settings.light_background }};
+  }
+
+  #shopify-section-{{ section.id }} .premium-verified-section.color-mode-dark {
+    background: {{ section.settings.dark_background }};
+  }
+
+  #shopify-section-{{ section.id }} .premium-verified-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .premium-verified-wrapper::before {
+    content: "";
+    width: 40px;
+    height: 2px;
+    display: block;
+    margin: 0 auto 20px;
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-light .premium-verified-wrapper::before {
+    background: {{ section.settings.light_line_color }};
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-dark .premium-verified-wrapper::before {
+    background: {{ section.settings.dark_line_color }};
+  }
+
+  #shopify-section-{{ section.id }} .premium-icon {
+    margin-bottom: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .premium-icon img {
+    max-width: {{ section.settings.icon_size }}px;
+    width:{{ section.settings.icon_size }}px;
+    height: auto;
+    display: inline-flex;
+  }
+
+  #shopify-section-{{ section.id }} .premium-icon svg {
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-light .premium-icon svg {
+    fill: {{ section.settings.light_heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-dark .premium-icon svg {
+    fill: {{ section.settings.dark_heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .premium-heading {
+    margin: 0 0 16px;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-light .premium-heading {
+    color: {{ section.settings.light_heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-dark .premium-heading {
+    color: {{ section.settings.dark_heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .premium-text {
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-light .premium-text {
+    color: {{ section.settings.light_text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .color-mode-dark .premium-text {
+    color: {{ section.settings.dark_text_color }};
+  }
+
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .premium-verified-section {
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} .premium-text {
+      font-size: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Verified Section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_mode",
+      "label": "Section color mode",
+      "default": "light",
+      "options": [
+        {
+          "value": "light",
+          "label": "Light mode"
+        },
+        {
+          "value": "dark",
+          "label": "Dark mode"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_icon",
+      "label": "Show icon",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_image",
+      "label": "Icon image"
+    },
+    {
+      "type": "textarea",
+      "id": "icon_svg",
+      "label": "SVG icon fallback",
+      "default": "<svg viewBox='0 0 24 24'><path d='M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 15.8 7.1 17.2l.9-5.5-4-3.9 5.5-.8L12 2z'/></svg>"
+    },
+    {
+      "type": "text",
+      "id": "icon_title",
+      "label": "Icon title",
+      "default": "This item is Trufairs verified"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 32,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trufairs Verified"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We don’t list everything — we select what works. Each product is reviewed to meet our standards for quality, usability, and consistency. So you can shop without second-guessing your purchase."
+    },
+    {
+      "type": "header",
+      "content": "Light mode colors"
+    },
+    {
+      "type": "color",
+      "id": "light_background",
+      "label": "Light background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "light_heading_color",
+      "label": "Light heading color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "light_text_color",
+      "label": "Light text color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "light_line_color",
+      "label": "Light line color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "header",
+      "content": "Dark mode colors"
+    },
+    {
+      "type": "color",
+      "id": "dark_background",
+      "label": "Dark background",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "dark_heading_color",
+      "label": "Dark heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dark_text_color",
+      "label": "Dark text color",
+      "default": "#d6d6d6"
+    },
+    {
+      "type": "color",
+      "id": "dark_line_color",
+      "label": "Dark line color",
+      "default": "#444444"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Verified Section"
+    }
+  ]
+}
+{% endschema %}

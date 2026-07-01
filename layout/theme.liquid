@@ -1,0 +1,318 @@
+
+<!doctype html>
+<html class="no-js  " lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction }}">
+<head>
+  <script src="https://t.contentsquare.net/uxa/af94cf63d5a64.js"></script>
+  <meta name="google-site-verification" content="wdg2EnlTyaujnC9-t_lPfn11NXHZ6YzlfSfOC5gOdV8" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://productreviews.shopifycdn.com">
+  <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+ <link rel="dns-prefetch" href="https://maps.googleapis.com">
+  <link rel="dns-prefetch" href="https://maps.gstatic.com">  
+ 
+ {% render 'organization-schema' %}
+  {%- if settings.favicon != blank -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png" />
+  {%- endif -%}
+
+  {%- render 'seo-title' -%}
+
+  {%- if page_description -%}
+  <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {%- render 'social-meta-tags' -%}
+
+  {%- render 'font-face' -%}
+ 
+  {{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+  {%- render 'css-variables' -%}
+   {{ 'custom-css.css' | asset_url | stylesheet_tag  }}
+ 
+  
+   
+  <script>
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+
+    window.theme = window.theme || {};
+    theme.routes = {
+      home: "{{ routes.root_url }}",
+      cart: "{{ routes.cart_url | append: '.js' }}",
+      cartPage: "{{ routes.cart_url }}",
+      cartAdd: "{{ routes.cart_add_url | append: '.js' }}",
+      cartChange: "{{ routes.cart_change_url | append: '.js' }}",
+      search: "{{ routes.search_url }}",
+      predictiveSearch: "{{ routes.predictive_search_url }}"
+    };
+    theme.strings = {
+      soldOut: {{ 'products.product.sold_out' | t | json }},
+      unavailable: {{ 'products.product.unavailable' | t | json }},
+      inStockLabel: {{ 'products.product.in_stock_label' | t | json }},
+      oneStockLabel: {{ 'products.product.stock_label.one' | t: count: '[count]' | json }},
+      otherStockLabel: {{ 'products.product.stock_label.other' | t: count: '[count]' | json }},
+      willNotShipUntil: {{ 'products.product.will_not_ship_until' | t: date: '[date]' | json }},
+      willBeInStockAfter: {{ 'products.product.will_be_in_stock_after' | t: date: '[date]' | json }},
+      waitingForStock: {{ 'products.product.waiting_for_stock' | t | json }},
+      savePrice: {{ 'products.general.save_html' | t: saved_amount: '[saved_amount]' | json }},
+      cartEmpty: {{ 'cart.general.empty' | t | json }},
+      cartTermsConfirmation: {{ 'cart.general.terms_confirm' | t | json }},
+      searchCollections: {{ 'general.search.collections' | t | json }},
+      searchPages: {{ 'general.search.pages' | t | json }},
+      searchArticles: {{ 'general.search.articles' | t | json }},
+      productFrom: {{ 'products.general.from_text_html' | t: price: '' | json }},
+      maxQuantity: {{ 'cart.general.max_quantity' | t: quantity: '[quantity]', title: '[title]' | json }}
+    };
+    theme.settings = {
+      cartType: {{ settings.cart_type | json }},
+      isCustomerTemplate: {% if request.page_type contains 'customers/' %}true{% else %}false{% endif %},
+      moneyFormat: {{ shop.money_format | json }},
+      saveType: {{ settings.product_save_type | json }},
+      productImageSize: {{ settings.product_grid_image_size | json }},
+      productImageCover: {{ settings.product_grid_image_fill }},
+      predictiveSearch: {{ settings.predictive_search_enabled }},
+      predictiveSearchType: {{ settings.search_type | json }},
+      predictiveSearchVendor: {{ settings.predictive_search_show_vendor | json }},
+      predictiveSearchPrice: {{ settings.predictive_search_show_price | json }},
+      quickView: {{ settings.quick_shop_enable }},
+      themeName: 'Impulse',
+      themeVersion: "7.6.2"
+    };
+  </script>
+
+  {{ content_for_header }}
+
+  <script src="{{ 'vendor-scripts-v11.js' | asset_url | split: '?' | first }}" defer="defer"></script>
+
+  {%- if shop.enabled_currencies.size > 1 -%}
+    <link rel="stylesheet" href="{{ 'country-flags.css' | asset_url | split: '?' | first }}">
+  {%- endif -%}
+
+ 
+<script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
+
+
+  {%- if request.page_type contains 'customers/' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  {% if request.design_mode %}
+    <script>theme.settings.email = {{ shop.email | json }}</script>
+    <script src="https://api.archetypethemes.co/design-mode.js" defer="defer"></script>
+  {% endif %}
+
+
+
+
+ <!-- Microsoft Clarity (gtag.js) -->
+  
+  <script type="text/javascript" defer="defer">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "r12hxrpf47");
+  </script>  
+  
+  <!-- TikTok Pixel Code Start -->
+  <script defer="defer">
+  !function (w, d, t) {
+  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+  var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+  ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+  ttq.load('D24HERBC77UCI3DBND9G');
+  ttq.page();
+  }(window, document, 'ttq');
+  </script>  
+    
+
+
+</head>
+
+
+
+<body class="  template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}{% if request.path == '/challenge' %} template-challange{% endif %}" data-center-text="{{ settings.type_body_align_text }}" data-button_style="{{ settings.button_style }}" data-type_header_capitalize="{{ settings.type_header_capitalize }}" data-type_headers_align_text="{{ settings.type_headers_align_text }}" data-type_product_capitalize="{{ settings.type_product_capitalize }}" data-swatch_style="{{ settings.swatch_style }}" {% if settings.disable_animations %}data-disable-animations="true"{% endif %}>
+
+
+
+
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+  <div id="PageContainer" class="page-container">
+    <div class="transition-body">
+
+    {%- sections 'header-group' -%}
+    {%- sections 'popup-group' -%}
+{% comment %} {% section 'icon-with-text-custom' %} {% endcomment %}
+
+{% section 'dynamic-breadcrumbs' %}
+
+ 
+      <main class="main-content" id="MainContent">
+        
+        {{ content_for_layout }}
+      </main>
+
+    {%- sections 'footer-group' -%}
+
+    </div>
+  </div>
+
+  {%- liquid
+    render 'video-modal'
+    render 'photoswipe-template'
+    render 'tool-tip'
+  -%}
+{% if template == "product" %}
+<style>
+
+  @media (max-width: 768px) {
+    .shopify-back-to-top-btn {
+        
+        right: 30px !important;
+        bottom: 150px !important;
+    }
+
+inbox-online-store-chat#ShopifyChat   {
+    position: fixed;
+    bottom: 70px !important;
+   
+}
+
+}
+</style>
+
+{% endif %}
+  {% comment %} Image markup used when building product grid item via JS {% endcomment %}
+  <template id="naturalImageMarkup">
+    <div class="image-wrap" style="height: 0;">
+      <image-element data-aos="image-fade-in" data-aos-offset="150">
+        <img class="grid-product__image image-element" width height src srcset alt>
+      </image-element>
+    </div>
+  </template>
+  <template id="fixedRatioImageMarkup">
+    <div class="grid__image-ratio">
+      <image-element data-aos="image-fade-in" data-aos-offset="150">
+        <img class="image-element" width height src srcset alt>
+      </image-element>
+    </div>
+  </template>
+
+ {% render 'back-to-top' %}
+      
+      {% if template != "index" %}
+        {{ 'custom-css-others.css' | asset_url | stylesheet_tag }}
+  
+        <script src="{{ 'add-to-cart.js' | asset_url }}" defer="defer"></script>
+        
+        <script src="{{ 'custom-js-others.js' | asset_url }}" defer="defer"></script>
+      {% endif %}
+      
+      <script src="{{ 'custom-js.js' | asset_url }}" defer="defer"></script>
+
+   
+ <script>
+      // Initialize a flag to track if scripts have been loaded
+      var script_loaded = !1; // !1 is equivalent to false
+
+      // Function to load lazy-loaded scripts and resources
+      function loadJSscripts() {
+        // Check if scripts haven't already been loaded
+        if (!script_loaded) {
+          // Disconnect the observer (if it exists) to stop observing changes
+          observer.disconnect();
+
+          // Set the flag to true to prevent duplicate loading
+          script_loaded = !0; // !0 is equivalent to true
+
+          // Load lazy iframes
+          document.querySelectorAll("iframe.lazy").forEach(t => {
+            // Get the data-src attribute (the actual src to load)
+            datasrc = t.dataset.src;
+
+            // If data-src exists, set it as the src and remove the data-src attribute
+            null != datasrc && (t.src = datasrc);
+          });
+
+          // Load lazy scripts
+          var t = document.getElementsByTagName("script");
+          for (i = 0; i < t.length; i++) {
+            // Check if the script has a data-src attribute
+            if (null !== t[i].getAttribute("data-src")) {
+              // Set the src attribute to the value of data-src
+              t[i].setAttribute("src", t[i].getAttribute("data-src"));
+
+              // Remove the data-src attribute
+              delete t[i].dataset.src;
+            }
+
+            // Check if the script has a type of "text/lazyload"
+            if ("text/lazyload" == t[i].getAttribute("type")) {
+              // Create a new script element
+              var e = document.createElement("script");
+
+              // Copy all attributes from the lazy script to the new script
+              for (var a = 0; a < t[i].attributes.length; a++) {
+                var n = t[i].attributes[a];
+                e.setAttribute(n.name, n.value);
+              }
+
+              // Set the type to "text/javascript"
+              e.type = "text/javascript";
+
+              // Copy the inner HTML (script content) to the new script
+              e.innerHTML = t[i].innerHTML;
+
+              // Replace the lazy script with the new script in the DOM
+              t[i].parentNode.removeChild(t[i]);
+              t[i].parentNode.insertBefore(e, t[i]);
+            }
+          }
+
+          // Load lazy stylesheets
+          var r = document.getElementsByTagName("link");
+          for (i = 0; i < r.length; i++) {
+            // Check if the link has a data-href attribute
+            if (null !== r[i].getAttribute("data-href")) {
+              // Set the href attribute to the value of data-href
+              r[i].setAttribute("href", r[i].getAttribute("data-href"));
+
+              // Remove the data-href attribute
+              delete r[i].dataset.href;
+            }
+          }
+
+          // Dispatch a custom event to signal that lazy loading is complete
+          document.dispatchEvent(new CustomEvent("asyncLazyLoad"));
+        }
+      }
+
+      // Define a list of user activity events to trigger lazy loading
+      var activityEvents = [
+        "mousedown", "mousemove", "keydown", "scroll",
+        "touchstart", "click", "keypress", "touchmove"
+      ];
+
+      // Add event listeners for each activity event to trigger lazy loading
+      activityEvents.forEach(function(t) {
+        window.addEventListener(t, loadJSscripts, !1); // !1 is equivalent to false
+      });
+
+      // Add a fallback to load resources on window load if no user interaction occurs
+      window.addEventListener
+        ? window.addEventListener("load", function() {}, !1) // No-op function
+        : window.attachEvent
+        ? window.attachEvent("onload", function() {}) // Fallback for older IE
+        : (window.onload = (t => {})); // Fallback for very old browsers
+    </script>
+</body>
+</html>

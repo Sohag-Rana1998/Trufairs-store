@@ -1,0 +1,1880 @@
+{% comment %}
+  Section: Verified Quality Video
+  Description: Trust-building section featuring co-owner's product verification video
+{% endcomment %}
+
+{%- style -%}
+  #VerifiedQuality-{{ section.id }} {
+    --vq-bg-primary: {{ section.settings.bg_color }};
+    --vq-bg-secondary: {{ section.settings.bg_secondary }};
+    --vq-text-primary: {{ section.settings.text_color }};
+    --vq-text-secondary: {{ section.settings.text_secondary }};
+    --vq-accent: {{ section.settings.accent_color }};
+    --vq-accent-light: {{ section.settings.accent_color | color_lighten: 40 }};
+    --vq-cta-bg: {{ section.settings.cta_color }};
+    --vq-cta-text: {{ section.settings.cta_text_color }};
+    --vq-padding-top: {{ section.settings.padding_top }}px;
+    --vq-padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+<section id="VerifiedQuality-{{ section.id }}" class="verified-quality">
+  <!-- Background Elements -->
+  <div class="vq-background">
+    <div class="vq-bg-shape vq-bg-shape--1"></div>
+    <div class="vq-bg-shape vq-bg-shape--2"></div>
+    <div class="vq-bg-pattern"></div>
+  </div>
+
+  <div class="vq-container container page-width">
+    <!-- Section Header -->
+    <div class="vq-header">
+      <div class="vq-verified-stamp">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 12L11 14L15 10M12 3L13.45 5.41L16.18 5.19L16.96 7.82L19.42 9L18.56 11.54L19.42 14.08L16.96 15.26L16.18 17.89L13.45 17.67L12 20.08L10.55 17.67L7.82 17.89L7.04 15.26L4.58 14.08L5.44 11.54L4.58 9L7.04 7.82L7.82 5.19L10.55 5.41L12 3Z" fill="currentColor"/>
+        </svg>
+        <span>{{ section.settings.badge_text }}</span>
+      </div>
+      
+      <h2 class="vq-headline">{{ section.settings.headline }}</h2>
+      <p class="vq-subheadline">{{ section.settings.subheadline }}</p>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="vq-content">
+      <!-- Left: Video Column -->
+      <div class="vq-video-column">
+        <div class="vq-video-wrapper">
+          <!-- Video Frame Decoration -->
+          <div class="vq-video-frame">
+            <div class="vq-frame-corner vq-frame-corner--tl"></div>
+            <div class="vq-frame-corner vq-frame-corner--tr"></div>
+            <div class="vq-frame-corner vq-frame-corner--bl"></div>
+            <div class="vq-frame-corner vq-frame-corner--br"></div>
+          </div>
+
+          <!-- Video Container -->
+          <div class="vq-video-container" data-video-type="{{ section.settings.video_type }}">
+            {%- if section.settings.video_type == 'youtube' -%}
+              <div class="vq-video-thumbnail" data-video-id="{{ section.settings.youtube_id }}">
+                <img 
+                  src="https://img.youtube.com/vi/{{ section.settings.youtube_id }}/maxresdefault.jpg" 
+                  alt="{{ section.settings.video_alt }}"
+                 
+                  class="vq-thumbnail-img"
+                >
+                <button class="vq-play-button" aria-label="Play video">
+                  <div class="vq-play-button__bg"></div>
+                  <svg class="vq-play-icon" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div class="vq-video-duration">{{ section.settings.video_duration }}</div>
+              </div>
+              <div class="vq-video-iframe" style="display: none;">
+                <!-- YouTube iframe loads here on play -->
+              </div>
+
+            {%- elsif section.settings.video_type == 'vimeo' -%}
+              <div class="vq-video-thumbnail" data-video-id="{{ section.settings.vimeo_id }}">
+                {%- if section.settings.video_thumbnail != blank -%}
+                  <img 
+                    src="{{ section.settings.video_thumbnail | image_url: width: 800 }}" 
+                    alt="{{ section.settings.video_alt }}"
+                   
+                    class="vq-thumbnail-img"
+                  >
+                {%- endif -%}
+                <button class="vq-play-button" aria-label="Play video">
+                  <div class="vq-play-button__bg"></div>
+                  <svg class="vq-play-icon" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </button>
+                <div class="vq-video-duration">{{ section.settings.video_duration }}</div>
+              </div>
+              <div class="vq-video-iframe" style="display: none;">
+                <!-- Vimeo iframe loads here on play -->
+              </div>
+
+            {%- elsif section.settings.video_type == 'hosted' -%}
+              <video 
+                class="vq-hosted-video"
+                poster="{{ section.settings.video_thumbnail | image_url: width: 800 }}"
+                controls
+                playsinline
+                preload="metadata"
+              >
+                {%- if section.settings.video_mp4 != blank -%}
+                  <source src="{{ section.settings.video_mp4 }}" type="video/mp4">
+                {%- endif -%}
+                {%- if section.settings.video_webm != blank -%}
+                  <source src="{{ section.settings.video_webm }}" type="video/webm">
+                {%- endif -%}
+                Your browser does not support the video tag.
+              </video>
+
+            {%- elsif section.settings.video_type == 'shopify' and section.settings.shopify_video != blank -%}
+              {{ section.settings.shopify_video | video_tag: 
+                controls: true, 
+                playsinline: true, 
+                preload: 'metadata',
+                poster: section.settings.video_thumbnail,
+                class: 'vq-hosted-video'
+              }}
+            {%- endif -%}
+          </div>
+
+          <!-- Floating Labels on Video -->
+          <div class="vq-video-labels">
+            <div class="vq-label vq-label--quality">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              <span>Quality Verified</span>
+            </div>
+            <div class="vq-label vq-label--hands-on">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                <line x1="6" y1="1" x2="6" y2="4"/>
+                <line x1="10" y1="1" x2="10" y2="4"/>
+                <line x1="14" y1="1" x2="14" y2="4"/>
+              </svg>
+              <span>Hands-On Review</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Caption -->
+        {%- if section.settings.video_caption != blank -%}
+          <p class="vq-video-caption">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="16" x2="12" y2="12"/>
+              <line x1="12" y1="8" x2="12.01" y2="8"/>
+            </svg>
+            {{ section.settings.video_caption }}
+          </p>
+        {%- endif -%}
+      </div>
+
+      <!-- Right: Content Column -->
+      <div class="vq-text-column">
+        <!-- Verifier Profile Card -->
+        <div class="vq-profile-card">
+          <div class="vq-profile-header">
+            <div class="vq-profile-avatar">
+              {%- if section.settings.verifier_image != blank -%}
+                <img 
+                  src="{{ section.settings.verifier_image | image_url: width: 120 }}"
+                  alt="{{ section.settings.verifier_name }}"
+                  width="60"
+                  height="60"
+                 
+                >
+              {%- else -%}
+                <div class="vq-avatar-placeholder">
+                  {{ section.settings.verifier_name | slice: 0 }}
+                </div>
+              {%- endif -%}
+              <div class="vq-verified-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 12L11 14L15 10M12 3L13.45 5.41L16.18 5.19L16.96 7.82L19.42 9L18.56 11.54L19.42 14.08L16.96 15.26L16.18 17.89L13.45 17.67L12 20.08L10.55 17.67L7.82 17.89L7.04 15.26L4.58 14.08L5.44 11.54L4.58 9L7.04 7.82L7.82 5.19L10.55 5.41L12 3Z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="vq-profile-info">
+              <h4 class="vq-profile-name">{{ section.settings.verifier_name }}</h4>
+              <p class="vq-profile-title">{{ section.settings.verifier_title }}</p>
+            </div>
+          </div>
+
+          {%- if section.settings.verifier_quote != blank -%}
+            <blockquote class="vq-profile-quote">
+              <svg class="vq-quote-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity="0.15">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+              </svg>
+              <p>{{ section.settings.verifier_quote }}</p>
+            </blockquote>
+          {%- endif -%}
+        </div>
+
+        <!-- Quality Checklist -->
+        {% comment %} <div class="vq-checklist">
+          <h3 class="vq-checklist-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 11l3 3L22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            {{ section.settings.checklist_title }}
+          </h3>
+          
+          <ul class="vq-checklist-items">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'checklist_item' -%}
+                <li class="vq-checklist-item" {{ block.shopify_attributes }}>
+                  <div class="vq-check-icon">
+                    {%- if block.settings.item_status == 'passed' -%}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="#E8F5E9"/>
+                        <path d="M8 12L11 15L16 9" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    {%- elsif block.settings.item_status == 'excellent' -%}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" fill="#FFF8E1"/>
+                        <path d="M12 2L13.09 8.26L19 9.27L14.5 13.14L15.82 19.02L12 16.27L8.18 19.02L9.5 13.14L5 9.27L10.91 8.26L12 2Z" fill="#FFB800" stroke="#FFB800" stroke-width="1"/>
+                      </svg>
+                    {%- endif -%}
+                  </div>
+                  <div class="vq-check-content">
+                    <span class="vq-check-label">{{ block.settings.item_label }}</span>
+                    {%- if block.settings.item_detail != blank -%}
+                      <span class="vq-check-detail">{{ block.settings.item_detail }}</span>
+                    {%- endif -%}
+                  </div>
+                  {%- if block.settings.item_status == 'excellent' -%}
+                    <span class="vq-check-badge">Excellent</span>
+                  {%- endif -%}
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div> {% endcomment %}
+
+        <!-- Trust Guarantee Box -->
+        <div class="vq-guarantee-box">
+          <div class="vq-guarantee-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="vq-guarantee-content">
+            <h4 class="vq-guarantee-title">{{ section.settings.guarantee_title }}</h4>
+            <p class="vq-guarantee-text">{{ section.settings.guarantee_text }}</p>
+          </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="vq-cta-section">
+          <a href="{{ section.settings.cta_link }}" class="vq-cta-button">
+            <span class="vq-cta-text">{{ section.settings.cta_text }}</span>
+            <svg class="vq-cta-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          
+          {% comment %} {%- if section.settings.cta_subtext != blank -%}
+            <p class="vq-cta-subtext">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              {{ section.settings.cta_subtext }}
+            </p>
+          {%- endif -%} {% endcomment %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Trust Bar -->
+    {% comment %} <div class="vq-trust-bar">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'trust_stat' -%}
+          <div class="vq-trust-stat" {{ block.shopify_attributes }}>
+            <span class="vq-stat-number">{{ block.settings.stat_number }}</span>
+            <span class="vq-stat-label">{{ block.settings.stat_label }}</span>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div> {% endcomment %}
+  </div>
+</section>
+
+<style>
+  /* ============================================
+     VERIFIED QUALITY SECTION STYLES
+     ============================================ */
+
+  .verified-quality {
+    position: relative;
+    padding: var(--vq-padding-top) 0 var(--vq-padding-bottom);
+    background: var(--vq-bg-primary, #FAFAFA);
+    overflow: hidden;
+  }
+
+  /* Background Elements */
+  .vq-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .vq-bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+  }
+
+  .vq-bg-shape--1 {
+    width: 600px;
+    height: 600px;
+    background: var(--vq-accent-light, #FFE4D6);
+    top: -200px;
+    right: -100px;
+  }
+
+  .vq-bg-shape--2 {
+    width: 400px;
+    height: 400px;
+    background: var(--vq-bg-secondary, #E8F5E9);
+    bottom: -100px;
+    left: -100px;
+  }
+
+  .vq-bg-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0);
+    background-size: 40px 40px;
+  }
+
+  /* Container */
+  .vq-container {
+    position: relative;
+    z-index: 1;
+ 
+    margin: 0 auto;
+ 
+  }
+
+  /* ============================================
+     SECTION HEADER
+     ============================================ */
+
+  .vq-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+  }
+
+  .vq-verified-stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    border: 1px solid #A5D6A7;
+    border-radius: 50px;
+  color: #000000;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  .vq-verified-stamp svg {
+    flex-shrink: 0;
+  }
+
+  .vq-headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--vq-text-primary, #2D2D2D);
+    line-height: 1.2;
+    margin: 0 0 16px;
+    animation: fadeInUp 0.6s ease-out 0.1s backwards;
+  }
+
+  .vq-subheadline {
+    font-size: 18px;
+    color: var(--vq-text-secondary, #666666);
+    line-height: 1.6;
+    margin: 0;
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
+  }
+
+  /* ============================================
+     MAIN CONTENT GRID
+     ============================================ */
+
+  .vq-content {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  /* ============================================
+     VIDEO COLUMN
+     ============================================ */
+
+  .vq-video-column {
+    animation: fadeInLeft 0.8s ease-out 0.3s backwards;
+  }
+
+  .vq-video-wrapper {
+    position: relative;
+  }
+
+  /* Video Frame Decoration */
+  .vq-video-frame {
+    position: absolute;
+    inset: -12px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .vq-frame-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--vq-accent, #5C4033);
+  }
+
+  .vq-frame-corner--tl {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 8px 0 0 0;
+  }
+
+  .vq-frame-corner--tr {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 8px 0 0;
+  }
+
+  .vq-frame-corner--bl {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 8px;
+  }
+
+  .vq-frame-corner--br {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+    border-radius: 0 0 8px 0;
+  }
+
+  /* Video Container */
+  .vq-video-container {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+
+  .vq-video-thumbnail {
+    position: relative;
+    cursor: pointer;
+    aspect-ratio: 16 / 9;
+  }
+
+  .vq-thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease, filter 0.3s ease;
+  }
+
+  .vq-video-thumbnail:hover .vq-thumbnail-img {
+    transform: scale(1.05);
+    filter: brightness(0.8);
+  }
+
+  /* Play Button */
+  .vq-play-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    z-index: 3;
+    transition: transform 0.3s ease;
+  }
+
+  .vq-play-button:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .vq-play-button__bg {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .vq-play-button:hover .vq-play-button__bg {
+    transform: scale(1.05);
+  }
+
+  .vq-play-icon {
+    position: relative;
+    z-index: 1;
+    color: var(--vq-accent, #5C4033);
+    margin-left: 4px;
+  }
+
+  /* Video Duration Badge */
+  .vq-video-duration {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 6px;
+    z-index: 3;
+  }
+
+  /* Hosted Video */
+  .vq-hosted-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border-radius: 16px;
+  }
+
+  /* Video Labels */
+  .vq-video-labels {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 3;
+  }
+
+  .vq-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .vq-label--quality {
+    color: #2E7D32;
+  }
+
+  .vq-label--hands-on {
+    color: var(--vq-accent, #5C4033);
+  }
+
+  /* Video Caption */
+  .vq-video-caption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--vq-text-secondary, #666666);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .vq-video-caption svg {
+    flex-shrink: 0;
+    color: var(--vq-accent, #5C4033);
+  }
+
+  /* ============================================
+     TEXT COLUMN
+     ============================================ */
+
+  .vq-text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    animation: fadeInRight 0.8s ease-out 0.4s backwards;
+  }
+
+  /* Profile Card */
+  .vq-profile-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .vq-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .vq-profile-avatar {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+
+  .vq-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .vq-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--vq-accent, #5C4033) 0%, #8B6B5B 100%);
+    color: #FFFFFF;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 50%;
+    text-transform: uppercase;
+  }
+
+  .vq-verified-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 24px;
+    height: 24px;
+    background: #4CAF50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    border: 2px solid #FFFFFF;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+  }
+
+  .vq-profile-info {
+    flex: 1;
+  }
+
+  .vq-profile-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--vq-text-primary, #2D2D2D);
+    margin: 0 0 4px;
+  }
+
+  .vq-profile-title {
+    font-size: 14px;
+    color: var(--vq-accent, #5C4033);
+    margin: 0;
+    font-weight: 500;
+  }
+
+.vq-profile-quote {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    text-align: justify;
+}
+
+  .vq-quote-icon {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    color: var(--vq-accent, #5C4033);
+  }
+
+  .vq-profile-quote p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--vq-text-secondary, #666666);
+    font-style: italic;
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  /* Quality Checklist */
+  .vq-checklist {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+     
+  }
+
+  .vq-checklist-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--vq-text-primary, #2D2D2D);
+    margin: 0 0 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F0F0F0;
+  }
+
+  .vq-checklist-title svg {
+    color: var(--vq-accent, #5C4033);
+  }
+
+  .vq-checklist-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .vq-checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #FAFAFA;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .vq-checklist-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .vq-check-icon {
+    flex-shrink: 0;
+  }
+
+  .vq-check-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .vq-check-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--vq-text-primary, #2D2D2D);
+  }
+
+  .vq-check-detail {
+    font-size: 12px;
+    color: var(--vq-text-secondary, #666666);
+  }
+
+  .vq-check-badge {
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+    color: #F57F17;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Guarantee Box */
+  .vq-guarantee-box {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px;
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    border: 1px solid #A5D6A7;
+    border-radius: 16px;
+  }
+
+  .vq-guarantee-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    border-radius: 50%;
+    color: #2E7D32;
+    box-shadow: 0 4px 15px rgba(46, 125, 50, 0.2);
+  }
+
+  .vq-guarantee-content {
+    flex: 1;
+  }
+
+  .vq-guarantee-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1B5E20;
+    margin: 0 0 4px;
+  }
+
+  .vq-guarantee-text {
+    font-size: 13px;
+    color: #2E7D32;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* CTA Section */
+  .vq-cta-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .vq-cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 36px;
+    background: var(--vq-cta-bg, linear-gradient(135deg, #E86A33 0%, #D55A25 100%));
+    color: var(--vq-cta-text, #FFFFFF);
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 20px rgba(232, 106, 51, 0.35);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vq-cta-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .vq-cta-button:hover {
+    transform: translateY(-3px);
+     color: var(--vq-cta-text, #FFFFFF);
+    box-shadow: 0 10px 30px rgba(232, 106, 51, 0.45);
+  }
+
+  .vq-cta-button:hover::before {
+    opacity: 1;
+  }
+
+  .vq-cta-arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .vq-cta-button:hover .vq-cta-arrow {
+    transform: translateX(5px);
+  }
+
+  .vq-cta-subtext {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--vq-text-secondary, #666666);
+    margin: 0;
+  }
+
+  .vq-cta-subtext svg {
+    color: #4CAF50;
+  }
+
+  /* ============================================
+     TRUST BAR
+     ============================================ */
+
+  .vq-trust-bar {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .vq-trust-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .vq-stat-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--vq-accent, #5C4033);
+    line-height: 1;
+  }
+
+  .vq-stat-label {
+    font-size: 14px;
+    color: var(--vq-text-secondary, #666666);
+    text-align: center;
+  }
+
+  /* ============================================
+     ANIMATIONS
+     ============================================ */
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(25px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* ============================================
+     RESPONSIVE STYLES
+     ============================================ */
+
+  @media screen and (max-width: 1024px) {
+    .vq-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .vq-trust-bar {
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .verified-quality {
+      padding: 60px 0;
+    }
+
+ 
+    .vq-header {
+      margin-bottom: 40px;
+    }
+
+    .vq-headline {
+      font-size: 28px;
+    }
+
+    .vq-subheadline {
+      font-size: 16px;
+    }
+
+    .vq-video-frame {
+      display: none;
+    }
+
+    .vq-video-labels {
+      {% comment %} flex-direction: row; {% endcomment %}
+      flex-wrap: wrap;
+    }
+
+    .vq-label {
+      font-size: 11px;
+      padding: 6px 10px;
+    }
+
+    .vq-play-button {
+      width: 64px;
+      height: 64px;
+    }
+
+    .vq-profile-card,
+    .vq-checklist {
+      padding: 20px;
+    }
+
+    .vq-profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .vq-profile-quote p {
+      padding-left: 0;
+      text-align: center;
+    }
+
+    .vq-quote-icon {
+      display: none;
+    }
+
+    .vq-guarantee-box {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .vq-trust-bar {
+      gap: 30px;
+    }
+
+    .vq-stat-number {
+      font-size: 26px;
+    }
+
+    .vq-stat-label {
+      font-size: 12px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .vq-checklist-item {
+      flex-wrap: wrap;
+    }
+
+
+      .vq-verified-stamp {
+ 
+ 
+    font-size: 15px;
+ 
+  }
+
+
+    .vq-check-badge {
+      margin-left: 30px;
+    }
+
+    .vq-trust-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .vq-trust-stat {
+      padding: 16px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .vq-verified-stamp,
+    .vq-headline,
+    .vq-subheadline,
+    .vq-video-column,
+    .vq-text-column {
+      animation: none;
+    }
+
+    .vq-thumbnail-img,
+    .vq-play-button,
+    .vq-play-button__bg,
+    .vq-cta-button,
+    .vq-cta-arrow,
+    .vq-checklist-item {
+      transition: none;
+    }
+  }
+
+
+  /* Custom Play/Pause Overlay for Hosted Videos */
+.vq-custom-play-overlay {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.vq-overlay-button {
+  pointer-events: none;
+}
+
+.vq-overlay-button svg {
+  margin-left: 4px;
+}
+
+/* Ensure video container is positioned for overlay */
+.vq-video-container[data-video-type="hosted"],
+.vq-video-container[data-video-type="shopify"] {
+  position: relative;
+}
+
+/* Hide native controls initially on custom overlay videos */
+.vq-hosted-video {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile touch improvements */
+@media (hover: none) and (pointer: coarse) {
+  .vq-overlay-button {
+    opacity: 1 !important;
+  }
+  
+  .vq-custom-play-overlay:active .vq-overlay-button {
+    transform: scale(0.95);
+  }
+}
+
+/* Ensure proper stacking on iOS */
+@supports (-webkit-touch-callout: none) {
+  .vq-custom-play-overlay {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+  }
+  
+  .vq-hosted-video {
+    -webkit-playsinline: true;
+  }
+}
+
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // ============================================
+    // VIDEO PLAYER FUNCTIONALITY - MOBILE OPTIMIZED
+    // ============================================
+    
+    var videoContainers = document.querySelectorAll('.vq-video-container');
+
+    videoContainers.forEach(function(container) {
+      var videoType = container.dataset.videoType;
+      var thumbnail = container.querySelector('.vq-video-thumbnail');
+      var iframeContainer = container.querySelector('.vq-video-iframe');
+      var playButton = container.querySelector('.vq-play-button');
+
+      // ============================================
+      // YOUTUBE & VIMEO HANDLING
+      // ============================================
+      if (thumbnail && (videoType === 'youtube' || videoType === 'vimeo')) {
+        
+        function loadVideo(e) {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          
+          var videoId = thumbnail.dataset.videoId;
+          var iframeSrc = '';
+
+          if (videoType === 'youtube') {
+            iframeSrc = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+          } else if (videoType === 'vimeo') {
+            iframeSrc = 'https://player.vimeo.com/video/' + videoId + '?autoplay=1&title=0&byline=0&portrait=0&playsinline=1';
+          }
+
+          if (iframeSrc && iframeContainer) {
+            var iframe = document.createElement('iframe');
+            iframe.src = iframeSrc;
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.style.aspectRatio = '16/9';
+            iframe.style.border = 'none';
+            iframe.style.borderRadius = '16px';
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.setAttribute('webkitallowfullscreen', '');
+            iframe.setAttribute('mozallowfullscreen', '');
+            iframe.setAttribute('playsinline', '');
+            iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+
+            iframeContainer.innerHTML = '';
+            iframeContainer.appendChild(iframe);
+            iframeContainer.style.display = 'block';
+            iframeContainer.style.position = 'relative';
+            iframeContainer.style.paddingBottom = '56.25%';
+            iframeContainer.style.height = '0';
+            iframeContainer.style.overflow = 'hidden';
+            thumbnail.style.display = 'none';
+          }
+        }
+
+        // Click events
+        thumbnail.addEventListener('click', loadVideo);
+        if (playButton) {
+          playButton.addEventListener('click', loadVideo);
+        }
+
+        // Touch events with scroll detection
+        var touchStartY = 0;
+        var touchStartX = 0;
+        var touchStartTime = 0;
+
+        function handleTouchStart(e) {
+          touchStartY = e.touches[0].clientY;
+          touchStartX = e.touches[0].clientX;
+          touchStartTime = Date.now();
+        }
+
+        function handleTouchEnd(e) {
+          var touchEndY = e.changedTouches[0].clientY;
+          var touchEndX = e.changedTouches[0].clientX;
+          var touchEndTime = Date.now();
+          
+          var deltaY = Math.abs(touchEndY - touchStartY);
+          var deltaX = Math.abs(touchEndX - touchStartX);
+          var deltaTime = touchEndTime - touchStartTime;
+          
+          // Tap detection: small movement and quick touch
+          if (deltaY < 15 && deltaX < 15 && deltaTime < 300) {
+            e.preventDefault();
+            loadVideo(e);
+          }
+        }
+
+        thumbnail.addEventListener('touchstart', handleTouchStart, { passive: true });
+        thumbnail.addEventListener('touchend', handleTouchEnd, { passive: false });
+        
+        if (playButton) {
+          playButton.addEventListener('touchstart', handleTouchStart, { passive: true });
+          playButton.addEventListener('touchend', handleTouchEnd, { passive: false });
+        }
+      }
+
+      // ============================================
+      // HOSTED & SHOPIFY VIDEO HANDLING (PLAY/PAUSE TOGGLE)
+      // ============================================
+      if (videoType === 'hosted' || videoType === 'shopify') {
+        var hostedVideo = container.querySelector('.vq-hosted-video');
+        
+        if (hostedVideo) {
+          // Add required attributes for iOS
+          hostedVideo.setAttribute('playsinline', '');
+          hostedVideo.setAttribute('webkit-playsinline', '');
+          
+          // Create custom play/pause overlay
+          var playOverlay = document.createElement('div');
+          playOverlay.className = 'vq-custom-play-overlay';
+          playOverlay.innerHTML = '<div class="vq-overlay-button"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path class="play-icon" d="M8 5v14l11-7z"/><path class="pause-icon" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" style="display:none;"/></svg></div>';
+          playOverlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:72%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;background:transparent;transition:background 0.2s ease;';
+          
+          var overlayButton = playOverlay.querySelector('.vq-overlay-button');
+          overlayButton.style.cssText = 'width:70px;height:70px;background:rgba(255,255,255,0.95);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#5C4033;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:transform 0.2s ease, opacity 0.2s ease;';
+          
+          var playIcon = playOverlay.querySelector('.play-icon');
+          var pauseIcon = playOverlay.querySelector('.pause-icon');
+          
+          // Make container position relative for overlay positioning
+          container.style.position = 'relative';
+          container.appendChild(playOverlay);
+          
+          // Track playing state
+          var isPlaying = false;
+          
+          function updateOverlayIcon() {
+            if (hostedVideo.paused) {
+              playIcon.style.display = 'block';
+              pauseIcon.style.display = 'none';
+              overlayButton.style.opacity = '1';
+            } else {
+              playIcon.style.display = 'none';
+              pauseIcon.style.display = 'block';
+              // Hide overlay button after short delay when playing
+              setTimeout(function() {
+                if (!hostedVideo.paused) {
+                  overlayButton.style.opacity = '0';
+                }
+              }, 1500);
+            }
+          }
+          
+          function togglePlayPause(e) {
+            if (e) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+            
+            if (hostedVideo.paused) {
+              var playPromise = hostedVideo.play();
+              if (playPromise !== undefined) {
+                playPromise.then(function() {
+                  isPlaying = true;
+                  updateOverlayIcon();
+                }).catch(function(error) {
+                  console.log('Video play failed:', error);
+                  // On iOS, user interaction is required - show controls
+                  hostedVideo.controls = true;
+                });
+              }
+            } else {
+              hostedVideo.pause();
+              isPlaying = false;
+              updateOverlayIcon();
+            }
+          }
+          
+          // Show overlay button on hover/touch
+          playOverlay.addEventListener('mouseenter', function() {
+            overlayButton.style.opacity = '1';
+          });
+          
+          playOverlay.addEventListener('mouseleave', function() {
+            if (!hostedVideo.paused) {
+              overlayButton.style.opacity = '0';
+            }
+          });
+          
+          // Click handler
+          playOverlay.addEventListener('click', togglePlayPause);
+          
+          // Touch handlers with tap detection
+          var touchStartY = 0;
+          var touchStartX = 0;
+          var touchStartTime = 0;
+          
+          playOverlay.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+            touchStartTime = Date.now();
+            overlayButton.style.opacity = '1';
+            overlayButton.style.transform = 'scale(0.95)';
+          }, { passive: true });
+          
+          playOverlay.addEventListener('touchend', function(e) {
+            var touchEndY = e.changedTouches[0].clientY;
+            var touchEndX = e.changedTouches[0].clientX;
+            var touchEndTime = Date.now();
+            
+            var deltaY = Math.abs(touchEndY - touchStartY);
+            var deltaX = Math.abs(touchEndX - touchStartX);
+            var deltaTime = touchEndTime - touchStartTime;
+            
+            overlayButton.style.transform = 'scale(1)';
+            
+            // Tap detection
+            if (deltaY < 15 && deltaX < 15 && deltaTime < 300) {
+              e.preventDefault();
+              togglePlayPause(e);
+            }
+          }, { passive: false });
+          
+          playOverlay.addEventListener('touchcancel', function() {
+            overlayButton.style.transform = 'scale(1)';
+          });
+          
+          // Sync with native video events
+          hostedVideo.addEventListener('play', function() {
+            isPlaying = true;
+            updateOverlayIcon();
+          });
+          
+          hostedVideo.addEventListener('pause', function() {
+            isPlaying = false;
+            updateOverlayIcon();
+          });
+          
+          hostedVideo.addEventListener('ended', function() {
+            isPlaying = false;
+            updateOverlayIcon();
+          });
+          
+          // Double-tap to toggle fullscreen (optional)
+          var lastTap = 0;
+          playOverlay.addEventListener('touchend', function(e) {
+            var currentTime = new Date().getTime();
+            var tapLength = currentTime - lastTap;
+            
+            if (tapLength < 300 && tapLength > 0) {
+              // Double tap detected - toggle fullscreen
+              if (hostedVideo.requestFullscreen) {
+                hostedVideo.requestFullscreen();
+              } else if (hostedVideo.webkitRequestFullscreen) {
+                hostedVideo.webkitRequestFullscreen();
+              } else if (hostedVideo.webkitEnterFullscreen) {
+                // iOS Safari
+                hostedVideo.webkitEnterFullscreen();
+              }
+            }
+            lastTap = currentTime;
+          }, { passive: true });
+          
+          // Initialize overlay state
+          updateOverlayIcon();
+        }
+      }
+    });
+
+    // ============================================
+    // INTERSECTION OBSERVER FOR ANIMATIONS
+    // ============================================
+    var animatedElements = document.querySelectorAll('.vq-checklist-item, .vq-trust-stat');
+    
+    if ('IntersectionObserver' in window) {
+      var observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry, index) {
+          if (entry.isIntersecting) {
+            setTimeout(function() {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }, index * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      animatedElements.forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(el);
+      });
+    } else {
+      // Fallback for browsers without IntersectionObserver
+      animatedElements.forEach(function(el) {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    }
+  });
+</script>
+
+
+
+{% schema %}
+{
+  "name": "Verified Quality Video",
+  "tag": "section",
+  "class": "section-verified-quality",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAFAFA"
+    },
+    {
+      "type": "color",
+      "id": "bg_secondary",
+      "label": "Background Accent",
+      "default": "#E8F5E9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Primary Text Color",
+      "default": "#2D2D2D"
+    },
+    {
+      "type": "color",
+      "id": "text_secondary",
+      "label": "Secondary Text Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#5C4033"
+    },
+    {
+      "type": "color",
+      "id": "cta_color",
+      "label": "CTA Button Color",
+      "default": "#E86A33"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "✓ Quality Verified by Our Team"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "We Tested It. We Trust It. You Can Too."
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Subheadline",
+      "default": "Our co-owner personally ordered, inspected, and tested this product. Watch her honest review below."
+    },
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "select",
+      "id": "video_type",
+      "label": "Video Type",
+      "options": [
+        { "value": "youtube", "label": "YouTube" },
+        { "value": "vimeo", "label": "Vimeo" },
+        { "value": "hosted", "label": "Self-Hosted (MP4/WebM)" },
+        { "value": "shopify", "label": "Shopify Hosted Video" }
+      ],
+      "default": "youtube"
+    },
+    {
+      "type": "text",
+      "id": "youtube_id",
+      "label": "YouTube Video ID",
+      "info": "Enter only the video ID (e.g., dQw4w9WgXcQ)"
+    },
+    {
+      "type": "text",
+      "id": "vimeo_id",
+      "label": "Vimeo Video ID",
+      "info": "Enter only the video ID (e.g., 123456789)"
+    },
+    {
+      "type": "video",
+      "id": "shopify_video",
+      "label": "Shopify Hosted Video"
+    },
+    {
+      "type": "text",
+      "id": "video_mp4",
+      "label": "MP4 Video URL",
+      "info": "Direct URL to MP4 file"
+    },
+    {
+      "type": "text",
+      "id": "video_webm",
+      "label": "WebM Video URL",
+      "info": "Direct URL to WebM file (optional)"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_thumbnail",
+      "label": "Video Thumbnail",
+      "info": "Required for Vimeo and self-hosted videos"
+    },
+    {
+      "type": "text",
+      "id": "video_alt",
+      "label": "Video Alt Text",
+      "default": "Product quality verification video"
+    },
+    {
+      "type": "text",
+      "id": "video_duration",
+      "label": "Video Duration",
+      "default": "3:45"
+    },
+    {
+      "type": "textarea",
+      "id": "video_caption",
+      "label": "Video Caption",
+      "default": "Watch our co-owner's complete hands-on review of the product quality, features, and real-world usage."
+    },
+    {
+      "type": "header",
+      "content": "Verifier Profile"
+    },
+    {
+      "type": "image_picker",
+      "id": "verifier_image",
+      "label": "Verifier Photo"
+    },
+    {
+      "type": "text",
+      "id": "verifier_name",
+      "label": "Verifier Name",
+      "default": "Sarah Johnson"
+    },
+    {
+      "type": "text",
+      "id": "verifier_title",
+      "label": "Verifier Title",
+      "default": "Co-Owner & Quality Inspector"
+    },
+    {
+      "type": "textarea",
+      "id": "verifier_quote",
+      "label": "Verifier Quote",
+      "default": "I personally order and test every product we sell. This overbed table exceeded my expectations—the build quality is solid, the height adjustment is smooth, and it's genuinely useful for everyday life."
+    },
+    {
+      "type": "header",
+      "content": "Quality Checklist"
+    },
+    {
+      "type": "text",
+      "id": "checklist_title",
+      "label": "Checklist Title",
+      "default": "Our Quality Inspection Results"
+    },
+    {
+      "type": "header",
+      "content": "Guarantee Box"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_title",
+      "label": "Guarantee Title",
+      "default": "100% Quality Guaranteed"
+    },
+    {
+      "type": "textarea",
+      "id": "guarantee_text",
+      "label": "Guarantee Text",
+      "default": "If you're not completely satisfied with the quality, we'll make it right—no questions asked."
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Button Text",
+      "default": "Shop With Confidence"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Button Link"
+    },
+    {
+      "type": "text",
+      "id": "cta_subtext",
+      "label": "CTA Subtext",
+      "default": "Secure checkout • Fast shipping • Easy returns"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "checklist_item",
+      "name": "Quality Check Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "item_label",
+          "label": "Check Item Label",
+          "default": "Build Quality"
+        },
+        {
+          "type": "text",
+          "id": "item_detail",
+          "label": "Check Item Detail",
+          "default": "Sturdy metal frame with premium finish"
+        },
+        {
+          "type": "select",
+          "id": "item_status",
+          "label": "Status",
+          "options": [
+            { "value": "passed", "label": "Passed ✓" },
+            { "value": "excellent", "label": "Excellent ★" }
+          ],
+          "default": "passed"
+        }
+      ]
+    },
+    {
+      "type": "trust_stat",
+      "name": "Trust Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat_number",
+          "label": "Statistic Number",
+          "default": "50+"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Statistic Label",
+          "default": "Products Verified"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Verified Quality Video",
+      "blocks": [
+        {
+          "type": "checklist_item",
+          "settings": {
+            "item_label": "Build Quality",
+            "item_detail": "Sturdy metal frame, no wobbling",
+            "item_status": "excellent"
+          }
+        },
+        {
+          "type": "checklist_item",
+          "settings": {
+            "item_label": "Material Finish",
+            "item_detail": "Premium walnut MDF, smooth edges",
+            "item_status": "passed"
+          }
+        },
+        {
+          "type": "checklist_item",
+          "settings": {
+            "item_label": "Height Adjustment",
+            "item_detail": "Smooth mechanism, locks securely",
+            "item_status": "passed"
+          }
+        },
+        {
+          "type": "checklist_item",
+          "settings": {
+            "item_label": "Wheel Function",
+            "item_detail": "Rolls smoothly, brakes work perfectly",
+            "item_status": "passed"
+          }
+        },
+        {
+          "type": "checklist_item",
+          "settings": {
+            "item_label": "Tilting Panel",
+            "item_detail": "Anti-slip stopper holds devices securely",
+            "item_status": "excellent"
+          }
+        },
+        {
+          "type": "checklist_item",
+          "settings": {
+            "item_label": "Packaging Quality",
+            "item_detail": "Well-protected, easy assembly",
+            "item_status": "passed"
+          }
+        },
+        {
+          "type": "trust_stat",
+          "settings": {
+            "stat_number": "50+",
+            "stat_label": "Products Verified"
+          }
+        },
+        {
+          "type": "trust_stat",
+          "settings": {
+            "stat_number": "100%",
+            "stat_label": "Hands-On Testing"
+          }
+        },
+        {
+          "type": "trust_stat",
+          "settings": {
+            "stat_number": "2,400+",
+            "stat_label": "Happy Customers"
+          }
+        },
+        {
+          "type": "trust_stat",
+          "settings": {
+            "stat_number": "4.8★",
+            "stat_label": "Average Rating"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

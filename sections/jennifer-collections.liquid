@@ -1,0 +1,474 @@
+{% comment %}
+  Shopping by Category Section
+  Save this as: sections/shopping-by-category.liquid
+{% endcomment %}
+
+{%- style -%}
+  .category-section {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    {% if section.settings.background_image != blank %}
+      background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    {% else %}
+      background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    {% endif %}
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .category-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="0.5" fill="%23000" opacity="0.02"/><circle cx="80" cy="80" r="0.3" fill="%23000" opacity="0.02"/><circle cx="40" cy="60" r="0.4" fill="%23000" opacity="0.02"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    pointer-events: none;
+  }
+  
+  .category-container {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  
+  .category-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    flex: 1;
+  }
+  
+  .category-nav-wrapper {
+    display: flex;
+    gap: 12px;
+    margin-left: 20px;
+  }
+  
+  .category-slider-wrapper {
+    position: relative;
+  }
+  
+  .category-swiper {
+    overflow: hidden;
+    padding: 0 0 20px 0;
+  }
+  
+  .category-slide {
+    height: auto;
+    max-width: 450px;
+  }
+
+  .category-card {
+    background: white;
+    border-radius: 16px;
+    padding:40px 20px 40px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    pointer-events: none;
+  }
+  
+  .category-card:hover {
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+  }
+  
+  .category-image-wrapper {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    background: #f8f8f8;
+  }
+  
+  .category-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .category-card:hover .category-image {
+    transform: scale(1.1);
+  }
+  
+  .category-name {
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #2c2c2c;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
+  }
+  
+  .category-count {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+  }
+  
+  .swiper-nav {
+    position: static;
+    width: 44px;
+    height: 44px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .swiper-nav:hover {
+    background: #2c2c2c;
+    color: white ;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .swiper-nav:hover svg {
+    color: white !important;
+  }
+  
+  .swiper-nav.swiper-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  
+  .swiper-nav.swiper-button-disabled:hover {
+    background: white;
+    color: #2c2c2c;
+    transform: none;
+  }
+  
+  .swiper-nav svg {
+    width: 20px;
+    height: 20px;
+    color:black !important;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .category-section {
+      padding: 40px 0;
+    }
+    
+    .category-container {
+      padding: 0 15px;
+    }
+    
+    .category-title {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .category-header {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .category-nav-wrapper {
+      margin-left: 0;
+    }
+    
+    .category-card {
+      padding: 25px 15px 20px;
+    }
+    
+    .category-image-wrapper {
+      width: 230px;
+      height: 230px;
+      margin-bottom: 15px;
+    }
+    
+    .category-name {
+      font-size: 1.1rem;
+    }
+    
+    .swiper-nav {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .swiper-nav svg {
+      width: 18px;
+      height: 18px;
+      color: black !important;
+    }
+
+    .desktop-navigation{
+      display: none;
+    }
+
+    .mobile-navigation{
+      display: flex !important;
+      gap: 12px;
+      margin-left: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .category-title {
+      font-size: 1.8rem;
+    }
+  }
+{%- endstyle -%}
+
+<div class="category-section">
+  <div class="category-container container">
+    <div class="category-header">
+      <h2 class="category-title">{{ section.settings.section_title }}</h2>
+      
+      <!-- Desktop Navigation -->
+      <div class="category-nav-wrapper desktop-navigation">
+        <div class="swiper-nav desktop-prev">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="swiper-nav desktop-next">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    
+    <div class="category-slider-wrapper">
+      <div class="swiper category-swiper" data-swiper-config='{{ section.settings.swiper_config }}'>
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.settings.collection != blank %}
+              {% assign selected_collection = collections[block.settings.collection] %}
+              {% assign dynamic_name = selected_collection.title %}
+              {% assign dynamic_count = selected_collection.products_count %}
+              {% assign dynamic_url = selected_collection.url %}
+              {% assign dynamic_image = selected_collection.featured_image %}
+            {% endif %}
+            
+            {% assign final_name = block.settings.custom_category_name | default: dynamic_name | default: 'Category' %}
+            {% assign final_count = block.settings.custom_product_count | default: dynamic_count | default: 0 %}
+            {% assign final_url = block.settings.custom_category_url | default: dynamic_url | default: '#' %}
+            {% assign final_image = block.settings.custom_category_image | default: dynamic_image %}
+            
+            <div class="swiper-slide category-slide" {{ block.shopify_attributes }}>
+              <a href="{{ final_url }}" class="category-card">
+                <div class="category-image-wrapper">
+                  {% if final_image != blank %}
+                    {{ final_image | image_url: width: 240 | image_tag: 
+                       class: 'category-image',
+                       alt: final_name,
+                       loading: 'lazy' }}
+                  {% else %}
+                    <div class="category-image" style="background: linear-gradient(45deg, #f0f0f0, #e0e0e0); display: flex; align-items: center; justify-content: center; color: #999; font-size: 0.8rem;">
+                      No Image
+                    </div>
+                  {% endif %}
+                </div>
+                <h3 class="category-name">{{ final_name }}</h3>
+                <p class="category-count">{{ final_count }} Products</p>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="category-nav-wrapper mobile-navigation" style="display:none;">
+          <div class="swiper-nav mobile-prev">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <div class="swiper-nav mobile-next">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const swiper = new Swiper('.category-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    loop: false,
+    navigation: {
+      nextEl: '.desktop-next', // 👈 use desktop by default
+      prevEl: '.desktop-prev'
+    },
+    breakpoints: {
+      480: { slidesPerView: 2, spaceBetween: 20 },
+      768: { slidesPerView: 3, spaceBetween: 25 },
+      1024: { slidesPerView: 4, spaceBetween: 30 }
+    }
+  });
+
+  // 👇 Manually bind mobile buttons
+  document.querySelector('.mobile-next').addEventListener('click', () => swiper.slideNext());
+  document.querySelector('.mobile-prev').addEventListener('click', () => swiper.slidePrev());
+});
+</script>
+
+{% schema %}
+{
+  "name": "Shopping by Category",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Shopping by category"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image",
+      "info": "Optional background image for the section. If not provided, gradient background will be used."
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Collection Settings"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection",
+          "info": "Choose a collection to automatically populate category data"
+        },
+        {
+          "type": "header",
+          "content": "Custom Override Settings"
+        },
+        {
+          "type": "paragraph",
+          "content": "The following settings will override collection data if provided:"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_category_image",
+          "label": "Custom Category Image",
+          "info": "Override collection featured image"
+        },
+        {
+          "type": "text",
+          "id": "custom_category_name",
+          "label": "Custom Category Name",
+          "info": "Override collection title"
+        },
+        {
+          "type": "text",
+          "id": "custom_product_count",
+          "label": "Custom Product Count",
+          "info": "Override collection product count"
+        },
+        {
+          "type": "url",
+          "id": "custom_category_url",
+          "label": "Custom Category URL",
+          "info": "Override collection URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shopping by Category",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "custom_category_name": "Bedroom",
+            "custom_product_count": "10"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "custom_category_name": "Drawing",
+            "custom_product_count": "15"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "custom_category_name": "Dining room",
+            "custom_product_count": "12"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "custom_category_name": "Bath room",
+            "custom_product_count": "8"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

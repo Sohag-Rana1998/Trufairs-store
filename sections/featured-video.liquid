@@ -1,0 +1,92 @@
+{%- if section.settings.divider -%}<div class="section--divider">{%- endif -%}
+
+<div class="page-width">
+  {%- if section.settings.title != blank -%}
+    <div class="section-header">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+  {%- endif -%}
+  
+  <div class="video-wrapper" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
+    {%- if section.settings.video_url == blank -%}
+      <iframe 
+        src="https://www.youtube.com/embed/_9VUPq3SxOc?autoplay=0&mute=0&loop=1&playlist=_9VUPq3SxOc&controls=1&modestbranding=1&rel=0&showinfo=0" 
+        title="YouTube video"
+        frameborder="0"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
+    {%- else -%}
+      {%- if section.settings.video_url.type == "youtube" -%}
+        <iframe 
+          src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?autoplay=0&mute=0&loop=1&playlist={{ section.settings.video_url.id }}&controls=1&modestbranding=1&rel=0&showinfo=0" 
+          title="YouTube video"
+          frameborder="0"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      {%- endif -%}
+
+      {%- if section.settings.video_url.type == "vimeo" -%}
+        <iframe 
+          src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}?color={{ settings.color_button | remove: "#" }}&byline=0&portrait=0&badge=0" 
+          width="850" 
+          height="480" 
+          frameborder="0" 
+          allowfullscreen>
+        </iframe>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+<style>
+
+  .video-wrapper {
+    border-radius: 20px;
+}
+</style>
+
+
+{%- if section.settings.divider -%}</div>{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.featured-video.name",
+  "class": "index-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.featured-video.settings.title.label"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "t:sections.featured-video.settings.video_url.label",
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "divider",
+      "label": "t:sections.featured-video.settings.divider.label",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.featured-video.presets.video.name"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["footer", "header", "custom.popups"]
+  }
+}
+{% endschema %}

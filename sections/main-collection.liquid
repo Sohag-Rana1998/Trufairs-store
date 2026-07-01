@@ -1,0 +1,1246 @@
+{%- liquid
+  assign current_filter_size = 0
+
+  for filter in collection.filters
+    assign current_filter_size = current_filter_size | plus: filter.active_values.size
+  endfor
+-%}
+
+<div
+  class="collection-content"
+  data-section-id="{{ section.id }}"
+  data-section-type="collection-grid"
+>
+  <div id="CollectionAjaxContent">
+    <div class="page-width">
+      <div class="grid">
+        <div class="grid__item medium-up--one-fifth grid__item--sidebar">
+          {%- render 'collection-grid-filters',
+            collection: collection,
+            enable_sidebar: section.settings.enable_sidebar,
+            filter_style: section.settings.filter_style,
+            collapsed: section.settings.collapsed,
+            enable_color_swatches: section.settings.enable_color_swatches,
+            enable_swatch_labels: section.settings.enable_swatch_labels
+          -%}
+        </div>
+        <div class="grid__item medium-up--four-fifths grid__item--content">
+          {%- liquid
+            assign show_more_increment = section.settings.show_more_increment
+            if show_more_increment == blank or show_more_increment <= 0
+              assign show_more_increment = 12
+            endif
+            
+            for block in section.blocks
+              case block.type
+              when 'product_grid'
+                assign paginate_by = show_more_increment
+              endcase
+            endfor
+          -%}
+          
+          {%- paginate collection.products by paginate_by -%}
+          {%- for block in section.blocks -%}
+            <div {{ block.shopify_attributes }} {%- if block.type == 'product-grid' -%}data-scroll-to{%- endif -%}>
+              {%- case block.type -%}
+              {%- when 'collection_description' -%}
+                {%- if collection.description != blank and current_filter_size == 0 -%}
+                  <div class="rte collection__description">
+                    {{ collection.description }}
+                  </div>
+                {%- endif -%}
+              {%- when 'subcollections' -%}
+                {%- if paginate.current_page == 1 and current_filter_size == 0 -%}
+                  {%- render 'subcollections', per_row: block.settings.subcollections_per_row -%}
+                {%- endif -%}
+              {%- when 'product_grid' -%}
+                <div data-scroll-to>
+                  <div id="show-more-wrapper">
+                    <!-- Collection Filter and Sort -->
+                    <div class="collection-grid__wrapper">
+                      <div class="collection-filter">
+                        <div class="collection-filter__item collection-filter__item--drawer">
+                          <button
+                            type="button"
+                            class="js-drawer-open-collection-filters btn btn--tertiary{% unless current_filter_size == 0 %} btn--tertiary-active{% endunless %}"
+                            aria-controls="FilterDrawer">
+                              <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-filter" viewBox="0 0 64 64"><title>icon-filter</title><path d="M48 42h10m-10 0a5 5 0 1 1-5-5 5 5 0 0 1 5 5ZM7 42h31M16 22H6m10 0a5 5 0 1 1 5 5 5 5 0 0 1-5-5Zm41 0H26"/></svg>
+                              {{ 'collections.filters.title_tags' | t }}
+                              {%- if current_filter_size > 0 -%}
+                                  ({{ current_filter_size }})
+                              {%- endif -%}
+                          </button>
+                        </div>
+
+                        <div class="collection-filter__item collection-filter__item--count small--hide">
+                          {%- if block.settings.enable_collection_count -%}
+                            {%- liquid
+                              if collection.products
+                                assign count = collection.products_count
+                                assign count_label = 'collections.general.items_with_count'
+                              endif
+                            -%}
+                            {{ count_label | t: count: count }}
+                          {%- endif -%}
+                        </div>
+
+                        <div class="collection-filter__item collection-filter__item--sort">
+                            <div class="collection-filter__sort-container">
+                            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                            <label for="SortBy" class="hidden-label">{{ 'collections.sorting.title' | t }}</label>
+                            <select name="SortBy" id="SortBy" data-default-sortby="{{ collection.default_sort_by }}">
+                              <option value="title-ascending"{% if sort_by == collection.default_sort_by %} selected="selected"{% endif %}>{{ 'collections.sorting.title' | t }}</option>
+                              {%- for option in collection.sort_options -%}
+                              <option value="{{ option.value }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name }}</option>
+                              {%- endfor -%}
+                            </select>
+                            </div>
+                        </div>
+                      </div>
+
+{%- if section.settings.enable_product_type_tabs -%}
+<div class="product-type-tabs-sticky-wrapper">
+  {%- liquid
+    assign product_type_filter = null
+    assign product_type_values = null
+    
+    for filter in collection.filters
+      assign filter_label_downcase = filter.label | downcase
+      if filter_label_downcase contains 'product type' or filter_label_downcase contains 'type' or filter_label_downcase == 'product_type'
+        assign product_type_filter = filter
+        assign product_type_values = filter.values
+        break
+      endif
+    endfor
+  -%}
+
+
+
+  {%- if product_type_filter and product_type_values.size > 0 -%}
+  <div class="product-type-tabs" id="productTypeTabs">
+    <div class="product-type-tabs__container">
+
+      {%- comment -%} View All Button {%- endcomment -%}
+      <div class="product-type-tab {% unless product_type_filter.active_values.size > 0 %}product-type-tab--active{% endunless %}">
+        <button type="button" class="product-type-tab__link" data-filter="" data-filter-name="All Products" data-reset-all="true">
+          <div class="product-type-tab__image">
+            <img src="https://placehold.co/60x60" alt="View All Products">
+          </div>
+          <span class="product-type-tab__text">View All</span>
+        </button>
+      </div>
+
+{%- comment -%} Product Type Tabs (with mapped images) {%- endcomment -%}
+{%- for filter_value in product_type_values -%}
+  {%- if filter_value.count > 0 -%}
+    {%- assign is_active = false -%}
+    {%- for active_value in product_type_filter.active_values -%}
+      {%- if active_value.value == filter_value.value -%}
+        {%- assign is_active = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+    
+{%- comment -%} Then in your loop: {%- endcomment -%}
+{%- case filter_value.label -%}
+  {%- when 'Loveseat Sofa' -%}
+    {%- assign image_url = loveseat_image -%}
+  {%- when 'Recliner' -%}
+    {%- assign image_url = recliner_image -%}
+  {%- when 'Sectional Sofa' -%}
+    {%- assign image_url = sectional_image -%}
+  {%- when 'Sofa' -%}
+    {%- assign image_url = sofa_image -%}
+  {%- else -%}
+    {%- assign image_url = 'https://placehold.co/60x60' -%}
+{%- endcase -%}
+
+
+    <div class="product-type-tab {% if is_active %}product-type-tab--active{% endif %}">
+      <button type="button" 
+              class="product-type-tab__link" 
+              data-filter="{{ filter_value.value }}" 
+              data-filter-name="{{ filter_value.label }}"
+              data-type="{{ filter_value.label | escape }}"
+              data-filter-url-param="filter.p.product_type"
+              data-manual-image="{{ image_url }}">
+        <div class="product-type-tab__image">
+          <img src="{{ image_url }}" alt="{{ filter_value.label }} category">
+        </div>
+
+
+
+        <span class="product-type-tab__text">
+          {{ filter_value.label }} ({{ filter_value.count }})
+        </span>
+      </button>
+    </div>
+  {%- endif -%}
+{%- endfor -%}
+
+    </div>
+
+    <div class="product-filter-loading" id="filterLoading" style="display: none;">
+      <div class="loading-spinner"></div>
+      <span>Loading products...</span>
+    </div>
+  </div>
+  {%- endif -%}
+</div>
+{%- endif -%}
+ 
+{% if section.settings.enable_best_sellers  %}
+
+
+          <div class="grid grid--uniform{% if block.settings.mobile_flush_grid %} small--grid--flush{% endif %}" id="product-grid-main">
+                        {%- liquid
+                          assign available_products = collection.products | where: 'available', true
+                          assign sold_out_products = collection.products | where: 'available', false
+                        -%}
+
+                        {%- for product in available_products -%}
+                          {%- render 'product-grid-item-2',
+                            product: product,
+                            per_row: block.settings.per_row,
+                            quick_shop_enable: settings.quick_shop_enable
+                          -%}
+                        {%- endfor -%}
+
+                        {%- for product in sold_out_products -%}
+                          {%- render 'product-grid-item-2',
+                            product: product,
+                            per_row: block.settings.per_row,
+                            quick_shop_enable: settings.quick_shop_enable
+                          -%}
+                        {%- endfor -%}
+                      </div>
+
+                      {% else %}
+
+                                <div class="grid grid--uniform{% if block.settings.mobile_flush_grid %} small--grid--flush{% endif %}" id="product-grid-main">
+                        {%- liquid
+                          assign available_products = collection.products | where: 'available', true
+                          assign sold_out_products = collection.products | where: 'available', false
+                        -%}
+
+                        {%- for product in available_products -%}
+                          {%- render 'product-grid-item',
+                            product: product,
+                            per_row: block.settings.per_row,
+                            quick_shop_enable: settings.quick_shop_enable
+                          -%}
+                        {%- endfor -%}
+
+                        {%- for product in sold_out_products -%}
+                          {%- render 'product-grid-item',
+                            product: product,
+                            per_row: block.settings.per_row,
+                            quick_shop_enable: settings.quick_shop_enable
+                          -%}
+                        {%- endfor -%}
+                      </div>
+                    {% endif %}
+                
+              
+                    </div>
+                  </div>
+                  
+                  {%- if paginate.pages > 1 and collection.products_count > 0 and paginate.current_page < paginate.pages -%}
+                    <div class="show-more-container text-center" style="margin-top: 2rem;">
+                      <button 
+                        id="show-more-btn" 
+                        class="btn show-more-btn"
+                        data-current-page="{{ paginate.current_page }}"
+                        data-total-pages="{{ paginate.pages }}"
+                        data-base-url="{{ collection.url }}"
+                        data-increment="{{ show_more_increment }}"
+                        data-per-row="{{ block.settings.per_row }}"
+                        data-quick-shop="{{ settings.quick_shop_enable }}"
+                      >
+                        <span class="show-more-text">{{ section.settings.show_more_text | default: 'Show More' }}</span>
+                        <span class="show-more-loading" style="display: none;">
+                          <svg class="spinner" width="20" height="20" viewBox="0 0 50 50">
+                            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+                              <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+                              <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+                            </circle>
+                          </svg>
+                          {{ section.settings.loading_text | default: 'Loading...' }}
+                        </span>
+                      </button>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endcase -%}
+            </div>
+          {%- endfor -%}
+          {%- endpaginate -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if section.settings.enable_sidebar == false or section.settings.filter_style == 'drawer' or collection.filters.size == 0 -%}
+{% style %}
+  .collection-content .grid__item--sidebar { width: 0; padding:0; }
+  .collection-content .grid__item--content { width: 100%; }
+  .grid__item--sidebar { position: static; overflow: hidden; }
+{% endstyle %}
+{%- endif -%}
+
+{%- if section.settings.enable_sidebar and section.settings.filter_style != 'drawer' and collection.filters.size > 0 -%}
+{% style %}
+@media screen and (min-width: 769px) {
+  .collection-filter__item--drawer {
+    display: none;
+  }
+  .collection-filter__item--count {
+    text-align: left;
+  }
+  html[dir="rtl"] .collection-filter__item--count {
+    text-align: right;
+  }
+}
+{% endstyle %}
+{%- endif -%}
+
+{%- if section.settings.enable_sidebar == false or collection.filters.size == 0 -%}
+{% style %}
+.collection-filter__item--drawer {
+  display: none;
+}
+.collection-filter__item--count {
+  text-align: left;
+}
+html[dir="rtl"] .collection-filter__item--count {
+  text-align: right;
+}
+{% endstyle %}
+{%- endif -%}
+
+{%- unless section.settings.enable_sort -%}
+{% style %}
+.collection-filter__sort-container {
+  display: none;
+}
+{% endstyle %}
+{%- endunless -%}
+
+<style>
+/* Sticky wrapper for product type tabs */
+.product-type-tabs-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-type-tabs {
+  padding: 15px 0;
+}
+
+.product-type-tabs__container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0 15px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #007bff #f1f1f1;
+}
+
+.product-type-tabs__container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.product-type-tabs__container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.product-type-tabs__container::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 3px;
+}
+
+.product-type-tabs__container::-webkit-scrollbar-thumb:hover {
+  background:rgb(29, 29, 29);
+}
+
+.product-type-tab {
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.product-type-tab__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #666;
+  padding: 12px 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: white;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.product-type-tab__link:hover {
+  border-color:rgb(21, 21, 21);
+  color:rgb(0, 0, 0);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.product-type-tab--active .product-type-tab__link {
+  border-color:rgb(32, 33, 34);
+  background: #f8f9ff;
+  color:rgb(12, 12, 12);
+}
+
+.product-type-tab__link:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.product-type-tab__image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10%;
+    overflow: hidden;
+    margin-bottom: 8px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.product-type-tab--active .product-type-tab__image {
+ 
+  background: #f8f9ff;
+}
+
+.product-type-tab__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-type-tab__link:hover .product-type-tab__image img {
+  transform: scale(1.1);
+}
+
+.product-type-tab__text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Loading indicator */
+.product-filter-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e5e5;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Show More Button Styles */
+.show-more-btn {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 0;
+  margin-bottom: 20px !important;
+}
+
+.show-more-btn:hover {
+  background: #333;
+}
+
+.show-more-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: rotate 2s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.show-more-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .product-type-tabs-sticky-wrapper {
+    top: 70px;
+    margin-bottom: 15px;
+  }
+  
+  .product-type-tabs__container {
+    padding: 0 10px;
+    gap: 8px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .product-type-tabs__container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .product-type-tab {
+    min-width: 100px;
+  }
+  
+  .product-type-tab__link {
+    padding: 10px 12px;
+  }
+  
+  .product-type-tab__image {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 6px;
+  }
+  
+  .product-type-tab__text {
+    font-size: 11px;
+  }
+}
+
+/* Ensure proper spacing when sticky */
+@media (min-width: 769px) {
+ .product-type-tabs-sticky-wrapper {
+    top: 43px;
+}
+}
+
+/* Additional mobile header adjustments */
+@media (max-width: 768px) {
+  .product-type-tabs-sticky-wrapper {
+    top: 70px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const collectionHandle = {{ collection.handle | json }};
+  let activeFilter = '';
+  let isTabFilterActive = false;
+
+  // Initialize the tab system
+  function initializeTabSystem() {
+    const tabsContainer = document.querySelector('.product-type-tabs__container');
+    const productGrid = document.getElementById('product-grid-main');
+    const loadingIndicator = document.getElementById('filterLoading');
+    
+    if (!tabsContainer) return;
+
+    // Remove existing event listeners to prevent duplicates
+    document.querySelectorAll('.product-type-tab__link').forEach(button => {
+      button.replaceWith(button.cloneNode(true));
+    });
+
+    // Add event listeners to tab buttons
+    document.querySelectorAll('.product-type-tab__link').forEach(button => {
+      button.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const filterValue = this.dataset.filter;
+        const filterName = this.dataset.filterName;
+        const resetAll = this.dataset.resetAll === 'true';
+        
+        // Don't reload if already active
+        if (activeFilter === filterValue && isTabFilterActive) return;
+        
+        // Update active state
+        document.querySelectorAll('.product-type-tab').forEach(tab => {
+          tab.classList.remove('product-type-tab--active');
+        });
+        this.closest('.product-type-tab').classList.add('product-type-tab--active');
+        
+        // Disable all buttons and show loading
+        document.querySelectorAll('.product-type-tab__link').forEach(btn => {
+          btn.disabled = true;
+        });
+        if (loadingIndicator) loadingIndicator.style.display = 'flex';
+        
+        try {
+       if (resetAll) {
+  await loadFilteredProductsFast(''); // Empty filter = show all
+} else {
+  await loadFilteredProductsFast(filterValue);
+}
+          
+          activeFilter = filterValue;
+          isTabFilterActive = true;
+          
+          // Update URL
+          const newUrl = resetAll ? window.location.pathname :
+            `${window.location.pathname}?filter.p.product_type=${encodeURIComponent(filterValue)}`;
+          window.history.pushState({filter: filterValue, isTab: true}, '', newUrl);
+          
+        } catch (error) {
+          console.error('Error loading products:', error);
+          showErrorMessage('Error loading products. Please try again.');
+        } finally {
+          // Re-enable buttons and hide loading
+          document.querySelectorAll('.product-type-tab__link').forEach(btn => {
+            btn.disabled = false;
+          });
+          if (loadingIndicator) loadingIndicator.style.display = 'none';
+        }
+      });
+    });
+
+    // Set initial state based on URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialFilter = urlParams.get('filter.p.product_type') || '';
+    activeFilter = initialFilter;
+    
+    // Update active tab based on current filters
+    updateActiveTabFromURL();
+  }
+
+  // Fast filter loading using existing Shopify filter mechanism
+  async function loadFilteredProductsFast(filterValue) {
+    const filterForm = document.querySelector('form[data-collection-filters-form]') || 
+                     document.querySelector('.collection-filters form') ||
+                     document.querySelector('#CollectionFiltersForm');
+    
+    if (filterForm) {
+      // Use existing form submission for faster loading
+      const formData = new FormData(filterForm);
+      
+      // Clear existing product type filters
+      for (let [key, value] of formData.entries()) {
+        if (key.includes('filter.p.product_type')) {
+          formData.delete(key);
+        }
+      }
+      
+      // Add new filter
+      formData.append('filter.p.product_type', filterValue);
+      
+      const response = await fetch(window.location.pathname, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+      
+      if (response.ok) {
+        const html = await response.text();
+        updateProductGridFromHTML(html);
+        return;
+      }
+    }
+    
+    // Fallback to URL-based filtering
+    await loadFilteredProducts(filterValue);
+  }
+
+  // Reset all filters function
+  async function resetAllFilters() {
+    try {
+      const response = await fetch(window.location.pathname, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      });
+      
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      
+      // Update the entire collection content
+      const newContent = doc.querySelector('#CollectionAjaxContent');
+      const currentContent = document.querySelector('#CollectionAjaxContent');
+      
+      if (newContent && currentContent) {
+        currentContent.innerHTML = newContent.innerHTML;
+        
+        // Re-initialize everything
+        initializeTabSystem();
+        initializeShowMore(document);
+        reinitializeThemeScripts(currentContent);
+        
+        // Clear any active sidebar filters
+        clearSidebarFilters();
+      }
+      
+    } catch (error) {
+      console.error('Error resetting filters:', error);
+      throw error;
+    }
+  }
+
+  // Clear sidebar filters
+  function clearSidebarFilters() {
+    // Clear active filter classes
+    document.querySelectorAll('.filter-item--active, .filter__item--active').forEach(item => {
+      item.classList.remove('filter-item--active', 'filter__item--active');
+    });
+    
+    // Uncheck filter checkboxes
+    document.querySelectorAll('input[type="checkbox"][name*="filter."]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    
+    // Clear filter links active states
+    document.querySelectorAll('.filter-link--active, .filter__link--active').forEach(link => {
+      link.classList.remove('filter-link--active', 'filter__link--active');
+    });
+  }
+
+  // Load filtered products via AJAX
+  async function loadFilteredProducts(filterValue) {
+    let url = `/collections/${collectionHandle}`;
+    if (filterValue) {
+      url += `?filter.p.product_type=${encodeURIComponent(filterValue)}`;
+    }
+    
+    const response = await fetch(url, {
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
+    
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    const html = await response.text();
+    updateProductGridFromHTML(html);
+  }
+
+  // Update product grid from HTML
+  function updateProductGridFromHTML(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const productGrid = document.getElementById('product-grid-main');
+    
+    if (!productGrid) return false;
+    
+    const newProductGrid = doc.querySelector('#product-grid-main');
+    
+    if (newProductGrid) {
+      productGrid.style.opacity = '0.5';
+      
+      setTimeout(() => {
+        productGrid.innerHTML = newProductGrid.innerHTML;
+        productGrid.style.opacity = '1';
+        reinitializeThemeScripts(productGrid);
+      }, 100); // Reduced delay for faster loading
+      
+      return true;
+    }
+    
+    return false;
+  }
+
+  // Update active tab based on URL
+  function updateActiveTabFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterValue = urlParams.get('filter.p.product_type') || '';
+    
+    document.querySelectorAll('.product-type-tab').forEach(tab => {
+      tab.classList.remove('product-type-tab--active');
+    });
+    
+    document.querySelectorAll('.product-type-tab__link').forEach(button => {
+      if (button.dataset.filter === filterValue) {
+        button.closest('.product-type-tab').classList.add('product-type-tab--active');
+      }
+    });
+    
+    // If no filter, activate "View All"
+    if (!filterValue) {
+      const viewAllTab = document.querySelector('[data-reset-all="true"]');
+      if (viewAllTab) {
+        viewAllTab.closest('.product-type-tab').classList.add('product-type-tab--active');
+      }
+    }
+  }
+
+  // Show error message
+  function showErrorMessage(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'filter-error-message';
+    errorDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #f44336;
+      color: white;
+      padding: 15px;
+      border-radius: 4px;
+      z-index: 3;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    `;
+    errorDiv.textContent = message;
+    
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+      if (errorDiv.parentNode) {
+        errorDiv.parentNode.removeChild(errorDiv);
+      }
+    }, 3000);
+  }
+
+  // Handle browser navigation
+  window.addEventListener('popstate', function(event) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const filterValue = urlParams.get('filter.p.product_type') || '';
+    
+    if (event.state && event.state.isTab) {
+      // This was a tab navigation
+      isTabFilterActive = true;
+      activeFilter = filterValue;
+      updateActiveTabFromURL();
+      
+      if (filterValue) {
+        loadFilteredProducts(filterValue).catch(console.error);
+      } else {
+        resetAllFilters().catch(console.error);
+      }
+    } else {
+      // This might be a sidebar filter navigation
+      isTabFilterActive = false;
+      updateActiveTabFromURL();
+    }
+  });
+
+  // Monitor for sidebar filter changes
+  function monitorSidebarFilters() {
+    // Watch for AJAX content changes (sidebar filters)
+    const observer = new MutationObserver((mutations) => {
+      let contentChanged = false;
+      
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          // Check if this is a filter-triggered change
+          const hasProductGrid = Array.from(mutation.addedNodes).some(node => 
+            node.nodeType === 1 && (
+              node.querySelector('#product-grid-main') ||
+              node.querySelector('.grid--uniform') ||
+              node.id === 'product-grid-main'
+            )
+          );
+          
+          if (hasProductGrid) {
+            contentChanged = true;
+            break;
+          }
+        }
+      }
+      
+      if (contentChanged) {
+        // Re-initialize tab system after sidebar filter change
+        setTimeout(() => {
+          isTabFilterActive = false; // Reset tab filter state
+          initializeTabSystem();
+          updateActiveTabFromURL();
+          initializeShowMore(document);
+          
+          // Re-initialize theme scripts
+          const collectionContainer = document.querySelector('.collection-content[data-section-id]');
+          if (collectionContainer) {
+            reinitializeThemeScripts(collectionContainer);
+          }
+        }, 100);
+      }
+    });
+
+    const ajaxContainer = document.getElementById('CollectionAjaxContent');
+    if (ajaxContainer) {
+      observer.observe(ajaxContainer, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }
+
+  // Theme scripts re-initialization
+  function reinitializeThemeScripts(container) {
+    const event = new CustomEvent('shopify:section:load', {
+      bubbles: true,
+      detail: { sectionId: container.id }
+    });
+    container.dispatchEvent(event);
+    
+    initializeAddToCartButtons(container);
+  }
+
+  // Initialize add to cart buttons
+  function initializeAddToCartButtons(container) {
+    container.querySelectorAll('.product-card-add-to-cart:not([data-cart-initialized])').forEach(button => {
+      button.setAttribute('data-cart-initialized', 'true');
+      button.addEventListener('click', handleAddToCart);
+    });
+  }
+
+  // Handle add to cart
+  function handleAddToCart(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const button = e.currentTarget;
+    if (button.disabled || button.classList.contains('adding-to-cart')) return;
+    
+    button.classList.add('adding-to-cart');
+    button.disabled = true;
+    
+    const addText = button.querySelector('.add-to-cart-text');
+    const loadingText = button.querySelector('.add-to-cart-loading');
+    if (addText) addText.style.display = 'none';
+    if (loadingText) loadingText.style.display = 'inline';
+    
+    const formData = new FormData();
+    formData.append('id', button.dataset.variantId);
+    formData.append('quantity', '1');
+    
+    fetch('/cart/add.js', { method: 'POST', body: formData })
+      .then(response => response.json())
+      .then(data => {
+        document.dispatchEvent(new CustomEvent('ajaxProduct:added', { 
+          bubbles: true, 
+          detail: { product: data } 
+        }));
+        if (addText) {
+          addText.textContent = 'Added!';
+          setTimeout(() => { addText.textContent = 'Add To Cart'; }, 1500);
+        }
+      })
+      .catch(error => {
+        console.error('Error adding to cart:', error);
+        if (addText) {
+          addText.textContent = 'Error';
+          setTimeout(() => { addText.textContent = 'Add To Cart'; }, 2000);
+        }
+      })
+      .finally(() => {
+        setTimeout(() => {
+          button.classList.remove('adding-to-cart');
+          button.disabled = (button.dataset.variantAvailable === 'false');
+          if (addText) addText.style.display = 'inline';
+          if (loadingText) loadingText.style.display = 'none';
+        }, 1000);
+      });
+  }
+
+  // Initialize show more functionality
+  function initializeShowMore(container) {
+    const showMoreBtn = container.querySelector('#show-more-btn:not([data-initialized])');
+    if (!showMoreBtn) return;
+    
+    showMoreBtn.setAttribute('data-initialized', 'true');
+    showMoreBtn.addEventListener('click', handleShowMore);
+  }
+
+  // Handle show more
+  function handleShowMore(e) {
+    const button = e.currentTarget;
+    let currentPage = parseInt(button.dataset.currentPage);
+    const totalPages = parseInt(button.dataset.totalPages);
+    
+    if (currentPage >= totalPages) return;
+    
+    button.disabled = true;
+    button.querySelector('.show-more-text').style.display = 'none';
+    button.querySelector('.show-more-loading').style.display = 'flex';
+    
+    const nextPage = currentPage + 1;
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', nextPage);
+    
+    fetch(url.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const productGrid = document.getElementById('product-grid-main');
+        const newProducts = doc.querySelectorAll('#product-grid-main > *');
+        
+        if (newProducts.length > 0 && productGrid) {
+          const newContentWrapper = document.createElement('div');
+          newContentWrapper.style.display = 'contents';
+          newProducts.forEach(p => newContentWrapper.appendChild(p));
+          
+          productGrid.appendChild(newContentWrapper);
+          reinitializeThemeScripts(productGrid);
+          
+          button.dataset.currentPage = nextPage;
+          
+          const newShowMoreBtn = doc.getElementById('show-more-btn');
+          if (!newShowMoreBtn || nextPage >= totalPages) {
+            button.style.display = 'none';
+          }
+        } else {
+          button.style.display = 'none';
+        }
+      })
+      .catch(error => console.error('Error loading more products:', error))
+      .finally(() => {
+        button.disabled = false;
+        button.querySelector('.show-more-text').style.display = 'inline';
+        button.querySelector('.show-more-loading').style.display = 'none';
+      });
+  }
+
+  // Initialize everything
+  initializeTabSystem();
+  initializeShowMore(document);
+  monitorSidebarFilters();
+
+  // Initial theme scripts
+  const initialContainer = document.querySelector('.collection-content[data-section-id]');
+  if (initialContainer) {
+    reinitializeThemeScripts(initialContainer);
+  }
+});
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "CollectionPage",
+  {% if collection.description != blank %}
+    "description": {{ collection.description | strip_html | json }},
+  {% endif %}
+  {% if page_image %}
+    {% assign image_size = page_image.width | append: 'x' %}
+    "image": {
+      "@type": "ImageObject",
+      "height": {{ page_image.height | json }},
+      "url": {{ page_image | img_url: image_size | prepend: "https:" | json }},
+      "width": {{ page_image.width | json }}
+    },
+  {% endif %}
+  "name": {{ collection.title | json }}
+}
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Type Tabs"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_type_tabs",
+      "label": "Enable Product Type Tabs",
+      "default": false,
+      "info": "Show/hide product type filter tabs above the product grid"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_best_sellers",
+      "label": "Enable Best Sellers Layout",
+      "default": false,
+ 
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_review",
+      "label": "Show Review",
+      "default": false,
+ 
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sold",
+      "label": "Show Sold Quantity",
+      "default": false,
+ 
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-collection.settings.header_filtering_and_sorting"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sidebar",
+      "label": "t:sections.main-collection.settings.enable_sidebar.label",
+      "default": true,
+      "info": "t:sections.main-collection.settings.enable_sidebar.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapsed",
+      "label": "t:sections.main-collection.settings.collapsed.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "filter_style",
+      "label": "t:sections.main-collection.settings.filter_style.label",
+      "default": "sidebar",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "t:sections.main-collection.settings.filter_style.options.sidebar.label"
+        },
+        {
+          "value": "drawer",
+          "label": "t:sections.main-collection.settings.filter_style.options.drawer.label"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_color_swatches",
+      "label": "t:sections.main-collection.settings.enable_color_swatches.label",
+      "info": "t:sections.main-collection.settings.enable_color_swatches.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_swatch_labels",
+      "label": "t:common.enable_swatch_labels.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sort",
+      "label": "t:sections.main-collection.settings.enable_sort.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Show More Settings"
+    },
+    {
+      "type": "number",
+      "id": "show_more_increment",
+      "label": "Products to load per click",
+      "default": 12,
+      "info": "Number of products to load each time 'Show More' is clicked"
+    },
+    {
+      "type": "text",
+      "id": "show_more_text",
+      "label": "Show More button text",
+      "default": "Show More"
+    },
+    {
+      "type": "text",
+      "id": "loading_text",
+      "label": "Loading text",
+      "default": "Loading..."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_description",
+      "name": "t:sections.main-collection.blocks.collection_description.name",
+      "limit": 1
+    },
+    {
+      "type": "product_grid",
+      "name": "t:sections.main-collection.blocks.products.name",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_collection_count",
+          "label": "t:sections.main-collection.blocks.products.settings.enable_collection_count.label",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "per_row",
+          "label": "t:sections.main-collection.blocks.products.settings.per_row.label",
+          "default": 4,
+          "min": 2,
+          "max": 5,
+          "step": 1
+        },
+        {
+          "type": "range",
+          "id": "rows_per_page",
+          "label": "t:sections.main-collection.blocks.products.settings.rows_per_page.label",
+          "default": 7,
+          "min": 3,
+          "max": 20,
+          "step": 1
+        },
+        {
+          "type": "checkbox",
+          "id": "mobile_flush_grid",
+          "label": "t:sections.main-collection.blocks.products.settings.mobile_flush_grid.label",
+          "default": false
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "subcollections",
+      "name": "t:sections.main-collection.blocks.subcollections.name",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "t:sections.main-collection.blocks.subcollections.settings.content"
+        },
+        {
+          "type": "range",
+          "id": "subcollections_per_row",
+          "label": "t:sections.main-collection.blocks.subcollections.settings.subcollections_per_row.label",
+          "default": 5,
+          "min": 2,
+          "max": 5,
+          "step": 1
+        }
+      ],
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}

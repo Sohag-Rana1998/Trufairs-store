@@ -1,0 +1,291 @@
+{%- assign swatch_file_extension = 'png' -%}
+
+{%- liquid
+assign is_size = false
+assign size_trigger = 'products.general.size_trigger' | t | downcase
+assign downcased_option = option.name | downcase
+
+if downcased_option contains size_trigger
+assign is_size = true
+endif
+
+assign show_image = false
+assign is_color_with_image = false
+assign show_more_button = false
+
+if option.name contains ':-'
+assign show_image = true
+
+if downcased_option contains 'color' or downcased_option contains 'colour'
+assign is_color_with_image = true
+endif
+
+if option.values.size > 9
+assign show_more_button = true
+endif
+
+endif
+-%}
+
+<div class="variant-wrapper js" data-type="button">
+
+<label class="variant__label">
+{{ option.name | replace: ':-', '' | strip }}
+</label>
+
+{%- assign option_index = forloop.index -%}
+
+<fieldset
+class="variant-input-wrap{% if is_color_with_image %} variant-input-wrap--color-image{% endif %}{% if show_image %} variant-input-image-wrap{% endif %}"
+name="{{ option.name }}"
+data-index="option{{ option_index }}"
+data-handle="{{ option.name | handleize }}"
+id="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ forloop.index0 }}">
+
+<legend class="hide">{{ option.name }}</legend>
+
+{%- for value in option.values -%}
+
+{% assign hidden_class = '' %}
+{% if show_more_button and forloop.index > 9 %}
+{% assign hidden_class = 'variant-hidden' %}
+{% endif %}
+
+{%- liquid
+assign product_available = true
+if product.options.size == 1 and block.settings.product_dynamic_variants_enable
+assign product_available = product.variants[forloop.index0].available
+endif
+
+assign variant_for_value = null
+
+if show_image
+for variant in product.variants
+assign option_position = option_index | minus: 1
+if variant.options[option_position] == value
+assign variant_for_value = variant
+break
+endif
+endfor
+endif
+-%}
+
+<div
+class="variant-input {{ hidden_class }}{% if show_image %} variant-input--with-image{% endif %}{% if is_color_with_image %} variant-input--color-with-image{% endif %}"
+data-index="option{{ option_index }}"
+data-value="{{ value | escape }}">
+
+<input type="radio"
+form="{{ form_id }}"
+{% if option.selected_value == value %} checked="checked"{% endif %}
+value="{{ value | escape }}"
+data-index="option{{ option_index }}"
+name="{{ option.name | replace: '(Show Image)', '' | strip }}"
+data-variant-input
+class="{% unless product_available %} disabled{% endunless %}{% if is_color %} variant__input--color-swatch{% endif %}{% if show_image %} variant__input--image{% endif %}{% if is_color_with_image %} variant__input--color-image{% endif %}"
+id="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}">
+
+{%- if is_color_with_image and variant_for_value.image -%}
+
+<label
+for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"
+class="variant__button-label variant__button-label--color-image">
+
+<span class="variant__image-wrapper">
+<img src="{{ variant_for_value.image | image_url: width: 100 }}"
+alt="{{ value }}"
+loading="lazy"
+class="variant__image">
+</span>
+
+<span class="variant__label-text">{{ value }}</span>
+
+</label>
+
+{%- elsif show_image and variant_for_value.image -%}
+
+<label
+for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"
+class="variant__button-label variant__button-label--image">
+
+<span class="variant__image-wrapper">
+<img src="{{ variant_for_value.image | image_url: width: 100 }}"
+alt="{{ value }}"
+loading="lazy"
+class="variant__image">
+</span>
+
+<span class="variant__label-text">{{ value }}</span>
+
+</label>
+
+{%- else -%}
+
+<label
+for="ProductSelect-{{ section_id }}-{{ product.id }}-option-{{ option.name | handleize }}-{{ value | url_encode }}"
+class="variant__button-label">
+
+{{ value }}
+
+</label>
+
+{%- endif -%}
+
+</div>
+
+{%- endfor -%}
+
+{% if show_more_button %}
+<div class="variant-show-more-card">
+<button type="button" class="variant-show-more-btn">
+See more variants
+</button>
+</div>
+{% endif %}
+
+</fieldset>
+
+</div>
+
+<style>
+.variant-input--with-image {
+ display: grid;
+}
+
+.variant-input-wrap--color-image , .variant-input-image-wrap{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+gap:12px;
+margin-top:10px;
+}
+
+.variant-hidden{
+display:none;
+}
+
+/* NEW card style for See More */
+
+.variant-show-more-card{
+
+display:flex;
+align-items:center;
+justify-content:center;
+border:1px dashed #ccc;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+.variant-show-more-btn{
+
+width:100%;
+height:100%;
+padding:18px 10px;
+background:#fff;
+border:none;
+font-weight:600;
+cursor:pointer;
+
+}
+
+.variant-show-more-card:hover{
+
+background:#000;
+
+}
+
+.variant-show-more-card:hover .variant-show-more-btn {
+    color:rgb(255, 255, 255);
+    background: transparent;
+}
+
+.variant__button-label--image{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+text-align:center;
+padding:10px;
+border:1px solid #e0e0e0;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+.variant__image{
+width:80px;
+height:80px;
+object-fit:contain;
+}
+
+
+
+
+
+.variant__button-label--color-image{
+padding:7px !important;
+}
+.variant__label-text {
+    font-size: 13px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+label.variant__button-label.variant__button-label--color-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+@media (max-width:768px){
+
+.variant-input-wrap--color-image {
+    grid-template-columns: repeat(auto-fill,minmax(90px,1fr));
+    gap: 10px !important;
+}
+.variant__label-text {
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.variant__image {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+}
+
+
+
+}
+
+</style>
+
+<script>
+
+document.addEventListener("DOMContentLoaded",function(){
+
+const buttons=document.querySelectorAll(".variant-show-more-btn");
+
+buttons.forEach(btn=>{
+
+btn.addEventListener("click",function(){
+
+const wrapper=btn.closest(".variant-wrapper");
+
+const hiddenVariants=wrapper.querySelectorAll(".variant-hidden");
+
+hiddenVariants.forEach(el=>{
+
+el.style.display="block";
+
+});
+
+btn.closest(".variant-show-more-card").style.display="none";
+
+});
+
+});
+
+});
+
+</script>

@@ -1,0 +1,668 @@
+{% style %}
+  #shopify-section-{{ section.id }} .trufairs-featured-picks {
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+  }
+ 
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__header {
+     display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 36px;
+    text-align: center;
+  }
+ 
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__content {
+    max-width: 680px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__eyebrow {
+    margin: 0 0 12px;
+    color: {{ section.settings.accent_color }};
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__heading {
+    margin: 0 0 14px;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08;
+    font-weight: 750;
+    letter-spacing: -0.045em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__description {
+    margin: 0;
+    color: {{ section.settings.muted_text_color }};
+    font-size: 16.5px;
+    line-height: 1.7;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    background: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__button:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    overflow: hidden;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.card_background }};
+    border: 1px solid {{ section.settings.border_color }};
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.055);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__image-wrap {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: {{ section.settings.image_background }};
+    aspect-ratio: 1 / 1;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 260ms ease;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__card:hover .trufairs-featured-picks__image {
+    transform: scale(1.035);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__placeholder {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: {{ section.settings.image_background }};
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: calc(100% - 28px);
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: {{ section.settings.badge_background }};
+    color: {{ section.settings.badge_text_color }};
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__badge svg {
+    width: 13px;
+    height: 13px;
+    flex: 0 0 13px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__product-title {
+    margin: 0 0 8px;
+    font-size: 15px;
+    line-height: 1.35;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__product-title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__reason {
+    margin: 0 0 14px;
+    color: {{ section.settings.muted_text_color }};
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__benefit {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 16px;
+    padding: 7px 10px;
+    border-radius: 999px;
+    background: {{ section.settings.benefit_background }};
+    color: {{ section.settings.benefit_text_color }};
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__meta {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid {{ section.settings.border_color }};
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__price {
+    color: {{ section.settings.text_color }};
+    font-size: 15px;
+    font-weight: 750;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__shop {
+    color: {{ section.settings.accent_color }};
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__shop:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+.trufairs-featured-picks .button-container{
+    widht:100%;
+    display:flex;
+    justify-content: center;
+    margin-top:30px;
+}
+  #shopify-section-{{ section.id }} .trufairs-featured-picks__empty {
+    padding: 34px;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.card_background }};
+    border: 1px dashed {{ section.settings.border_color }};
+    color: {{ section.settings.muted_text_color }};
+    text-align: center;
+  }
+
+  @media screen and (max-width: 990px) {
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__header {
+      align-items: center;
+      flex-direction: column;
+      text-align:center;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .trufairs-featured-picks {
+      padding: {{ section.settings.mobile_padding_top }}px 0 {{ section.settings.mobile_padding_bottom }}px;
+    }
+ 
+    
+.trufairs-featured-picks__scroller{
+    margin-left: 15px;
+}
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__header {
+      padding: 0 16px;
+      margin-bottom: 28px;
+      gap: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__heading {
+      font-size: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__description {
+      font-size: 15.5px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__scroller {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 0 16px 6px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__scroller::-webkit-scrollbar {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__grid {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__card {
+      width: 78vw;
+      max-width: 330px;
+      min-width: 260px;
+      scroll-snap-align: start;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-featured-picks__body {
+      padding: 18px;
+    }
+  }
+    .trufairs-process__eyebrow::before,
+  .trufairs-process__eyebrow::after {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background:  #b8893b;
+    opacity: 0.45;
+  }
+
+{% endstyle %}
+
+<section class="trufairs-featured-picks" aria-labelledby="trufairs-featured-picks-heading-{{ section.id }}">
+  <div class="container">
+    <div class="trufairs-featured-picks__header">
+      <div class="trufairs-featured-picks__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="trufairs-featured-picks__eyebrow trufairs-process__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 id="trufairs-featured-picks-heading-{{ section.id }}" class="trufairs-featured-picks__heading">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <p class="trufairs-featured-picks__description">
+            {{ section.settings.description }}
+          </p>
+        {% endif %}
+      </div>
+
+ 
+    </div>
+
+    {% assign selected_collection = section.settings.collection %}
+
+    {% if selected_collection != blank and selected_collection.products_count > 0 %}
+      <div class="trufairs-featured-picks__scroller">
+        <div class="trufairs-featured-picks__grid">
+          {% for product in selected_collection.products limit: section.settings.products_limit %}
+            <article class="trufairs-featured-picks__card">
+              <a class="trufairs-featured-picks__image-wrap" href="{{ product.url | within: collection }}" aria-label="{{ product.title | escape }}">
+                {% if product.featured_image != blank %}
+                  <img
+                    class="trufairs-featured-picks__image"
+                    src="{{ product.featured_image | image_url: width: 520 }}"
+                    srcset="
+                      {{ product.featured_image | image_url: width: 320 }} 320w,
+                      {{ product.featured_image | image_url: width: 520 }} 520w,
+                      {{ product.featured_image | image_url: width: 720 }} 720w
+                    "
+                    sizes="(max-width: 749px) 78vw, (max-width: 990px) 33vw, {{ 100 | divided_by: section.settings.columns_desktop }}vw"
+                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                    loading="lazy"
+                    width="{{ product.featured_image.width }}"
+                    height="{{ product.featured_image.height }}"
+                  >
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'trufairs-featured-picks__placeholder' }}
+                {% endif %}
+
+                {% if section.settings.show_verified_badge %}
+                  <span class="trufairs-featured-picks__badge">
+                     <img title="This item is trufairs verified" class="verified-black-logo" style="max-width:25px;"  src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Verified_logo_67e7060b-e85b-4d29-b7ba-5a380279e3e8.png?v=1777097300" height="25" width="25">
+    
+                    {{ section.settings.badge_text }}
+                  </span>
+                {% endif %}
+              </a>
+
+              <div class="trufairs-featured-picks__body">
+                <h3 class="trufairs-featured-picks__product-title">
+                  <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+                </h3>
+
+                {% if product.description != blank and section.settings.show_product_description %}
+                  <p class="trufairs-featured-picks__reason">
+                    {{ product.description | strip_html | truncate: 110 }}
+                  </p>
+                {% else %}
+                  <p class="trufairs-featured-picks__reason">
+                      {% if product.metafields.custom.why_selected   %}
+                    {{ product.metafields.custom.why_selected }}
+                      {% else %}
+ {{ section.settings.default_reason }}
+                             {% endif %}
+                  </p>
+                {% endif %}
+
+             
+                  <span class="trufairs-featured-picks__benefit">
+               {% if product.metafields.custom.key_benefit   %}
+                    {{ product.metafields.custom.key_benefit }}
+                      {% else %}
+                           {% if section.settings.key_benefit != blank %}
+       {{ section.settings.key_benefit }}
+            {% endif %}
+                             {% endif %}
+                  </span>
+           
+
+                <div class="trufairs-featured-picks__meta">
+                  <span class="trufairs-featured-picks__price">
+                    {% if product.price_varies %}
+                      From {{ product.price_min | money }}
+                    {% else %}
+                      {{ product.price | money }}
+                    {% endif %}
+                  </span>
+
+                  <a class="trufairs-featured-picks__shop" href="{{ product.url | within: collection }}">
+                    {{ section.settings.product_link_label }}
+                  </a>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+
+        </div>
+
+      
+      </div>
+        <div class="button-container">
+     {% if section.settings.button_label != blank %}
+        {% assign button_url = section.settings.button_link %}
+
+        {% if button_url == blank and section.settings.collection != blank %}
+          {% assign button_url = section.settings.collection.url %}
+        {% endif %}
+
+        {% if button_url != blank %}
+          <a class="trufairs-featured-picks__button" href="{{ button_url }}">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      {% endif %}
+
+    </div>
+    {% else %}
+      <div class="trufairs-featured-picks__empty">
+        Select a collection with products from the theme editor.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Verified Picks",
+  "tag": "section",
+  "class": "section-featured-verified-picks",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Curated, Not Catalog"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trufairs Verified Picks"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "A focused selection of home products chosen for quality, usefulness, and real-world value — so you can shop with confidence instead of scrolling endlessly."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Maximum products to show",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_description",
+      "label": "Use product description as reason text",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "default_reason",
+      "label": "Default reason text",
+      "default": "Selected for dependable quality, practical use, and strong everyday value."
+    },
+    {
+      "type": "text",
+      "id": "key_benefit",
+      "label": "Key benefit badge",
+      "default": "Verified for everyday use"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Header button label",
+      "default": "Shop All Verified Picks"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Custom header button link"
+    },
+    {
+      "type": "text",
+      "id": "product_link_label",
+      "label": "Product link label",
+      "default": "View Pick"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_verified_badge",
+      "label": "Show verified badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Verified Pick"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#fbf7ef"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Image background",
+      "default": "#f1eadf"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main text color",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text color",
+      "default": "#625a50"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#b8893b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#eadfcd"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge background",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "benefit_background",
+      "label": "Benefit background",
+      "default": "#f4ead8"
+    },
+    {
+      "type": "color",
+      "id": "benefit_text_color",
+      "label": "Benefit text",
+      "default": "#6e4f1f"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 140,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min":0,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 10,
+      "max": 34,
+      "step": 2,
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Verified Picks"
+    }
+  ]
+}
+{% endschema %}

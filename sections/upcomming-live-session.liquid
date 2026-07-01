@@ -1,0 +1,848 @@
+{% comment %}
+  Upcoming Live Session Section
+  - A customizable section for showing upcoming product sessions with countdown timer
+  - Features customizable title, session details, and countdown functionality
+  - Countdown date/time is set through schema settings in the editor
+{% endcomment %}
+
+{{ 'section-upcoming-live-session.css' | asset_url | stylesheet_tag }}
+
+<div class="upcoming-session-container page-width" id="upcoming-live-session-{{ section.id }}">
+  {% if section.settings.title != blank %}
+    <div class="upcoming-session-title">{{ section.settings.title }}</div>
+  {% endif %}
+
+  <div class="upcoming-session-content">
+    <div class="session-details">
+      {% if section.settings.badge_text != blank %}
+        <span class="session-badge">{{ section.settings.badge_text }}</span>
+      {% endif %}
+
+      {% if section.settings.session_title != blank %}
+        <h3 class="session-title">{{ section.settings.session_title }}</h3>
+      {% endif %}
+      
+      {% if section.settings.session_description != blank %}
+        <p class="session-description">{{ section.settings.session_description }}</p>
+      {% endif %}
+
+      <div class="session-meta">
+        <div class="meta-item">
+          <div class="meta-icon">
+ 
+           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-pf-type="Icon2" class="sc-knuQPt cjJYot pf-62_ pf-icon2-1"><path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm64 80v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm128 0v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H336zM64 400v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H208zm112 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H336c-8.8 0-16 7.2-16 16z"></path></svg>   <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zM7 12h5v5H7z"/>
+        
+          </div>
+          <span>{{ section.settings.session_date }}</span>
+        </div>
+        
+        <div class="meta-item">
+          <div class="meta-icon">
+           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-pf-type="Icon2" class="sc-knuQPt cjJYot pf-67_ pf-icon2-1"><path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"></path></svg>
+          </div>
+          <span>{{ section.settings.session_time }}</span>
+        </div>
+        
+        <div class="meta-item">
+          <div class="meta-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-pf-type="Icon2" class="sc-knuQPt cjJYot pf-72_ pf-icon2-1"><path d="M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z"></path></svg>
+          </div>
+          <span>{{ section.settings.session_location }}</span>
+        </div>
+      </div>
+
+      {% if section.settings.topics_title != blank %}
+        <div class="session-topics">
+          <h4 class="topics-title">{{ section.settings.topics_title }}</h4>
+          {% if section.blocks.size > 0 %}
+            <ul class="topics-list">
+              {% for block in section.blocks %}
+                {% if block.type == 'topic_item' %}
+                  <li>{{ block.settings.topic_text }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="countdown-container">
+      {% if section.settings.countdown_title != blank %}
+        <h3 class="countdown-title">{{ section.settings.countdown_title }}</h3>
+      {% endif %}
+      
+      <div class="countdown-timer" id="countdown-timer-{{ section.id }}">
+        <div class="countdown-item">
+          <div class="countdown-value" id="days-{{ section.id }}">{{ section.settings.default_days }}</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="hours-{{ section.id }}">{{ section.settings.default_hours }}</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="mins-{{ section.id }}">{{ section.settings.default_minutes }}</div>
+          <div class="countdown-label">Mins</div>
+        </div>
+        <div class="countdown-item">
+          <div class="countdown-value" id="secs-{{ section.id }}">{{ section.settings.default_seconds }}</div>
+          <div class="countdown-label">Secs</div>
+        </div>
+      </div>
+
+      {% if section.settings.countdown_message != blank %}
+        <p class="countdown-message">{{ section.settings.countdown_message }}</p>
+      {% endif %}
+
+      {% if section.settings.show_register_button %}
+              <button class="register-button" id="bookSeatButton1">  {{ section.settings.reminder_button_text }}</button>
+        
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --primary-color: {{ section.settings.primary_color }};
+    --background-color: {{ section.settings.background_color }};
+    --text-color: {{ section.settings.text_color }};
+    --border-radius: {{ section.settings.border_radius }}px;
+    --box-shadow: {{ section.settings.box_shadow }};
+  }
+
+  .upcoming-session-container {
+    max-width: {{ section.settings.container_width }}px;
+    margin: {{ section.settings.margin_top }}px auto {{ section.settings.margin_bottom }}px;
+    padding: {{ section.settings.padding }}px;
+  }
+
+.upcoming-session-title {
+    text-align: center;
+    font-size: 2.6rem;
+    text-transform: capitalize !important;
+    font-weight: 700;
+    margin-bottom: 3rem;
+    color: {{ section.settings.title_color }};
+   text-align: center !important;
+    display: block;
+  
+    margin: 0 auto !important;
+  }
+
+ 
+
+  
+  .upcoming-session-content {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .session-details {
+    flex: 1;
+    padding: 1.5rem;
+  }
+
+  .session-badge {
+    display: inline-block;
+    background-color: {{ section.settings.badge_background }};
+    color: {{ section.settings.badge_text_color }};
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+.session-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333333;
+    margin-top: 5px;
+    letter-spacing: normal !important;
+    text-transform: capitalize !IMPORTANT;
+}
+
+  .session-description {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    color: {{ section.settings.text_color }};
+  }
+
+  .session-meta {
+    margin-bottom: 1.5rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .meta-icon {
+    width: 2rem;
+    height: 2rem;
+    background-color: {{ section.settings.icon_background }};
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+  }
+
+  .meta-icon svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  
+  }
+
+
+  .meta-icon svg {
+    width: 2.2rem;
+    height: 2.2rem;
+  fill: {{ section.settings.icon_color }};
+    stroke: unset;
+}
+
+  .session-topics {
+    margin-top: 1.5rem;
+  }
+
+  
+  .topics-title {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 1.4rem;
+    color: {{ section.settings.topics_title_color }};
+    letter-spacing: normal  !important;
+    text-transform:capitalize !important;  
+}
+
+  .topics-list {
+    list-style-position: inside;
+    padding-left: 0.5rem;
+  }
+
+  .topics-list li {
+    margin-bottom: 0.75rem;
+    position: relative;
+    padding-left: 1.5rem;
+    color: {{ section.settings.text_color }};
+  }
+
+ 
+
+  .countdown-container {
+    flex: 1;
+    background-color: {{ section.settings.countdown_background }};
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .countdown-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+  text-transform: capitalize !important;
+    color: {{ section.settings.countdown_title_color }};
+  }
+
+  .countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+       box-shadow: var(--box-shadow);
+        background-color: {{ section.settings.countdown_box_color }};
+    border-radius: var(--border-radius);
+  }
+
+  .countdown-value {
+    width: 80px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: {{ section.settings.countdown_value_color }};
+ 
+  }
+
+  .countdown-label {
+    margin-top: 0.75rem;
+    font-weight: 700;
+    font-size: 1rem;
+    padding-bottom: 10px;
+    color: {{ section.settings.countdown_label_color }};
+  }
+
+  .countdown-message {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: {{ section.settings.countdown_message_color }};
+    font-weight: 500;
+  }
+
+  .register-button {
+    background-color: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+    padding: 0.875rem 1.75rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--box-shadow);
+  }
+
+  .register-button:hover {
+    background-color: {{ section.settings.button_hover_background }};
+    transform: translateY(-2px);
+  }
+
+  @media screen and (max-width: 767px) {
+
+.countdown-label {
+    margin-top: -1.25rem;
+    
+}
+
+
+    
+    .upcoming-session-content {
+      flex-direction: column;
+    }
+
+    .countdown-timer {
+      gap:5px;
+      flex-wrap: wrap;
+    }
+.countdown-item {
+   
+    min-width: 60px;
+   
+}
+    .countdown-value {
+      width: 60px;
+      height: 60px;
+      font-size: 1.75rem;
+    }
+
+    .session-title {
+      font-size: 1.5rem;
+    }
+
+    .countdown-title {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = '{{ section.id }}';
+    
+    // Countdown elements
+    const daysEl = document.getElementById(`days-${sectionId}`);
+    const hoursEl = document.getElementById(`hours-${sectionId}`);
+    const minsEl = document.getElementById(`mins-${sectionId}`);
+    const secsEl = document.getElementById(`secs-${sectionId}`);
+    
+    // Target date from section settings
+    let targetDate = new Date('{{ section.settings.countdown_target_date }}T{{ section.settings.countdown_target_time }}:00');
+    let countdownInterval;
+    
+    // Start countdown
+    startCountdown();
+    
+    function startCountdown() {
+      // Run first to avoid delay
+      updateCountdown();
+      
+      // Update every second
+      countdownInterval = setInterval(updateCountdown, 1000);
+    }
+    
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+      
+      // Check if countdown is over
+      if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minsEl.textContent = '00';
+        secsEl.textContent = '00';
+        clearInterval(countdownInterval);
+        return;
+      }
+      
+      // Calculate time values
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      // Add leading zeros
+      daysEl.textContent = days < 10 ? '0' + days : days;
+      hoursEl.textContent = hours < 10 ? '0' + hours : hours;
+      minsEl.textContent = mins < 10 ? '0' + mins : mins;
+      secsEl.textContent = secs < 10 ? '0' + secs : secs;
+    }
+  });
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const bookButton = document.getElementById('bookSeatButton1');
+    const modal = document.getElementById('bookingModal');
+    const closeModal = document.getElementById('closeModal');
+    const bookForm = document.getElementById('bookSeatForm');
+    
+    // Open modal when button is clicked
+    bookButton.addEventListener('click', function() {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    });
+    
+    // Close modal when X is clicked
+    closeModal.addEventListener('click', function() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+    
+    // Close modal when clicking outside the content
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+    
+    // Form submission
+    bookForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Here you would normally handle the form submission
+      // For example, send the data to your server or a Shopify app
+      
+      // For demo purposes, show success message
+      const formElements = bookForm.elements;
+      for (let i = 0; i < formElements.length; i++) {
+        formElements[i].disabled = true;
+      }
+      
+      bookForm.innerHTML = '<div style="text-align: center; padding: 20px;"><h3 style="color: #28a745;">Thank You!</h3><p>Your seat has been booked successfully. We will send you the session details via email.</p></div>';
+      
+      // Close modal after 3 seconds
+      setTimeout(function() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        // Reset form after closing
+        setTimeout(function() {
+          bookForm.innerHTML = `
+            <div class="form-group">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" id="fullName" name="fullName" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+            
+            <button type="submit" class="form-submit">${ '{{ section.settings.submit_button_text }}' }</button>
+          `;
+        }, 500);
+      }, 3000);
+    });
+  });
+</script>
+
+
+             
+
+{% schema %}
+{
+  "name": "Upcoming Live Session",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Upcoming Live Session"
+    },
+    {
+      "type": "header",
+      "content": "Session Details"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Next Session"
+    },
+    {
+      "type": "text",
+      "id": "session_title",
+      "label": "Session Title",
+      "default": "Product Deep Dive & Q&A"
+    },
+    {
+      "type": "textarea",
+      "id": "session_description",
+      "label": "Session Description",
+      "default": "Join us for an exclusive product deep dive and interactive Q&A session with Jennifer, where we'll be discussing the latest features and addressing your questions."
+    },
+    {
+      "type": "text",
+      "id": "session_date",
+      "label": "Session Date",
+      "default": "Wednesday May 21st 2025"
+    },
+    {
+      "type": "text",
+      "id": "session_time",
+      "label": "Session Time",
+      "default": "5:30 PM - 7:00 PM (EST)"
+    },
+    {
+      "type": "text",
+      "id": "session_location",
+      "label": "Session Location",
+      "default": "Online - Link sent after registration"
+    },
+    {
+      "type": "text",
+      "id": "topics_title",
+      "label": "Topics Title",
+      "default": "Topics we'll cover:"
+    },
+    {
+      "type": "header",
+      "content": "Countdown Settings"
+    },
+    {
+      "type": "text",
+      "id": "countdown_title",
+      "label": "Countdown Title",
+      "default": "Countdown to Live Session"
+    },
+    {
+      "type": "text",
+      "id": "countdown_message",
+      "label": "Countdown Message",
+      "default": "Don't miss out! Set reminder for the session now"
+    },
+    {
+      "type": "text",
+      "id": "countdown_target_date",
+      "label": "Target Date (YYYY-MM-DD)",
+      "default": "2025-05-21",
+      "info": "Set the date for the countdown timer"
+    },
+    {
+      "type": "text",
+      "id": "countdown_target_time",
+      "label": "Target Time (HH:MM)",
+      "default": "17:30",
+      "info": "Set the time for the countdown timer (24-hour format)"
+    },
+    {
+      "type": "number",
+      "id": "default_days",
+      "label": "Default Days",
+      "default": 2,
+      "info": "Fallback value if JavaScript is disabled"
+    },
+    {
+      "type": "number",
+      "id": "default_hours",
+      "label": "Default Hours",
+      "default": 19,
+      "info": "Fallback value if JavaScript is disabled"
+    },
+    {
+      "type": "number",
+      "id": "default_minutes",
+      "label": "Default Minutes",
+      "default": 37,
+      "info": "Fallback value if JavaScript is disabled"
+    },
+    {
+      "type": "number",
+      "id": "default_seconds",
+      "label": "Default Seconds",
+      "default": 53,
+      "info": "Fallback value if JavaScript is disabled"
+    },
+    {
+      "type": "header",
+      "content": "Register Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_register_button",
+      "label": "Show Register Button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "reminder_button_text",
+      "label": "Button Text",
+      "default": "Set Reminder"
+    },
+    {
+      "type": "url",
+      "id": "register_button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Style Settings"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Color",
+      "default": "#ef5777"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f7f7f9"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Section Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge Background",
+      "default": "#ffebee"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#ef5777"
+    },
+    {
+      "type": "color",
+      "id": "session_title_color",
+      "label": "Session Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon Background",
+      "default": "#ffebee"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#ef5777"
+    },
+    {
+      "type": "color",
+      "id": "topics_title_color",
+      "label": "Topics Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "countdown_background",
+      "label": "Countdown Background",
+      "default": "#f7f7f9"
+    },
+    {
+      "type": "color",
+      "id": "countdown_title_color",
+      "label": "Countdown Title Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "countdown_box_color",
+      "label": "Countdown Box Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "countdown_value_color",
+      "label": "Countdown Value Color",
+      "default": "#ef5777"
+    },
+    {
+      "type": "color",
+      "id": "countdown_label_color",
+      "label": "Countdown Label Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "countdown_message_color",
+      "label": "Countdown Message Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button Background",
+      "default": "#ef5777"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Button Hover Background",
+      "default": "#d8405f"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border Radius",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "text",
+      "id": "box_shadow",
+      "label": "Box Shadow",
+      "default": "0 4px 6px rgba(0,0,0,0.05)"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container Width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Top Margin",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Bottom Margin",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Container Padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "label": "Title Font Size",
+      "min": 20,
+      "max": 50,
+      "step": 1,
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "topic_item",
+      "name": "Topic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "topic_text",
+          "label": "Topic Text",
+          "default": "Latest product updates and features"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Upcoming Live Session",
+      "blocks": [
+        {
+          "type": "topic_item",
+          "settings": {
+            "topic_text": "Latest product updates and features"
+          }
+        },
+        {
+          "type": "topic_item",
+          "settings": {
+            "topic_text": "Troubleshooting common issues"
+          }
+        },
+        {
+          "type": "topic_item",
+          "settings": {
+            "topic_text": "Best practices and tips"
+          }
+        },
+        {
+          "type": "topic_item",
+          "settings": {
+            "topic_text": "Live Q&A session with Jennifer"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

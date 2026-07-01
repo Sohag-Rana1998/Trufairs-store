@@ -1,0 +1,418 @@
+<section 
+class="container"
+>
+    
+    <div
+    
+      class="testimonial-section  "
+  style="
+    background-image: url('{{ section.settings.background_image | img_url: '1920x' }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  
+    margin: {{ section.settings.margin_top }}px {{ section.settings.margin_horizontal }}px {{ section.settings.margin_bottom }}px {{ section.settings.margin_horizontal }}px;
+    border-radius: {{ section.settings.border_radius }}px;
+    position: relative;
+    min-height: {{ section.settings.section_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
+    >
+  <!-- Overlay -->
+  <div 
+    class="testimonial-overlay"
+    style="
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: {{ section.settings.overlay_color }};
+      opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+      border-radius: {{ section.settings.border_radius }}px;
+    "
+  ></div>
+
+  <!-- Content Container -->
+  <div 
+    class="testimonial-content"
+    style="
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: {{ section.settings.content_width }}px;
+      padding: 15px;
+    "
+  >
+    {% if section.settings.testimonial_text != blank %}
+      <blockquote 
+        class="testimonial-quote"
+        style="
+          font-size: {{ section.settings.quote_font_size }}px;
+          line-height: {{ section.settings.quote_line_height }};
+          color: {{ section.settings.quote_color }};
+          font-weight: {{ section.settings.quote_font_weight }};
+          margin: 0 0 {{ section.settings.quote_margin_bottom }}px 0;
+          font-family: {{ section.settings.quote_font_family }};
+        "
+      >
+        "{{ section.settings.testimonial_text }}"
+      </blockquote>
+    {% endif %}
+
+    {% if section.settings.author_name != blank %}
+      <cite 
+        class="testimonial-author"
+        style="
+          font-size: {{ section.settings.author_font_size }}px;
+          color: {{ section.settings.author_color }};
+          font-weight: {{ section.settings.author_font_weight }};
+          text-transform: {{ section.settings.author_text_transform }};
+          letter-spacing: {{ section.settings.author_letter_spacing }}px;
+          font-family: {{ section.settings.author_font_family }};
+          font-style: normal;
+        "
+      >
+        {{ section.settings.author_name }}
+      </cite>
+    {% endif %}
+  </div>
+    </div>
+</section>
+
+<style>
+  .testimonial-section {
+    overflow: hidden;
+      padding: {{ section.settings.padding_top }}px {{ section.settings.padding_horizontal }}px {{ section.settings.padding_bottom }}px {{ section.settings.padding_horizontal }}px;
+  }
+  
+  .testimonial-quote {
+    quotes: none;
+  }
+  
+  @media (max-width: 768px) {
+    .testimonial-content {
+      max-width: 100% !important;
+    }
+
+     .testimonial-section {
+    overflow: hidden;
+      padding: 0;
+  }
+    
+    .testimonial-section{
+    max-height:360px !important;
+    min-height:unset  !important;
+    }
+    .testimonial-quote {
+      font-size: {{ section.settings.quote_font_size | times: 0.8 }}px !important;
+    }
+    
+    .testimonial-author {
+      font-size: {{ section.settings.author_font_size | times: 0.9 }}px !important;
+    }
+  }
+</style>
+
+
+{% schema %}
+{
+  "name": "Testimonial Section",
+  "tag": "section",
+  "class": "testimonial-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image",
+      "info": "Recommended size: 1920x600px or larger"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section Height",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border Radius",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content Max Width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Spacing - Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Padding Left/Right",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Spacing - Margin"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_horizontal",
+      "label": "Margin Left/Right",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Testimonial Content"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial_text",
+      "label": "Testimonial Quote",
+      "default": "Good design speaks for itself, making every moment worthwhile."
+    },
+    {
+      "type": "text",
+      "id": "author_name",
+      "label": "Author Name",
+      "default": "JENNIFER"
+    },
+    {
+      "type": "header",
+      "content": "Quote Typography"
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size",
+      "label": "Quote Font Size",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "quote_font_weight",
+      "label": "Quote Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "select",
+      "id": "quote_line_height",
+      "label": "Quote Line Height",
+      "options": [
+        { "value": "1.2", "label": "1.2" },
+        { "value": "1.4", "label": "1.4" },
+        { "value": "1.5", "label": "1.5" },
+        { "value": "1.6", "label": "1.6" },
+        { "value": "1.8", "label": "1.8" }
+      ],
+      "default": "1.4"
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "quote_font_family",
+      "label": "Quote Font Family",
+      "options": [
+        { "value": "inherit", "label": "Theme Default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Georgia, serif", "label": "Georgia" },
+        { "value": "'Helvetica Neue', sans-serif", "label": "Helvetica" },
+        { "value": "'Times New Roman', serif", "label": "Times New Roman" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "quote_margin_bottom",
+      "label": "Space Below Quote",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Author Typography"
+    },
+    {
+      "type": "range",
+      "id": "author_font_size",
+      "label": "Author Font Size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "author_font_weight",
+      "label": "Author Font Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi Bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "author_color",
+      "label": "Author Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "author_text_transform",
+      "label": "Author Text Transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "lowercase", "label": "Lowercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "author_letter_spacing",
+      "label": "Author Letter Spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "author_font_family",
+      "label": "Author Font Family",
+      "options": [
+        { "value": "inherit", "label": "Theme Default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Georgia, serif", "label": "Georgia" },
+        { "value": "'Helvetica Neue', sans-serif", "label": "Helvetica" },
+        { "value": "'Times New Roman', serif", "label": "Times New Roman" }
+      ],
+      "default": "inherit"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Testimonial",
+      "settings": {
+        "testimonial_text": "Good design speaks for itself, making every moment worthwhile.",
+        "author_name": "JENNIFER"
+      }
+    }
+  ]
+}
+{% endschema %}

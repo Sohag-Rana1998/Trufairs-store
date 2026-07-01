@@ -1,0 +1,469 @@
+<section class="tf-social-proof color-{{ section.id }}">
+  <div class="tf-sp-container">
+    <div class="tf-sp-header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="tf-sp-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="tf-sp-subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    {% comment %} <div class="tf-sp-trustbar">
+      <div>★★★★★ <span>{{ section.settings.rating_text }}</span></div>
+      <div>{{ section.settings.order_text }}</div>
+      <div>{{ section.settings.shipping_text }}</div>
+    </div> {% endcomment %}
+
+    <div class="tf-sp-grid">
+      {% for block in section.blocks %}
+        <article class="tf-sp-card" {{ block.shopify_attributes }}>
+          <div class="tf-sp-stars">
+            {% for i in (1..block.settings.stars) %}★{% endfor %}
+          </div>
+
+          <blockquote>“{{ block.settings.review }}”</blockquote>
+
+          <div class="tf-sp-footer">
+            <div>
+              <strong>{{ block.settings.name }}</strong>
+              {% if block.settings.location != blank %}
+                <span>{{ block.settings.location }}</span>
+              {% endif %}
+            </div>
+
+            {% if block.settings.verified %}
+              <p class="tf-sp-verified">Verified Buyer</p>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.button_label != blank %}
+      <div class="tf-sp-cta-wrap">
+        <a href="{{ section.settings.button_link }}" class="tf-sp-cta">
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .color-{{ section.id }} {
+    --tf-bg: {{ section.settings.background_color }};
+    --tf-card: {{ section.settings.card_color }};
+    --tf-text: {{ section.settings.text_color }};
+    --tf-muted: {{ section.settings.muted_color }};
+    --tf-accent: {{ section.settings.accent_color }};
+    --tf-border: {{ section.settings.border_color }};
+  }
+
+  .tf-social-proof {
+    background:
+      radial-gradient(circle at top left, rgba(250, 211, 112, 0.14), transparent 32%),
+      var(--tf-bg);
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    color: var(--tf-text);
+  }
+
+  .tf-sp-container {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .tf-sp-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 34px;
+  }
+
+  .tf-sp-eyebrow {
+    display: inline-block;
+    margin: 0 0 12px;
+    font-size: 12px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--tf-accent);
+    font-weight: 700;
+  }
+
+  .tf-sp-header h2 {
+    margin: 0;
+  font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--tf-text);
+  }
+    
+  .tf-sp-subheading {
+    margin: 16px auto 0;
+    color: var(--tf-muted);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .tf-sp-trustbar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .tf-sp-trustbar div {
+    border: 1px solid var(--tf-border);
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(10px);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--tf-text);
+    box-shadow: 0 8px 24px rgba(0,0,0,.05);
+  }
+
+  .tf-sp-trustbar span {
+    color: var(--tf-muted);
+    margin-left: 6px;
+  }
+
+  .tf-sp-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: 18px;
+  }
+
+  .tf-sp-card {
+    position: relative;
+    background: var(--tf-card);
+    border: 1px solid var(--tf-border);
+    border-radius: 24px;
+    padding: 26px;
+    box-shadow: 0 18px 45px rgba(0,0,0,.07);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    overflow: hidden;
+  }
+
+  .tf-sp-card:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(250,211,112,.15), transparent 36%);
+    pointer-events: none;
+  }
+
+  .tf-sp-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 24px 60px rgba(0,0,0,.11);
+    border-color: rgba(250,211,112,.55);
+  }
+
+  .tf-sp-stars {
+    color: var(--tf-accent);
+    font-size: 28px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+     padding-left: 30px;
+  }
+ 
+  .tf-sp-card blockquote {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--tf-text);
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tf-sp-footer {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--tf-border);
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    align-items: flex-end;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tf-sp-footer strong {
+    display: block;
+    font-size: 14px;
+    color: var(--tf-text);
+  }
+
+  .tf-sp-footer span {
+    display: block;
+    margin-top: 3px;
+    font-size: 13px;
+    color: var(--tf-muted);
+  }
+
+  .tf-sp-verified {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--tf-text);
+    background: rgba(250,211,112,.25);
+    border: 1px solid rgba(250,211,112,.45);
+    padding: 7px 10px;
+    border-radius: 999px;
+  }
+
+  .tf-sp-cta-wrap {
+    text-align: center;
+    margin-top: 34px;
+  }
+
+  .tf-sp-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 26px;
+    border-radius: 999px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: .01em;
+    box-shadow: 0 14px 30px rgba(0,0,0,.18);
+    transition: transform .2s ease, opacity .2s ease;
+  }
+
+  .tf-sp-cta:hover {
+    transform: translateY(-2px);
+    opacity: .88;
+  }
+
+  @media screen and (max-width: 990px) {
+    .tf-sp-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    .tf-social-proof {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .tf-sp-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tf-sp-card {
+      padding: 22px;
+      border-radius: 20px;
+    }
+
+    .tf-sp-footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "TruFairs Social Proof",
+  "tag": "section",
+  "class": "section-trufairs-social-proof",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Loved by TruFairs Customers"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real homes. Real comfort. Real reviews."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Premium furniture, decor, and lifestyle finds chosen by customers who care about comfort, quality, and beautiful everyday living."
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "default": "Customer-loved picks"
+    },
+    {
+      "type": "text",
+      "id": "order_text",
+      "label": "Trust item 2",
+      "default": "Fast U.S. shipping"
+    },
+    {
+      "type": "text",
+      "id": "shipping_text",
+      "label": "Trust item 3",
+      "default": "Premium home essentials"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Best Sellers"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+   
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FAF7F1"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Card color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text color",
+      "default": "#66615A"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#FAD370"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#E8DED0"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 84
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "review",
+          "label": "Review text",
+          "default": "The quality feels premium, the delivery was smooth, and it looks even better in my space than I expected."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer name",
+          "default": "Jennifer M."
+        },
+        {
+          "type": "text",
+          "id": "location",
+          "label": "Location",
+          "default": "Austin, TX"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Show verified buyer badge",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "TruFairs Social Proof",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "review": "Finally, a home decor store that feels curated instead of random. The piece looked exactly like the photos.",
+            "name": "Amanda R.",
+            "location": "Dallas, TX"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "review": "The design instantly made my living room feel more expensive. Clean, comfortable, and worth it.",
+            "name": "Michael T.",
+            "location": "Miami, FL"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "review": "I saved so much time comparing options. TruFairs made the whole buying experience simple and stylish.",
+            "name": "Lauren K.",
+            "location": "Atlanta, GA"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %} 

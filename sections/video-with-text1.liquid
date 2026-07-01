@@ -1,0 +1,453 @@
+<section class="video-content-section" style="background-color: {{ section.settings.background_color }}; padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px;">
+  <div class="container">
+    <div class="video-content-wrapper">
+      <!-- Video Column -->
+      <div class="video-column">
+        <div class="video-container">
+          {% if section.settings.video_type == 'youtube' and section.settings.youtube_url != blank %}
+            {% assign youtube_id = section.settings.youtube_url | split: 'v=' | last | split: '&' | first %}
+            <iframe 
+              src="https://www.youtube.com/embed/{{ youtube_id }}?rel=0&modestbranding=1" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          {% elsif section.settings.video_type == 'hosted' and section.settings.hosted_video_url != blank %}
+            <video controls{% if section.settings.video_autoplay %}autoplay muted{% endif %}>
+              <source src="{{ section.settings.hosted_video_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% else %}
+            <div class="video-placeholder">
+              <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 5V19L19 12L8 5Z" fill="#666"/>
+              </svg>
+              <p>{{ section.settings.video_placeholder_text | default: 'Add your video' }}</p>
+            </div>
+          {% endif %}
+          
+          {% if section.settings.video_caption != blank %}
+            <p class="video-caption">{{ section.settings.video_caption }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Content Column -->
+      <div class="content-column">
+        {% if section.settings.heading != blank %}
+          <h2 class="section-heading" style="color: {{ section.settings.heading_color }};">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <div class="features-list">
+            {% for block in section.blocks %}
+              <div class="feature-item" {{ block.shopify_attributes }}>
+                <div class="feature-icon">
+                  {% if block.settings.icon_type == 'checkmark' %}
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="12" cy="12" r="10" stroke="{{ block.settings.icon_color }}" stroke-width="2"/>
+                      <path d="m9 12 2 2 4-4" stroke="{{ block.settings.icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {% elsif block.settings.icon_type == 'custom' and block.settings.custom_icon != blank %}
+                    <img src="{{ block.settings.custom_icon | image_url: width: 20 }}" alt="" width="20" height="20">
+                  {% endif %}
+                </div>
+                <p class="feature-text" style="color: {{ block.settings.text_color }};">
+                  {{ block.settings.text }}
+                </p>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.cta_text != blank and section.settings.cta_url != blank %}
+          <div class="cta-wrapper">
+            <a href="{{ section.settings.cta_url }}" class="cta-button" style="background-color: {{ section.settings.cta_bg_color }}; color: {{ section.settings.cta_text_color }};">
+              {{ section.settings.cta_text }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .video-content-section {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .video-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .video-column {
+    position: relative;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .video-container iframe,
+  .video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block; /* prevents inline spacing issues */
+  }
+
+  .video-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+  }
+
+  .video-placeholder p {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .video-caption {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+  }
+
+  .content-column {
+    padding-left: 20px;
+  }
+
+  .section-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    color: #333;
+  }
+
+  .features-list {
+    margin-bottom: 30px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+  }
+
+  .feature-icon {
+    margin-right: 15px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* FIXED: closed the svg rule correctly */
+  .feature-icon svg {
+    fill: none !important;
+  }
+
+  .feature-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+  }
+
+  .cta-wrapper {
+    margin-top: 30px;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* =========================
+     RESPONSIVE (must come AFTER base rules)
+     ========================= */
+  @media screen and (max-width: 992px) {
+    .video-content-wrapper {
+      gap: 40px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    /* single-column layout on mobile */
+    .video-content-wrapper {
+      grid-template-columns: 1fr;   /* THIS is the key override */
+      gap: 30px;
+      align-items: start;
+    }
+
+    /* ensure video above text on mobile */
+    .video-column {
+      order: 1;
+    }
+
+    .content-column {
+      order: 2;
+      padding-left: 0;
+    }
+
+    .section-heading {
+      font-size: 2rem;
+    }
+
+    .container {
+      padding: 0 15px;
+    }
+
+    .video-container {
+      aspect-ratio: 16/9; /* keeps proper height */
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .video-content-wrapper {
+      gap: 20px;
+    }
+
+    .section-heading {
+      font-size: 1.75rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Video Content Section",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Top Padding",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom Padding",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Video Settings"
+    },
+    {
+      "type": "select",
+      "id": "video_type",
+      "label": "Video Type",
+      "options": [
+        {
+          "value": "youtube",
+          "label": "YouTube"
+        },
+        {
+          "value": "hosted",
+          "label": "Self Hosted"
+        }
+      ],
+      "default": "youtube"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL",
+      "info": "Enter the full YouTube URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID)"
+    },
+    {
+      "type": "url",
+      "id": "hosted_video_url",
+      "label": "Self Hosted Video URL",
+      "info": "Enter the direct URL to your video file (must be .mp4, .webm, or .ogg)"
+    },
+    {
+      "type": "checkbox",
+      "id": "video_autoplay",
+      "label": "Autoplay Video (Self Hosted Only)",
+      "default": false,
+      "info": "Note: Autoplay videos are muted by default for better user experience"
+    },
+    {
+      "type": "text",
+      "id": "video_caption",
+      "label": "Video Caption"
+    },
+    {
+      "type": "text",
+      "id": "video_placeholder_text",
+      "label": "Placeholder Text",
+      "default": "Add your video"
+    },
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A Closer Look at Our Premium Collection"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button Background Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Icon Type",
+          "options": [
+            {
+              "value": "checkmark",
+              "label": "Checkmark"
+            },
+            {
+              "value": "custom",
+              "label": "Custom Icon"
+            }
+          ],
+          "default": "checkmark"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom Icon"
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon Color",
+          "default": "#28a745"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Feature Text",
+          "default": "Showcase our high-quality, stylish furniture collections"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#666666"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Content Section",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Showcase our high-quality, stylish furniture collections"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "See how our premium pieces fit perfectly into real living spaces"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Explore exclusive design tips and inspiration for your home decor"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "text": "Get a closer look at product features and expert craftsmanship"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

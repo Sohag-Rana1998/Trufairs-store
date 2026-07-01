@@ -1,0 +1,750 @@
+ 
+{%- liquid
+  
+
+  assign current_page_type = request.page_type
+  assign show_breadcrumbs = false
+  assign schema_enabled_for_page = false
+
+  assign crumb_2_name = ''
+  assign crumb_2_url = ''
+  assign crumb_3_name = ''
+  assign crumb_3_url = ''
+
+  assign home_name = section.settings.home_label | default: 'Home'
+  assign home_url = routes.root_url
+  assign home_absolute_url = home_url | prepend: request.origin
+
+  case current_page_type
+
+    when 'product'
+      if product != blank
+        assign show_breadcrumbs = true
+        assign schema_enabled_for_page = true
+
+        assign breadcrumb_collection = product.metafields.custom.breadcrumb_collection.value
+
+        if breadcrumb_collection == blank and collection != blank and collection.handle != 'all'
+          assign breadcrumb_collection = collection
+        endif
+
+        if breadcrumb_collection == blank and section.settings.auto_product_collection
+          assign excluded_collection_handles = section.settings.excluded_collection_handles | downcase | replace: ' ', '' | prepend: ',' | append: ','
+
+          for candidate_collection in product.collections
+            assign candidate_collection_token = candidate_collection.handle | downcase | prepend: ',' | append: ','
+
+            unless excluded_collection_handles contains candidate_collection_token
+              assign breadcrumb_collection = candidate_collection
+              break
+            endunless
+          endfor
+        endif
+
+        if section.settings.show_product_collection and breadcrumb_collection != blank
+          assign breadcrumb_collection_label = breadcrumb_collection.metafields.custom.breadcrumb_label.value
+
+          if breadcrumb_collection_label == blank
+            assign breadcrumb_collection_label = breadcrumb_collection.title
+          endif
+
+          assign crumb_2_name = breadcrumb_collection_label
+          assign crumb_2_url = breadcrumb_collection.url
+          assign crumb_3_name = product.title
+          assign crumb_3_url = product.url
+        else
+          assign crumb_2_name = product.title
+          assign crumb_2_url = product.url
+        endif
+      endif
+
+    when 'collection'
+      if collection != blank
+        assign show_breadcrumbs = true
+        assign schema_enabled_for_page = true
+
+        assign collection_breadcrumb_label = collection.metafields.custom.breadcrumb_label.value
+
+        if collection_breadcrumb_label == blank
+          assign collection_breadcrumb_label = collection.title
+        endif
+
+        assign crumb_2_name = collection_breadcrumb_label
+        assign crumb_2_url = collection.url
+      endif
+
+    when 'list-collections'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = true
+      assign crumb_2_name = section.settings.collections_label
+      assign crumb_2_url = '/collections'
+
+    when 'page'
+      if page != blank
+        assign show_breadcrumbs = true
+        assign schema_enabled_for_page = true
+        assign crumb_2_name = page.title
+        assign crumb_2_url = page.url
+      endif
+
+    when 'blog'
+      if blog != blank
+        assign show_breadcrumbs = true
+        assign schema_enabled_for_page = true
+        assign crumb_2_name = blog.title
+        assign crumb_2_url = blog.url
+      endif
+
+    when 'article'
+      if article != blank and blog != blank
+        assign show_breadcrumbs = true
+        assign schema_enabled_for_page = true
+        assign crumb_2_name = blog.title
+        assign crumb_2_url = blog.url
+        assign crumb_3_name = article.title
+        assign crumb_3_url = article.url
+      endif
+
+    when 'policy'
+      if policy != blank
+        assign show_breadcrumbs = true
+        assign schema_enabled_for_page = true
+        assign crumb_2_name = policy.title
+        assign crumb_2_url = policy.url
+      endif
+
+    when 'metaobject'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = true
+      assign crumb_2_name = page_title
+      assign crumb_2_url = canonical_url
+
+    when 'search'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.search_label
+      assign crumb_2_url = routes.search_url
+
+      if search.terms != blank
+        capture crumb_2_name
+          echo section.settings.search_results_label
+          echo ' “'
+          echo search.terms
+          echo '”'
+        endcapture
+      endif
+
+    when 'cart'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.cart_label
+      assign crumb_2_url = routes.cart_url
+
+    when '404'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.not_found_label
+
+    when 'customers/account'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.account_label
+      assign crumb_2_url = routes.account_url
+
+    when 'customers/addresses'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.account_label
+      assign crumb_2_url = routes.account_url
+      assign crumb_3_name = section.settings.addresses_label
+
+    when 'customers/order'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.account_label
+      assign crumb_2_url = routes.account_url
+      assign crumb_3_name = page_title
+
+    when 'customers/login'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.login_label
+
+    when 'customers/register'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.register_label
+
+    when 'customers/activate_account'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.activate_account_label
+
+    when 'customers/reset_password'
+      assign show_breadcrumbs = true
+      assign schema_enabled_for_page = false
+      assign crumb_2_name = section.settings.reset_password_label
+
+  endcase
+
+  assign crumb_2_absolute_url = crumb_2_url
+
+  if crumb_2_absolute_url != blank
+    unless crumb_2_absolute_url contains '://'
+      assign crumb_2_absolute_url = crumb_2_absolute_url | prepend: request.origin
+    endunless
+  endif
+
+  if crumb_3_name != blank
+    assign current_breadcrumb_name = crumb_3_name
+  else
+    assign current_breadcrumb_name = crumb_2_name
+  endif
+-%}
+
+{%- if show_breadcrumbs and crumb_2_name != blank -%}
+  <div
+    class="tf-dynamic-breadcrumbs"
+    style="
+      --tf-breadcrumb-max-width: {{ section.settings.max_width }}px;
+      --tf-breadcrumb-desktop-padding: {{ section.settings.desktop_horizontal_padding }}px;
+      --tf-breadcrumb-mobile-padding: {{ section.settings.mobile_horizontal_padding }}px;
+      --tf-breadcrumb-padding-top: {{ section.settings.padding_top }}px;
+      --tf-breadcrumb-padding-bottom: {{ section.settings.padding_bottom }}px;
+      --tf-breadcrumb-font-size: {{ section.settings.font_size }}px;
+      --tf-breadcrumb-mobile-font-size: {{ section.settings.mobile_font_size }}px;
+      --tf-breadcrumb-separator-spacing: {{ section.settings.separator_spacing }}px;
+      --tf-breadcrumb-background: {{ section.settings.background_color }};
+      --tf-breadcrumb-link-color: {{ section.settings.link_color }};
+      --tf-breadcrumb-current-color: {{ section.settings.current_color }};
+      --tf-breadcrumb-separator-color: {{ section.settings.separator_color }};
+      --tf-breadcrumb-border-color: {{ section.settings.border_color }};
+    "
+  >
+    <div class="tf-dynamic-breadcrumbs__container">
+      <nav
+        class="tf-dynamic-breadcrumbs__nav"
+        aria-label="Breadcrumb"
+      >
+        <ol class="tf-dynamic-breadcrumbs__list">
+
+          <li class="tf-dynamic-breadcrumbs__item">
+            <a
+              class="tf-dynamic-breadcrumbs__link"
+              href="{{ home_url }}"
+            >
+              {{ home_name | escape }}
+            </a>
+          </li>
+
+          <li
+            class="tf-dynamic-breadcrumbs__separator"
+            aria-hidden="true"
+          >
+            <svg
+              viewBox="0 0 10 16"
+              width="6"
+              height="10"
+              focusable="false"
+              aria-hidden="true"
+            >
+              <path
+                d="M2 1.5L8 8L2 14.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </li>
+
+          {%- if crumb_3_name != blank -%}
+            <li class="tf-dynamic-breadcrumbs__item">
+              {%- if crumb_2_url != blank -%}
+                <a
+                  class="tf-dynamic-breadcrumbs__link"
+                  href="{{ crumb_2_url }}"
+                >
+                  {{ crumb_2_name | escape }}
+                </a>
+              {%- else -%}
+                <span class="tf-dynamic-breadcrumbs__text">
+                  {{ crumb_2_name | escape }}
+                </span>
+              {%- endif -%}
+            </li>
+
+            <li
+              class="tf-dynamic-breadcrumbs__separator"
+              aria-hidden="true"
+            >
+              <svg
+                viewBox="0 0 10 16"
+                width="6"
+                height="10"
+                focusable="false"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 1.5L8 8L2 14.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </li>
+
+            <li
+              class="tf-dynamic-breadcrumbs__item tf-dynamic-breadcrumbs__item--current"
+              aria-current="page"
+            >
+              <span
+                class="tf-dynamic-breadcrumbs__current"
+                title="{{ crumb_3_name | escape }}"
+              >
+                {{ crumb_3_name | escape }}
+              </span>
+            </li>
+
+          {%- else -%}
+            <li
+              class="tf-dynamic-breadcrumbs__item tf-dynamic-breadcrumbs__item--current"
+              aria-current="page"
+            >
+              <span
+                class="tf-dynamic-breadcrumbs__current"
+                title="{{ crumb_2_name | escape }}"
+              >
+                {{ crumb_2_name | escape }}
+              </span>
+            </li>
+          {%- endif -%}
+
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  {%- if section.settings.enable_schema and schema_enabled_for_page -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": {{ home_name | json }},
+            "item": {{ home_absolute_url | json }}
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ crumb_2_name | json }}
+            {%- if crumb_3_name != blank and crumb_2_absolute_url != blank -%}
+              ,
+              "item": {{ crumb_2_absolute_url | json }}
+            {%- endif -%}
+          }
+          {%- if crumb_3_name != blank -%}
+            ,
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": {{ crumb_3_name | json }}
+            }
+          {%- endif -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+<style>
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--tf-breadcrumb-background);
+    padding-top: var(--tf-breadcrumb-padding-top);
+    padding-bottom: var(--tf-breadcrumb-padding-bottom);
+    {% if section.settings.show_bottom_border %}
+      border-bottom: 1px solid var(--tf-breadcrumb-border-color);
+    {% endif %}
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__container {
+    width: 100%;
+    max-width: var(--tf-breadcrumb-max-width);
+    margin: 0 auto;
+    padding-right: var(--tf-breadcrumb-desktop-padding);
+    padding-left: var(--tf-breadcrumb-desktop-padding);
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__nav {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    list-style: none;
+    font-size: var(--tf-breadcrumb-font-size);
+    line-height: 1.5;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__item {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__item--current {
+    flex: 0 1 auto;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--tf-breadcrumb-link-color);
+    text-decoration: none;
+    transition:
+      opacity 0.2s ease,
+      text-decoration-color 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__link:hover {
+    opacity: 0.72;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__link:focus-visible {
+    border-radius: 2px;
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__separator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    margin-right: var(--tf-breadcrumb-separator-spacing);
+    margin-left: var(--tf-breadcrumb-separator-spacing);
+    color: var(--tf-breadcrumb-separator-color);
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__current {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--tf-breadcrumb-current-color);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__text {
+    color: var(--tf-breadcrumb-link-color);
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__container {
+      padding-right: var(--tf-breadcrumb-mobile-padding);
+      padding-left: var(--tf-breadcrumb-mobile-padding);
+    }
+
+    #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__list {
+      font-size: var(--tf-breadcrumb-mobile-font-size);
+    }
+
+    {% unless section.settings.show_on_mobile %}
+      #shopify-section-{{ section.id }} {
+        display: none;
+      }
+    {% endunless %}
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .tf-dynamic-breadcrumbs__link {
+      transition: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Dynamic breadcrumbs",
+  "tag": "section",
+  "class": "section-dynamic-breadcrumbs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SEO and behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_schema",
+      "label": "Enable BreadcrumbList schema",
+      "default": true,
+      "info": "Disable this if another theme feature or app already outputs BreadcrumbList schema."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_collection",
+      "label": "Show collection on product pages",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_product_collection",
+      "label": "Automatically select a product collection",
+      "default": true,
+      "info": "Used when the product breadcrumb collection metafield and collection URL context are unavailable."
+    },
+    {
+      "type": "text",
+      "id": "excluded_collection_handles",
+      "label": "Excluded collection handles",
+      "default": "all,frontpage",
+      "info": "Comma-separated handles excluded from automatic product collection selection."
+    },
+    {
+      "type": "paragraph",
+      "content": "For a controlled product hierarchy, create a product collection-reference metafield with namespace and key custom.breadcrumb_collection."
+    },
+    {
+      "type": "paragraph",
+      "content": "To customize a collection breadcrumb name, create a collection single-line text metafield with namespace and key custom.breadcrumb_label."
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home",
+      "default": "Home"
+    },
+    {
+      "type": "text",
+      "id": "collections_label",
+      "label": "Collections page",
+      "default": "Collections"
+    },
+    {
+      "type": "text",
+      "id": "search_label",
+      "label": "Search",
+      "default": "Search"
+    },
+    {
+      "type": "text",
+      "id": "search_results_label",
+      "label": "Search results",
+      "default": "Search results for"
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Cart",
+      "default": "Cart"
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Account",
+      "default": "Account"
+    },
+    {
+      "type": "text",
+      "id": "addresses_label",
+      "label": "Addresses",
+      "default": "Addresses"
+    },
+    {
+      "type": "text",
+      "id": "login_label",
+      "label": "Login",
+      "default": "Login"
+    },
+    {
+      "type": "text",
+      "id": "register_label",
+      "label": "Register",
+      "default": "Create account"
+    },
+    {
+      "type": "text",
+      "id": "activate_account_label",
+      "label": "Activate account",
+      "default": "Activate account"
+    },
+    {
+      "type": "text",
+      "id": "reset_password_label",
+      "label": "Reset password",
+      "default": "Reset password"
+    },
+    {
+      "type": "text",
+      "id": "not_found_label",
+      "label": "404 page",
+      "default": "Page not found"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on mobile",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "desktop_horizontal_padding",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop horizontal padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_horizontal_padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile horizontal padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "min": 11,
+      "max": 17,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile font size",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "separator_spacing",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Separator spacing",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Link",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "current_color",
+      "label": "Current page",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#e5e5e5"
+    }
+  ]
+}
+{% endschema %}
+ 

@@ -1,0 +1,14 @@
+ 
+span.product__price  {
+    font-size: 30px;
+    font-weight: 600;
+    color: #F48520;
+}
+
+
+
+
+
+div#judgeme_product_reviews {
+    max-width: 1440px !important;
+}

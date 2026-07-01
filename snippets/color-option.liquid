@@ -1,0 +1,93 @@
+{% comment %}
+  PRODUCT SIBLINGS COLOR SELECTOR WITH FEATURED IMAGES
+  This snippet adds color option blocks showing product featured images that redirect 
+  to different product pages based on the selected color.
+  Uses product_reference metafield type for more robust product relationships.
+  Maintains consistent ordering of color options regardless of current product.
+{% endcomment %}
+{% comment %} {% if product.metafields.custom.different_color_products != blank %}
+  <div class="product-siblings-container">
+    <p class="color-option-title">More Variants: <span class="color-name">{{ product.metafields.custom.color_name   }}</span></p>
+    <div class="color-options">
+      {% comment %} Display current product and siblings in original metafield order {% endcomment %}
+      {% if product.metafields.custom.different_color_products.type == 'list.product_reference' %}
+        {% assign all_color_products = product.metafields.custom.different_color_products.value %}
+        {% assign found_current = false %}
+        
+        {% comment %} Check if current product is in the metafield list {% endcomment %}
+        {% for sibling in all_color_products %}
+          {% if sibling.id == product.id %}
+            {% assign found_current = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        
+        {% comment %} If current product wasn't in list, add it first {% endcomment %}
+        {% unless found_current %}
+          <a href="{{ product.url }}" class="color-option active" 
+             title="{{ product.metafields.custom.color_name | default: 'Current' }}">
+            <img src="{{ product.featured_image | img_url: '150x150' }}" 
+                 alt="{{ product.metafields.custom.color_name | default: product.title }}" 
+                 class="color-thumbnail">
+          </a>  
+        {% endunless %}
+        
+        {% comment %} Display all products from the metafield list {% endcomment %}
+       
+        {% for sibling in all_color_products %}
+          {% unless  sibling.id == product.id  %}
+              <a href="{{ sibling.url }}" 
+             class="color-option {% if sibling.id == product.id %}active{% endif %}"
+             title="{{ sibling.metafields.custom.color_name | default: sibling.title }}">
+            <img src="{{ sibling.featured_image | img_url: '150x150'  }}" 
+                 alt="{{ sibling.metafields.custom.color_name | default: sibling.title }}" 
+                 class="color-thumbnail">
+          </a>
+          {% endunless %}
+        
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+  <style>
+    .product-siblings-container {
+      margin: 20px 0;
+    }
+    .color-option-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .color-name{
+      font-weight: 400;
+    }
+    .color-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    /* justify-content: center; */
+}
+    .color-option {
+      width: 90px;
+      height: 90px;
+      border-radius: 5px;
+      display: inline-block;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      transition: transform 0.2s;
+      overflow: hidden;
+      padding: 5px;
+    }
+    .color-thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .color-option:hover {
+      transform: scale(1.05);
+    }
+    .color-option.active {
+      border: 2px solid #000;
+    }
+  </style>
+{% endif %} {% endcomment %}

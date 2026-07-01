@@ -1,0 +1,311 @@
+
+<!-- Modal Popup -->
+<div class="trufairs-modal" data-popup="true">
+  <div class="trufairs-modal-overlay"></div>
+  <div class="trufairs-modal-content">
+    <button class="trufairs-modal-close" data-popup-close="true">&times;</button>
+    
+    <h2 class="trufairs-modal-title">{{ settings.main_title }}</h2>
+
+    <!-- Warranty Section -->
+    <div class="trufairs-section">
+      <div class="trufairs-section-header">
+    
+        <h3 class="trufairs-section-title">{{ settings.warranty_title }}</h3>
+      </div>
+         <div class="trufairs-border-green trufairs-section-border">
+      <p class="trufairs-section-text">{{ settings.warranty_text }}</p>
+      <p class="trufairs-section-text">{{ settings.warranty_contact }}</p>
+    </div>
+    </div>
+    <!-- Shipping Section -->
+    <div class="trufairs-section">
+      <div class="trufairs-section-header">
+         
+        <h3 class="trufairs-section-title">{{ settings.shipping_title }}</h3>
+      </div>
+       <div class="trufairs-border-orange trufairs-section-border">
+      <p class="trufairs-section-text">{{ settings.shipping_text }}</p>
+           <a href="{{ settings.shipping_policy_link }}" class="trufairs-policy-link" target="_blank">
+
+        {{ settings.shipping_policy_text }}
+      </a>
+       </div>
+ 
+    </div>
+
+    <!-- Return Policy Section -->
+    <div class="trufairs-section">
+      <div class="trufairs-section-header">
+       
+        <h3 class="trufairs-section-title">{{ settings.return_title }}</h3>
+      </div>
+       <div class="trufairs-border-red trufairs-section-border">
+      <p class="trufairs-section-text">{{ settings.return_text }}</p>
+      <p class="trufairs-section-text">{{ settings.return_additional_text }}</p>
+        <a href="{{ settings.return_policy_link }}" class="trufairs-policy-link" target="_blank">
+        {{ settings.return_policy_text }}
+      </a>  
+    </div>
+  
+    </div>
+  </div>
+</div>
+
+ 
+
+
+<!-- JavaScript -->
+<script defer>
+document.addEventListener('DOMContentLoaded', function() {
+  // Define a reusable function to initialize popup logic
+  function initTrufairsPopup(scope = document) {
+    const modals = scope.querySelectorAll('.trufairs-modal');
+    const openButtons = scope.querySelectorAll('[data-popup-open="true"]');
+    const closeButtons = scope.querySelectorAll('[data-popup-close="true"]');
+    const overlays = scope.querySelectorAll('.trufairs-modal-overlay');
+
+    openButtons.forEach((btn, index) => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const modal = modals[index] || document.querySelector('.trufairs-modal');
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    closeButtons.forEach((btn) => {
+      btn.addEventListener('click', function() {
+        const modal = btn.closest('.trufairs-modal');
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+    });
+
+    overlays.forEach((overlay) => {
+      overlay.addEventListener('click', function() {
+        const modal = overlay.closest('.trufairs-modal');
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+    });
+  }
+
+  // Initialize popup for the main page
+  initTrufairsPopup();
+
+  // Observe for dynamically added Quick View modals
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1 && node.querySelector('.trufairs-popup-btn')) {
+          // Reinitialize popup inside dynamically added content
+          initTrufairsPopup(node);
+        }
+      });
+    });
+  });
+
+  // Watch for added elements in the whole document body
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+</script>
+
+
+<style>
+
+
+  
+.trufairs-popup-btn {
+    text-decoration: underline;
+    cursor: pointer !important;
+}
+
+ 
+
+.sales-points {
+   
+    margin: 6px 0;
+     
+}
+
+  .trufairs-popup-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  .trufairs-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .trufairs-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .trufairs-modal-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .trufairs-modal-content {
+    position: relative;
+    background-color: #f9f9f9;
+    padding: 50px;
+    border-radius: 8px;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .trufairs-modal-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: {{ settings.title_color }};
+    text-align: center;
+  }
+
+  .trufairs-modal-close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.2s;
+  }
+
+  .trufairs-modal-close:hover {
+    color: #333;
+  }
+
+  .trufairs-section {
+    margin-bottom: 35px;
+  }
+
+  .trufairs-section:last-child {
+    margin-bottom: 0;
+  }
+
+  .trufairs-section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 15px;
+        justify-content: center;
+  }
+
+ 
+
+
+.trufairs-section-border {
+ padding: 0 10px;
+    border-radius: 20px;
+    padding-left: 15px;
+
+}
+
+
+
+.trufairs-border-green {
+    border-left: 8px solid #27ae60;
+   
+}
+
+
+  .trufairs-border-green {
+     border-left: 8px solid #27ae60;
+  }
+
+  .trufairs-border-orange {
+     border-left: 8px solid #f39c12;
+  }
+
+  .trufairs-border-red {
+     border-left: 8px solid #e74c3c;
+  }
+
+  .trufairs-section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: {{ settings.section_title_color }};
+    margin: 0;
+  }
+
+  .trufairs-section-text {
+    line-height: 1.8;
+    color: {{ settings.text_color }};
+    margin: 12px 0;
+    font-size: 14px;
+    text-align: justify;
+  }
+
+  .trufairs-policy-link {
+    color: {{ settings.link_color }};
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    display: inline-block;
+    margin-top: 12px;
+  }
+
+  .trufairs-policy-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    .trufairs-modal-content {
+      margin: 20px;
+      max-width: 100%;
+      padding: 30px 20px;
+    }
+
+.trufairs-modal-close{
+top:0px;
+}
+
+
+    .trufairs-modal-title {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+
+    .trufairs-section-header {
+      gap: 15px;
+    }
+
+ 
+
+    .trufairs-section-title {
+      font-size: 18px;
+    }
+
+    .trufairs-section-text {
+      font-size: 13px;
+    }
+  }
+
+
+  @media (max-width:768px){
+.verified-icon1{
+width:50px !important;
+height:50px !important;
+ 
+}
+
+}
+</style>

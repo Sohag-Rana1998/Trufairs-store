@@ -1,0 +1,225 @@
+{% liquid
+  assign desktop_video = section.settings.desktop_video
+  assign mobile_video = section.settings.mobile_video
+
+  assign has_mobile_video = false
+  if mobile_video != blank
+    assign has_mobile_video = true
+  endif
+%}
+
+<section
+  id="ResponsiveVideo-{{ section.id }}"
+  class="responsive-video-section color-{{ section.settings.color_scheme }}"
+>
+  <div class="responsive-video-section__wrapper {% if section.settings.full_width %}full-width{% else %}page-width{% endif %}">
+    
+    {% if desktop_video != blank or mobile_video != blank %}
+      
+      <div class="responsive-video-section__media">
+
+        {% if desktop_video != blank %}
+          <div class="video video--desktop">
+       {{
+  desktop_video
+  | video_tag:
+    autoplay: true,
+    loop: true,
+    muted: true,
+    controls: false,
+    playsinline: true,
+    preload: 'auto',
+    image_size: '2000x',
+    class: 'video__element'
+}}
+          </div>
+        {% endif %}
+
+        {% if has_mobile_video %}
+          <div class="video video--mobile">
+      {{
+  mobile_video
+  | video_tag:
+    autoplay: true,
+    loop: true,
+    muted: true,
+    controls: false,
+    playsinline: true,
+    preload: 'auto',
+    image_size: '1000x',
+    class: 'video__element'
+}}
+          </div>
+        {% endif %}
+
+      </div>
+
+    {% else %}
+      <div class="video-placeholder">
+        {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #ResponsiveVideo-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .responsive-video-section__wrapper {
+    margin: 0 auto;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .full-width {
+    width: 100%;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .page-width {
+    max-width: {{ section.settings.max_width }}px;
+    padding: 0 16px;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .responsive-video-section__media {
+    width: 100%;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .video {
+    width: 100%;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .video__element {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain; /* ensures NO cropping */
+  }
+
+  /* Mobile handling */
+  #ResponsiveVideo-{{ section.id }} .video--mobile {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+
+    #ResponsiveVideo-{{ section.id }} {
+      padding-top: {{ section.settings.mobile_padding_top }}px;
+      padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    {% if has_mobile_video %}
+      #ResponsiveVideo-{{ section.id }} .video--desktop {
+        display: none;
+      }
+
+      #ResponsiveVideo-{{ section.id }} .video--mobile {
+        display: block;
+      }
+    {% endif %}
+  }
+
+  /* Prevent layout shift */
+  #ResponsiveVideo-{{ section.id }} video {
+    aspect-ratio: auto;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .video-placeholder {
+    width: 100%;
+    background: #f5f5f5;
+  }
+
+  #ResponsiveVideo-{{ section.id }} .placeholder-svg {
+    width: 100%;
+    height: auto;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Responsive video",
+  "tag": "section",
+  "class": "section-responsive-video",
+  "settings": [
+    {
+      "type": "video",
+      "id": "desktop_video",
+      "label": "Desktop video"
+    },
+    {
+      "type": "video",
+      "id": "mobile_video",
+      "label": "Mobile video"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width",
+      "min": 800,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Responsive video"
+    }
+  ]
+}
+{% endschema %}

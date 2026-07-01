@@ -1,0 +1,741 @@
+{% style %}
+.product-info-container {
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  background: white;
+  padding: 50px;
+  border-radius: 25px;
+}
+
+.product-info-image {
+  width: 91%;
+  overflow: hidden;
+  position: sticky;
+  height: fit-content;
+  top: 20px;
+  max-width: 540px;
+}
+
+.product-info-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  margin-left: auto;
+  border-bottom-left-radius: 25px;
+  border-top-left-radius: 25px;
+}
+
+.product-info-dynamic-image {
+  transition: opacity 0.25s ease;
+}
+
+.product-info-dynamic-image.is-changing {
+  opacity: 0;
+}
+.product-single {
+font-size: 10px;
+}
+.product-info-tabs-wrapper {
+  background: {{ section.settings.tabs_background }};
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 40px;
+  width: 100%;
+}
+
+.tab-accordion-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.tab-accordion-item:last-child {
+  border-bottom: none;
+}
+
+.tab-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.tab-accordion-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: {{ section.settings.title_color }};
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.tab-accordion-icon {
+  font-size: 28px;
+  font-weight: 300;
+  transition: transform 0.3s ease;
+  color: {{ section.settings.icon_color }};
+  line-height: 1;
+}
+
+.tab-accordion-icon.active {
+  transform: rotate(45deg);
+}
+
+.tab-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0;
+}
+
+.tab-accordion-content.active {
+  max-height: max-content;
+  padding: 0 0 24px 0;
+}
+
+.tab-accordion-content-inner {
+  color: {{ section.settings.content_color }};
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.tab-accordion-content-inner p {
+  margin-bottom: 12px;
+}
+.tab-accordion-content-inner a {
+  text-decoration: underline;
+}
+
+.tab-accordion-content-inner p:last-child {
+  margin-bottom: 0;
+}
+
+.tab-accordion-content-inner ul,
+.tab-accordion-content-inner ol {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+
+.tab-accordion-content-inner li {
+  margin-bottom: 8px;
+}
+
+.tab-accordion-content-inner table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+.tab-accordion-content-inner table td,
+.tab-accordion-content-inner table th {
+  padding: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+button.tfsp-btn.tab-accordion-title {
+  padding: 0;
+}
+
+@media screen and (max-width: 990px) {
+  .product-info-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    flex-direction: column-reverse;
+    padding: 20px 15px;
+  }
+
+  .product-info-image {
+    width: 100%;
+    position: static;
+  }
+
+  .product-info-tabs-wrapper {
+    padding: 30px 20px;
+  }
+
+  .tab-accordion-title {
+    font-size: 18px;
+  }
+
+  .tab-accordion-content-inner {
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .product-info-tabs {
+    padding: 40px 0;
+  }
+
+  .product-info-tabs-wrapper,
+  .product-info-image img {
+    border-radius: 15px;
+  }
+
+  .product-info-tabs-wrapper {
+    padding: 20px 15px;
+  }
+
+  .tab-accordion-header {
+    padding: 18px 0;
+  }
+
+  .tab-accordion-title {
+    font-size: 16px;
+  }
+
+  .tab-accordion-icon {
+    font-size: 24px;
+  }
+
+  .tab-accordion-content-inner {
+    font-size: 14px;
+  }
+}
+{% endstyle %}
+
+<div class="product-info-tabs container page-width">
+  <div class="product-info-container">
+
+    <!-- Product Image Section -->
+    <div class="product-info-image" data-product-info-image-section="{{ section.id }}">
+      {% liquid
+        assign current_variant = product.selected_or_first_available_variant
+        assign current_variant_image_url = blank
+        assign current_variant_images_mf = current_variant.metafields.custom.images
+
+        comment
+          5th image URL = index 4 because Liquid array index starts from 0.
+          Video URLs are ignored before counting image URLs.
+        endcomment
+        assign target_image_index = 2
+
+        assign product_fallback_image_url = blank
+        if product.featured_image
+          assign product_fallback_image_url = product.featured_image | image_url: width: 1400
+        endif
+
+        assign current_variant_fallback_image_url = blank
+        if current_variant.featured_media and current_variant.featured_media.media_type == 'image'
+          assign current_variant_fallback_image_url = current_variant.featured_media | image_url: width: 1400
+        elsif current_variant.featured_image
+          assign current_variant_fallback_image_url = current_variant.featured_image | image_url: width: 1400
+        endif
+
+        assign image_only_urls = ''
+        assign image_only_count = 0
+
+        if current_variant_images_mf != blank
+          if current_variant_images_mf.type contains 'list.'
+            for media_item in current_variant_images_mf.value
+              assign media_url = media_item
+
+              if current_variant_images_mf.type contains 'file_reference'
+                assign media_url = media_item | file_url
+              endif
+
+              assign media_url_string = media_url | append: '' | strip
+              assign media_url_downcase = media_url_string | downcase
+
+              unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+                assign image_only_count = image_only_count | plus: 1
+
+                if image_only_urls == ''
+                  assign image_only_urls = media_url_string
+                else
+                  assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+                endif
+              endunless
+            endfor
+          else
+            assign current_variant_images_list = current_variant_images_mf.value | split: ','
+
+            for media_url in current_variant_images_list
+              assign media_url_string = media_url | strip
+              assign media_url_downcase = media_url_string | downcase
+
+              unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+                assign image_only_count = image_only_count | plus: 1
+
+                if image_only_urls == ''
+                  assign image_only_urls = media_url_string
+                else
+                  assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+                endif
+              endunless
+            endfor
+          endif
+
+          assign image_only_list = image_only_urls | split: '||'
+
+          if image_only_count > 1
+            assign current_variant_image_url = image_only_list[target_image_index] | strip
+
+            if current_variant_image_url == blank
+              assign current_variant_image_url = image_only_list | first | strip
+            endif
+          elsif image_only_count == 1
+            assign current_variant_image_url = image_only_list | first | strip
+          endif
+        endif
+
+        if current_variant_image_url == blank
+          assign current_variant_image_url = current_variant_fallback_image_url
+        endif
+
+        if current_variant_image_url == blank
+          assign current_variant_image_url = product_fallback_image_url
+        endif
+      %}
+
+      {% if current_variant_image_url != blank %}
+        <img
+          src="{{ current_variant_image_url }}"
+          loading="lazy"
+          class="trufairs-why-selected__image product-info-dynamic-image"
+          alt="{{ product.title | escape }}"
+          width="1400"
+          height="600"
+          data-product-info-dynamic-image
+        >
+      {% elsif section.settings.custom_image != blank %}
+        <img
+          src="{{ section.settings.custom_image | image_url: width: 1400 }}"
+          loading="lazy"
+          class="trufairs-why-selected__image product-info-dynamic-image"
+          alt="{{ product.title | escape }}"
+          width="1400"
+          height="600"
+          data-product-info-dynamic-image
+        >
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
+
+    <!-- Tabs Section -->
+    <div class="product-info-tabs-wrapper">
+
+      {% if product.description != blank %}
+        <div class="tab-accordion-item">
+          <div class="tab-accordion-header" onclick="toggleAccordion(this)" data-default-open="true">
+            <h3 class="tab-accordion-title">{{ section.settings.tab1_title }}</h3>
+            <span class="tab-accordion-icon">+</span>
+          </div>
+
+          <div class="tab-accordion-content">
+            <div class="tab-accordion-content-inner">
+              {{ product.description }}
+              <br>
+
+              <div class="product-single">
+                 {{ product.vendor }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if product.metafields.custom.package_lists != blank %}
+        <div class="tab-accordion-item">
+          <div class="tab-accordion-header" onclick="toggleAccordion(this)" data-default-open="true">
+            <h3 class="tab-accordion-title">{{ section.settings.tab4_title }}</h3>
+            <span class="tab-accordion-icon">+</span>
+          </div>
+
+          <div class="tab-accordion-content">
+            <div class="tab-accordion-content-inner">
+              {{ product.metafields.custom.package_lists }}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% for block in section.blocks %}
+        {% case block.type %}
+
+          {% when 'custom_tab' %}
+            {% if block.settings.tab_content != blank or block.settings.tab_title == "Shipping Information" or block.settings.tab_title == "Return & Refund Policy" %}
+              <div class="tab-accordion-item" {{ block.shopify_attributes }}>
+
+                {% if block.settings.tab_title == "Shipping Information" %}
+                  <div class="tab-accordion-header">
+                    <button
+                      type="button"
+                      class="tfsp-btn tab-accordion-title"
+                      data-tfsp-open
+                      data-tfsp-url="/policies/shipping-policy"
+                      data-tfsp-title="Shipping Policy"
+                    >
+                      Shipping Policy
+                    </button>
+                    <span class="tab-accordion-icon">+</span>
+                  </div>
+
+                {% elsif block.settings.tab_title == "Return & Refund Policy" %}
+                  <div class="tab-accordion-header">
+                    <button
+                      type="button"
+                      class="tfsp-btn tab-accordion-title"
+                      data-tfsp-open
+                      data-tfsp-url="/policies/refund-policy"
+                      data-tfsp-title="Refund Policy"
+                    >
+                      Refund Policy
+                    </button>
+                    <span class="tab-accordion-icon">+</span>
+                  </div>
+
+                {% else %}
+                  <div class="tab-accordion-header" onclick="toggleAccordion(this)">
+                    <h3 class="tab-accordion-title">{{ block.settings.tab_title }}</h3>
+                    <span class="tab-accordion-icon">+</span>
+                  </div>
+                {% endif %}
+
+                <div class="tab-accordion-content">
+                  <div class="tab-accordion-content-inner">
+                    {{ block.settings.tab_content }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+
+          {% when 'metafield_tab' %}
+            {% assign metafield_value = product.metafields[block.settings.metafield_namespace][block.settings.metafield_key] %}
+
+            {% if metafield_value != blank %}
+              <div class="tab-accordion-item" {{ block.shopify_attributes }}>
+                <div class="tab-accordion-header" onclick="toggleAccordion(this)">
+                  <h3 class="tab-accordion-title">{{ block.settings.tab_title }}</h3>
+                  <span class="tab-accordion-icon">+</span>
+                </div>
+
+                <div class="tab-accordion-content">
+                  <div class="tab-accordion-content-inner">
+                    {{ metafield_value }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+
+        {% endcase %}
+      {% endfor %}
+
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="ProductInfoVariantImages-{{ section.id }}">
+{
+  {% for variant in product.variants %}
+    {% liquid
+      assign target_image_index = 2
+      assign variant_image_url = blank
+      assign variant_images_mf = variant.metafields.custom.images
+
+      assign product_fallback_image_url = blank
+      if product.featured_image
+        assign product_fallback_image_url = product.featured_image | image_url: width: 1400
+      endif
+
+      assign variant_fallback_image_url = blank
+      if variant.featured_media and variant.featured_media.media_type == 'image'
+        assign variant_fallback_image_url = variant.featured_media | image_url: width: 1400
+      elsif variant.featured_image
+        assign variant_fallback_image_url = variant.featured_image | image_url: width: 1400
+      endif
+
+      assign image_only_urls = ''
+      assign image_only_count = 0
+
+      if variant_images_mf != blank
+        if variant_images_mf.type contains 'list.'
+          for media_item in variant_images_mf.value
+            assign media_url = media_item
+
+            if variant_images_mf.type contains 'file_reference'
+              assign media_url = media_item | file_url
+            endif
+
+            assign media_url_string = media_url | append: '' | strip
+            assign media_url_downcase = media_url_string | downcase
+
+            unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+              assign image_only_count = image_only_count | plus: 1
+
+              if image_only_urls == ''
+                assign image_only_urls = media_url_string
+              else
+                assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+              endif
+            endunless
+          endfor
+        else
+          assign variant_images_list = variant_images_mf.value | split: ','
+
+          for media_url in variant_images_list
+            assign media_url_string = media_url | strip
+            assign media_url_downcase = media_url_string | downcase
+
+            unless media_url_downcase contains '.mp4' or media_url_downcase contains '.webm' or media_url_downcase contains '.mov'
+              assign image_only_count = image_only_count | plus: 1
+
+              if image_only_urls == ''
+                assign image_only_urls = media_url_string
+              else
+                assign image_only_urls = image_only_urls | append: '||' | append: media_url_string
+              endif
+            endunless
+          endfor
+        endif
+
+        assign image_only_list = image_only_urls | split: '||'
+
+        if image_only_count > 1
+          assign variant_image_url = image_only_list[target_image_index] | strip
+
+          if variant_image_url == blank
+            assign variant_image_url = image_only_list | first | strip
+          endif
+        elsif image_only_count == 1
+          assign variant_image_url = image_only_list | first | strip
+        endif
+      endif
+
+      if variant_image_url == blank
+        assign variant_image_url = variant_fallback_image_url
+      endif
+
+      if variant_image_url == blank
+        assign variant_image_url = product_fallback_image_url
+      endif
+    %}
+
+    "{{ variant.id }}": {{ variant_image_url | json }}{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+}
+</script>
+
+<script>
+  function toggleAccordion(header) {
+    var content = header.nextElementSibling;
+    var icon = header.querySelector('.tab-accordion-icon');
+
+    if (!content || !icon) return;
+
+    content.classList.toggle('active');
+    icon.classList.toggle('active');
+  }
+
+  (function() {
+    var sectionId = "{{ section.id }}";
+    var imageMapEl = document.getElementById("ProductInfoVariantImages-" + sectionId);
+    var imageWrapper = document.querySelector('[data-product-info-image-section="' + sectionId + '"]');
+    var variantInput = document.getElementById("pdp-variant-id");
+
+    if (!imageMapEl || !imageWrapper || !variantInput) return;
+
+    var variantImageMap = {};
+
+    try {
+      variantImageMap = JSON.parse(imageMapEl.textContent || "{}");
+    } catch (error) {
+      variantImageMap = {};
+    }
+
+    function updateProductInfoImage(variantId) {
+      var imageUrl = variantImageMap[String(variantId)];
+      var imageEl = imageWrapper.querySelector("[data-product-info-dynamic-image]");
+
+      if (!imageUrl || !imageEl) return;
+
+      if (imageEl.getAttribute("src") === imageUrl) return;
+
+      imageEl.classList.add("is-changing");
+
+      var preloadedImage = new Image();
+
+      preloadedImage.onload = function() {
+        imageEl.setAttribute("src", imageUrl);
+        imageEl.removeAttribute("srcset");
+        imageEl.classList.remove("is-changing");
+      };
+
+      preloadedImage.onerror = function() {
+        imageEl.classList.remove("is-changing");
+      };
+
+      preloadedImage.src = imageUrl;
+    }
+
+    variantInput.addEventListener("change", function() {
+      updateProductInfoImage(variantInput.value);
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      updateProductInfoImage(variantInput.value);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Info Tabs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "custom_image",
+      "label": "Custom Image",
+      "info": "Leave empty to use product featured image"
+    },
+    {
+      "type": "header",
+      "content": "Fixed Tab Titles"
+    },
+    {
+      "type": "paragraph",
+      "content": "The first three tabs are fixed and pull from product data. Use blocks below to add more tabs."
+    },
+    {
+      "type": "text",
+      "id": "tab1_title",
+      "label": "Tab 1 Title (Description)",
+      "default": "Description"
+    },
+    {
+      "type": "text",
+      "id": "tab2_title",
+      "label": "Tab 2 Title (Specifications)",
+      "default": "Specifications"
+    },
+    {
+      "type": "text",
+      "id": "tab3_title",
+      "label": "Tab 3 Title (Dimensions)",
+      "default": "Dimension and Weight"
+    },
+    {
+      "type": "text",
+      "id": "tab4_title",
+      "label": "Tab 4 Title Package Lists",
+      "default": "Package Lists"
+    },
+    {
+      "type": "header",
+      "content": "Design Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "tabs_background",
+      "label": "Tabs Background Color",
+      "default": "#d4ebf7"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Tab Title Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Content Text Color",
+      "default": "#333333"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "custom_tab",
+      "name": "Custom Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab Title",
+          "default": "Custom Tab"
+        },
+        {
+          "type": "html",
+          "id": "tab_content",
+          "label": "Tab Content",
+          "info": "Add your custom HTML content here"
+        }
+      ]
+    },
+    {
+      "type": "metafield_tab",
+      "name": "Metafield Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_title",
+          "label": "Tab Title",
+          "default": "Additional Info"
+        },
+        {
+          "type": "text",
+          "id": "metafield_namespace",
+          "label": "Metafield Namespace",
+          "default": "custom",
+          "info": "Example: custom"
+        },
+        {
+          "type": "text",
+          "id": "metafield_key",
+          "label": "Metafield Key",
+          "default": "additional_info",
+          "info": "Example: additional_info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Info Tabs",
+      "blocks": [
+        {
+          "type": "custom_tab",
+          "settings": {
+            "tab_title": "Shipping Information",
+            "tab_content": "<p>Add your shipping information here.</p>"
+          }
+        },
+        {
+          "type": "custom_tab",
+          "settings": {
+            "tab_title": "Return & Refund Policy",
+            "tab_content": "<p>Add your return policy here.</p>"
+          }
+        },
+        {
+          "type": "custom_tab",
+          "settings": {
+            "tab_title": "About Trufairs",
+            "tab_content": "<p>Add information about your brand here.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

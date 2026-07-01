@@ -1,0 +1,295 @@
+{% style %}
+#shopify-section-{{ section.id }} .trufairs-comparison {
+  background: {{ section.settings.background_color }};
+  color: {{ section.settings.text_color }};
+  padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+}
+
+ 
+.tf-sp-eyebrow-compare {
+    display: inline-block;
+    margin: 0 0 12px;
+    font-size: 12px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #b8893b;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+}
+ .trufairs-comparison__highlight  {
+    background: white !important;
+}
+#shopify-section-{{ section.id }} .trufairs-comparison__header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+
+#shopify-section-{{ section.id }} .trufairs-comparison__heading {
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.2;
+  margin-bottom: 12px;
+  font-weight:700;
+}
+
+#shopify-section-{{ section.id }} .trufairs-comparison__subheading {
+  font-size: 16px;
+  color: {{ section.settings.muted_text_color }};
+}
+
+#shopify-section-{{ section.id }} .trufairs-comparison__table-wrapper {
+  background: {{ section.settings.card_background }};
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid {{ section.settings.border_color }};
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+ 
+
+#shopify-section-{{ section.id }} .trufairs-comparison__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#shopify-section-{{ section.id }} .trufairs-comparison__table th {
+  text-align: left;
+  padding: 18px;
+  font-size: 16px;
+  background: {{ section.settings.header_background }};
+}
+
+#shopify-section-{{ section.id }} .trufairs-comparison__table td {
+  padding: 18px;
+  border-top: 1px solid {{ section.settings.border_color }};
+  font-size: 16px;
+}
+
+#shopify-section-{{ section.id }} .trufairs-comparison__highlight {
+
+  color: {{ section.settings.highlight_color }};
+}
+
+#shopify-section-{{ section.id }} .trufairs-comparison__note {
+  text-align: center;
+  margin-top: 28px;
+  font-size: 16px;
+  color: {{ section.settings.muted_text_color }};
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  #shopify-section-{{ section.id }} .trufairs-comparison__heading {
+    font-size: 28px;
+  }
+
+   #shopify-section-{{ section.id }} .trufairs-comparison__table th{
+
+text-align: center;
+
+   }
+  #shopify-section-{{ section.id }} .trufairs-comparison__table th,
+  #shopify-section-{{ section.id }} .trufairs-comparison__table td {
+    padding: 5px;
+  }
+  tr td{
+    font-size:13px !important;
+  }
+}
+{% endstyle %}
+
+<section class="trufairs-comparison">
+  <div class="container">
+  {% if section.settings.eyebrow != blank %}
+        <p class="tf-sp-eyebrow-compare">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+    <div class="trufairs-comparison__header">
+      <h2 class="trufairs-comparison__heading">
+        {{ section.settings.heading }}
+      </h2>
+      <p class="trufairs-comparison__subheading">
+        {{ section.settings.subheading }}
+      </p>
+    </div>
+
+    <div class="trufairs-comparison__table-wrapper">
+      <table class="trufairs-comparison__table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Other Marketplaces</th>
+            <th class="trufairs-comparison__highlight">Trufairs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            <tr {{ block.shopify_attributes }}>
+              <td style="font-weight:600;">{{ block.settings.label }}</td>
+              <td>{{ block.settings.marketplace }}</td>
+              <td class="trufairs-comparison__highlight">{{ block.settings.trufairs }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="trufairs-comparison__note">
+      {{ section.settings.note }}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Strategic Comparison",
+  "settings": [
+       {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Loved by TruFairs Customers"
+    }
+    ,
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why Not Just Buy from Other Marketplaces?"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "We remove the noise, so you can make confident decisions without endless scrolling and second-guessing."
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Bottom Note",
+      "default": "This approach reduces decision fatigue and helps you choose faster with more confidence."
+    },
+
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card Background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "header_background",
+      "label": "Header Background",
+      "default": "#f3f3f3"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted Text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight Color",
+      "default": "#000000"
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "default": 80,
+      "label": "Padding Top"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 40,
+      "max": 120,
+      "step": 4,
+      "default": 80,
+      "label": "Padding Bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Comparison Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Feature",
+          "default": "Product selection"
+        },
+        {
+          "type": "text",
+          "id": "marketplace",
+          "label": "Other Marketplaces",
+          "default": "Hundreds of options"
+        },
+        {
+          "type": "text",
+          "id": "trufairs",
+          "label": "Trufairs",
+          "default": "Curated selection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Strategic Comparison",
+      "blocks": [
+        {
+          "type": "row",
+          "settings": {
+            "label": "Product selection",
+            "marketplace": "Hundreds of options",
+            "trufairs": "Curated picks"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Decision process",
+            "marketplace": "You compare everything",
+            "trufairs": "We pre-test & filter"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "label": "Confidence",
+            "marketplace": "Uncertain choice",
+            "trufairs": "Confident buying"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

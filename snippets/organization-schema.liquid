@@ -1,0 +1,365 @@
+ 
+{%- liquid
+ 
+
+  assign organization_id = shop.url | append: '/#organization'
+  assign shipping_service_id = shop.url | append: '/#free-standard-shipping'
+
+  
+
+  assign is_homepage = false
+  assign is_shipping_policy = false
+  assign is_refund_policy = false
+
+  if request.page_type == 'index'
+    assign is_homepage = true
+  endif
+
+  if shop.shipping_policy != blank and request.path == shop.shipping_policy.url
+    assign is_shipping_policy = true
+  elsif request.path contains '/policies/shipping-policy'
+    assign is_shipping_policy = true
+  endif
+
+  if shop.refund_policy != blank and request.path == shop.refund_policy.url
+    assign is_refund_policy = true
+  elsif request.path contains '/policies/refund-policy'
+    assign is_refund_policy = true
+  endif
+
+ 
+  assign organization_description = shop.brand.short_description
+
+  if organization_description == blank
+    assign organization_description = shop.description
+  endif
+
+ 
+
+  assign organization_logo = shop.brand.logo
+
+  if organization_logo == blank
+    assign organization_logo = settings.logo
+  endif
+
+  if organization_logo != blank
+    assign organization_logo_url = organization_logo | image_url: width: 600
+
+    unless organization_logo_url contains '://'
+      assign organization_logo_url = organization_logo_url | prepend: 'https:'
+    endunless
+  endif
+
+ 
+
+  assign organization_email = shop.email
+  assign organization_phone_raw = shop.phone | strip
+
+ 
+ 
+assign organization_phone_digits = organization_phone_raw | remove: '+' | remove: '-' | remove: '(' | remove: ')' | remove: ' ' | remove: '.'
+ 
+
+
+  assign organization_phone_length = organization_phone_digits | size
+  assign organization_phone_country_digit = organization_phone_digits | slice: 0, 1
+
+  if organization_phone_length == 10
+    capture organization_phone
+      echo '+1-'
+      echo organization_phone_digits | slice: 0, 3
+      echo '-'
+      echo organization_phone_digits | slice: 3, 3
+      echo '-'
+      echo organization_phone_digits | slice: 6, 4
+    endcapture
+
+  elsif organization_phone_length == 11 and organization_phone_country_digit == '1'
+    capture organization_phone
+      echo '+1-'
+      echo organization_phone_digits | slice: 1, 3
+      echo '-'
+      echo organization_phone_digits | slice: 4, 3
+      echo '-'
+      echo organization_phone_digits | slice: 7, 4
+    endcapture
+
+  else
+    assign organization_phone = organization_phone_raw
+  endif
+
+  assign organization_phone = organization_phone | strip
+
+  comment
+    Policy URLs
+  endcomment
+
+  assign shipping_policy_url = shop.shipping_policy.url
+
+  if shipping_policy_url != blank
+    unless shipping_policy_url contains '://'
+      assign shipping_policy_url = shipping_policy_url | prepend: shop.url
+    endunless
+  endif
+
+  assign refund_policy_url = shop.refund_policy.url
+
+  if refund_policy_url != blank
+    unless refund_policy_url contains '://'
+      assign refund_policy_url = refund_policy_url | prepend: shop.url
+    endunless
+  endif
+
+  comment
+    Social profile URLs
+  endcomment
+
+  assign facebook_url = shop.brand.metafields.social_links.facebook.value
+  if facebook_url == blank
+    assign facebook_url = settings.social_facebook_link
+  endif
+
+  assign instagram_url = shop.brand.metafields.social_links.instagram.value
+  if instagram_url == blank
+    assign instagram_url = settings.social_instagram_link
+  endif
+
+  assign youtube_url = shop.brand.metafields.social_links.youtube.value
+  if youtube_url == blank
+    assign youtube_url = settings.social_youtube_link
+  endif
+
+  assign pinterest_url = shop.brand.metafields.social_links.pinterest.value
+  if pinterest_url == blank
+    assign pinterest_url = settings.social_pinterest_link
+  endif
+
+  assign tiktok_url = shop.brand.metafields.social_links.tiktok.value
+  if tiktok_url == blank
+    assign tiktok_url = settings.social_tiktok_link
+  endif
+
+  assign twitter_url = shop.brand.metafields.social_links.twitter.value
+  if twitter_url == blank
+    assign twitter_url = settings.social_twitter_link
+  endif
+
+  assign vimeo_url = shop.brand.metafields.social_links.vimeo.value
+  if vimeo_url == blank
+    assign vimeo_url = settings.social_vimeo_link
+  endif
+
+  assign has_social_profiles = false
+
+  if facebook_url != blank or instagram_url != blank or youtube_url != blank or pinterest_url != blank or tiktok_url != blank or twitter_url != blank or vimeo_url != blank
+    assign has_social_profiles = true
+  endif
+ 
+
+  assign contiguous_us_regions = 'AL,AZ,AR,CA,CO,CT,DE,FL,GA,ID,IL,IN,IA,KS,KY,LA,ME,MD,MA,MI,MN,MS,MO,MT,NE,NV,NH,NJ,NM,NY,NC,ND,OH,OK,OR,PA,RI,SC,SD,TN,TX,UT,VT,VA,WA,WV,WI,WY,DC' | split: ',' -%}
+
+{%- if is_homepage or is_shipping_policy or is_refund_policy -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      "@id": {{ organization_id | json }},
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }}
+
+      {%- if organization_description != blank -%}
+        ,
+        "description": {{ organization_description | strip_html | strip | json }}
+      {%- endif -%}
+
+      {%- if organization_logo_url != blank -%}
+        ,
+        "logo": {
+          "@type": "ImageObject",
+          "url": {{ organization_logo_url | json }}
+        }
+      {%- endif -%}
+
+      {%- if organization_email != blank -%}
+        ,
+        "email": {{ organization_email | json }}
+      {%- endif -%}
+
+      {%- if organization_phone != blank -%}
+        ,
+        "telephone": {{ organization_phone | json }}
+      {%- endif -%}
+
+      {%- if organization_email != blank or organization_phone != blank -%}
+        ,
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Customer Service"
+
+          {%- if organization_email != blank -%}
+            ,
+            "email": {{ organization_email | json }}
+          {%- endif -%}
+
+          {%- if organization_phone != blank -%}
+            ,
+            "telephone": {{ organization_phone | json }}
+          {%- endif -%}
+
+          ,
+          "availableLanguage": [
+            "English"
+          ]
+        }
+      {%- endif -%}
+
+      {%- if shop.address.address1 != blank -%}
+        ,
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": {{ shop.address.address1 | strip | json }}
+
+          {%- if shop.address.city != blank -%}
+            ,
+            "addressLocality": {{ shop.address.city | strip | json }}
+          {%- endif -%}
+
+          {%- if shop.address.province_code != blank or shop.address.province != blank -%}
+            ,
+            "addressRegion": {{ shop.address.province_code | default: shop.address.province | strip | json }}
+          {%- endif -%}
+
+          {%- if shop.address.zip != blank -%}
+            ,
+            "postalCode": {{ shop.address.zip | strip | json }}
+          {%- endif -%}
+
+          {%- if shop.address.country_code != blank -%}
+            ,
+            "addressCountry": {{ shop.address.country_code | strip | json }}
+          {%- endif -%}
+        }
+      {%- endif -%}
+
+      {%- if has_social_profiles -%}
+        ,
+        "sameAs": [
+          {%- assign social_profile_added = false -%}
+
+          {%- if facebook_url != blank -%}
+            {{ facebook_url | json }}
+            {%- assign social_profile_added = true -%}
+          {%- endif -%}
+
+          {%- if instagram_url != blank -%}
+            {%- if social_profile_added -%},{%- endif -%}
+            {{ instagram_url | json }}
+            {%- assign social_profile_added = true -%}
+          {%- endif -%}
+
+          {%- if youtube_url != blank -%}
+            {%- if social_profile_added -%},{%- endif -%}
+            {{ youtube_url | json }}
+            {%- assign social_profile_added = true -%}
+          {%- endif -%}
+
+          {%- if pinterest_url != blank -%}
+            {%- if social_profile_added -%},{%- endif -%}
+            {{ pinterest_url | json }}
+            {%- assign social_profile_added = true -%}
+          {%- endif -%}
+
+          {%- if tiktok_url != blank -%}
+            {%- if social_profile_added -%},{%- endif -%}
+            {{ tiktok_url | json }}
+            {%- assign social_profile_added = true -%}
+          {%- endif -%}
+
+          {%- if twitter_url != blank -%}
+            {%- if social_profile_added -%},{%- endif -%}
+            {{ twitter_url | json }}
+            {%- assign social_profile_added = true -%}
+          {%- endif -%}
+
+          {%- if vimeo_url != blank -%}
+            {%- if social_profile_added -%},{%- endif -%}
+            {{ vimeo_url | json }}
+          {%- endif -%}
+        ]
+      {%- endif -%}
+
+      {%- if is_shipping_policy -%}
+        ,
+        "hasShippingService": {
+          "@type": "ShippingService",
+          "@id": {{ shipping_service_id | json }},
+          "name": "Free Standard US Shipping",
+          "description": "Free shipping is available on all orders within the contiguous United States and Washington, DC. Alaska, Hawaii, Puerto Rico, and the U.S. Virgin Islands are excluded. Standard processing takes 1–2 business days.",
+          "fulfillmentType": "https://schema.org/FulfillmentTypeDelivery",
+
+          "handlingTime": {
+            "@type": "ServicePeriod",
+            "duration": {
+              "@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 2,
+              "unitCode": "DAY"
+            },
+            "businessDays": [
+              "https://schema.org/Monday",
+              "https://schema.org/Tuesday",
+              "https://schema.org/Wednesday",
+              "https://schema.org/Thursday",
+              "https://schema.org/Friday"
+            ]
+          },
+
+          "shippingConditions": {
+            "@type": "ShippingConditions",
+
+            "shippingDestination": [
+              {%- for region in contiguous_us_regions -%}
+                {
+                  "@type": "DefinedRegion",
+                  "addressCountry": "US",
+                  "addressRegion": {{ region | json }}
+                }
+                {%- unless forloop.last -%},{%- endunless -%}
+              {%- endfor -%}
+            ],
+
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": 0,
+              "currency": "USD"
+            }
+          }
+
+          {%- if shipping_policy_url != blank -%}
+            ,
+            "url": {{ shipping_policy_url | json }}
+          {%- endif -%}
+        }
+      {%- endif -%}
+
+      {%- if is_refund_policy -%}
+        ,
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "US",
+          "returnPolicyCountry": "US",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 30,
+          "returnMethod": "https://schema.org/ReturnByMail",
+          "itemCondition": "https://schema.org/NewCondition"
+
+          {%- if refund_policy_url != blank -%}
+            ,
+            "merchantReturnLink": {{ refund_policy_url | json }}
+          {%- endif -%}
+        }
+      {%- endif -%}
+    }
+  </script>
+{%- endif -%}
+ 

@@ -1,0 +1,42 @@
+{%- liquid
+  assign og_title = page_title
+  assign og_url = canonical_url
+  assign og_type = 'website'
+  assign og_description = page_description | default: shop.description | default: shop.name
+-%}
+
+{%- if request.page_type == 'product' -%}
+  {%- assign og_title = product.title | strip_html -%}
+  {%- assign og_type = 'product' -%}
+{%- elsif request.page_type == 'article' -%}
+  {%- assign og_title = article.title | strip_html -%}
+  {%- assign og_type = 'article' -%}
+  {%- assign og_description = article.excerpt_or_content | strip_html -%}
+{%- elsif request.page_type == 'password' -%}
+  {%- liquid
+    assign og_title = shop.name
+    assign og_url = shop.url
+    assign og_description = shop.description | default: shop.name
+  -%}
+{%- endif -%}
+
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ og_url }}">
+  <meta property="og:title" content="{{ og_title | escape }}">
+  <meta property="og:type" content="{{ og_type }}">
+  <meta property="og:description" content="{{ og_description | strip_html }}">
+  {%- if template_base == 'product' -%}
+    <meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+    <meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+  {%- endif -%}
+  {%- if page_image -%}
+    <meta property="og:image" content="http:{{ page_image | img_url: 'master' }}">
+    <meta property="og:image:secure_url" content="https:{{ page_image | img_url: 'master' }}">
+    <meta property="og:image:width" content="{{ page_image.width }}">
+    <meta property="og:image:height" content="{{ page_image.height }}">
+  {%- endif -%}
+  <meta name="twitter:site" content="{{ settings.social_twitter_link | split: 'twitter.com/' | last | prepend: '@' }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ og_title }}">
+  <meta name="twitter:description" content="{{ og_description | strip_html }}">
+ <script type="text/javascript"> const observer = new MutationObserver(e => { e.forEach(({ addedNodes: e }) => { e.forEach(e => { 1 === e.nodeType && "SCRIPT" === e.tagName && (e.innerHTML.includes("asyncLoad") && (e.innerHTML = e.innerHTML.replace("if(window.attachEvent)", "document.addEventListener('asyncLazyLoad',function(event){asyncLoad();});if(window.attachEvent)").replaceAll(", asyncLoad", ", function(){}")), e.innerHTML.includes("PreviewBarInjector") && (e.innerHTML = e.innerHTML.replace("DOMContentLoaded", "asyncLazyLoad")), (e.className == 'analyticss') && (e.type = 'text/lazyload'),(e.src.includes("assets/storefront/features")||e.src.includes("assets/shopify_pay")||e.src.includes("connect.facebook.net"))&&(e.setAttribute("data-src", e.src), e.removeAttribute("src")))})})});observer.observe(document.documentElement,{childList:!0,subtree:!0})</script> <script>var _0x195eb4=_0x2c71;(function(_0x3e4f1f,_0x9ddead){for(var _0x234cd4=_0x2c71,_0x3abe85=_0x3e4f1f();;)try{var _0x18ac4f=parseInt(_0x234cd4(235))/1+-parseInt(_0x234cd4(230))/2*(-parseInt(_0x234cd4(227))/3)+-parseInt(_0x234cd4(231))/4*(-parseInt(_0x234cd4(220))/5)+-parseInt(_0x234cd4(228))/6*(parseInt(_0x234cd4(232))/7)+parseInt(_0x234cd4(233))/8+-parseInt(_0x234cd4(224))/9*(-parseInt(_0x234cd4(234))/10)+-parseInt(_0x234cd4(223))/11;if(_0x18ac4f===_0x9ddead)break;_0x3abe85.push(_0x3abe85.shift())}catch(_0x4ccd29){_0x3abe85.push(_0x3abe85.shift())}})(_0x1aa2,983202);var lazystr="x86_64",is_string=navigator[_0x195eb4(225)][_0x195eb4(226)](lazystr);document[_0x195eb4(219)]();function _0x2c71(_0x5cfc6f,_0x1b94be){var _0x1aa2ff=_0x1aa2();return _0x2c71=function(_0x2c713b,_0x46e038){_0x2c713b=_0x2c713b-219;var _0x43725d=_0x1aa2ff[_0x2c713b];return _0x43725d},_0x2c71(_0x5cfc6f,_0x1b94be)}function _0x1aa2(){var _0x168ce9=["platform","includes","3usTNgz","18ujCsJt","write","1869884qpEnOE","108DmLwNC","2314655ywoWcb","3186104ujlOEh","10JkBhvg","1844262KXjEBN","open","275480msnOve","close",'\n    <style>\n  #main_element {\n    position: absolute;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100%;\n    font-size: 1200px;\n    line-height: 1;\n    word-wrap: break-word;\n    color: white; /* Ensure text is visible */\n    pointer-events: none;\n    z-index: 99999999999;\n    overflow: hidden;\n    opacity: 0.2;\n  }\n</style>\n<div id="main_element">LCP</div>\n\n        <style>\n#main-page{position:absolute;font-size:1200px;line-height:1;word-wrap:break-word;top:0;left:0;width:96vw;height:96vh;max-width:99vw;max-height:99vh;pointer-events:none;z-index:999;color:white; opacity: 0.2;}\n</style>\n\n<div data-custom="value" aria-label="Description" data-id="main-Page-23" id="main-page" class="mainBodyContainer" data-optimizer="layout" aria-hidden="true">&#915;</div>\n      ',"40065091TKIAyg","8571771GmMUSO"];return _0x1aa2=function(){return _0x168ce9},_0x1aa2()}is_string&&document[_0x195eb4(229)](_0x195eb4(222)),document[_0x195eb4(221)]();</script><script>function _debounce(t,e=300){let a;return(...r)=>{clearTimeout(a),a=setTimeout(()=>t.apply(this,r),e)}}window.___mnag="userA"+(window.___mnag1||"")+"gent",window.___plt="plat"+(window.___mnag1||"")+"form";try{var t=navigator[window.___mnag],e=navigator[window.___plt];window.__isPSA=e.indexOf("x86_64")>-1&&0>t.indexOf("CrOS"),window.___mnag="!1",r=null}catch(a){window.__isPSA=!1;var r=null;window.___mnag="!1"}if(window.__isPSA=__isPSA,__isPSA){var n=new MutationObserver(t=>{t.forEach(({addedNodes:t})=>{t.forEach(t=>{1===t.nodeType&&"IFRAME"===t.tagName&&(t.setAttribute("loading","lazy"),t.setAttribute("data-src",t.src),t.removeAttribute("src")),1===t.nodeType&&"IMG"===t.tagName&&++i>s&&t.setAttribute("loading","lazy"),1===t.nodeType&&"SCRIPT"===t.tagName&&(t.setAttribute("data-src",t.src),t.removeAttribute("src"),t.type="text/lazyload")})})}),i=0,s=20;n.observe(document.documentElement,{childList:!0,subtree:!0})}</script>

@@ -1,0 +1,32 @@
+  function copyCoupon(couponCode, button) {
+    navigator.clipboard.writeText(couponCode).then(function() {
+      const notification = button.parentElement.querySelector('.copied-notification');
+      notification.classList.add('show');
+      const originalText = button.innerHTML;
+      button.innerHTML = `
+        <svg class="copy-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+        </svg>
+        Copied!
+      `;
+      button.style.background = '#000000';
+      setTimeout(function() {
+        notification.classList.remove('show');
+        button.innerHTML = originalText;
+        button.style.background = '#000000';
+        button.style.color = '#ffffff';
+      }, 2000);
+    }).catch(function(err) {
+      const textArea = document.createElement('textarea');
+      textArea.value = couponCode;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      const notification = button.parentElement.querySelector('.copied-notification');
+      notification.classList.add('show');
+      setTimeout(function() {
+        notification.classList.remove('show');
+      }, 2000);
+    });
+  }

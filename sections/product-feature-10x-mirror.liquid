@@ -1,0 +1,419 @@
+{% comment %}
+  Specifications Section - Modern Design
+  File: sections/product-specifications.liquid
+{% endcomment %}
+
+<style>
+  .specs-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    overflow: hidden;
+  }
+
+  .specs-container {
+   
+    margin: 0 auto;
+  }
+
+  .specs-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .specs-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    letter-spacing: -0.5px;
+  }
+
+  .specs-header p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .specs-grid {
+    display: grid;
+   grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 50px;
+  }
+
+  .spec-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+.spec-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #ffd05a 0%, #F7EFDB 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+  .spec-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+
+  .spec-card:hover::before {
+    transform: scaleX(1);
+  }
+
+.spec-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #bfbfbf 0%, #adadad 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+  .spec-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+  }
+
+  .spec-description {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  .spec-highlight {
+    display: inline-block;
+    background: #f0f4ff;
+    color: #667eea;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+
+  /* Technical Specs Table */
+  .tech-specs {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-top: 30px;
+  }
+
+  .tech-specs h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .specs-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .specs-table tr {
+    border-bottom: 1px solid #e8e8e8;
+  }
+
+  .specs-table tr:last-child {
+    border-bottom: none;
+  }
+
+  .specs-table td {
+    padding: 18px 20px;
+    font-size: 0.95rem;
+  }
+
+  .specs-table td:first-child {
+    font-weight: 600;
+    color: #1a1a1a;
+    width: 40%;
+  }
+
+  .specs-table td:last-child {
+    color: #666;
+  }
+
+  /* Color Options */
+  .color-options1 {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-top: 30px;
+  }
+
+  .color-options1 h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .color-item {
+    text-align: center;
+    padding: 25px;
+    border: 2px solid #e8e8e8;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .color-item:hover {
+    border-color:rgb(238, 182, 42);
+    transform: scale(1.05);
+  }
+
+  .color-swatch1 {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .color-swatch1.nickel {
+    background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
+  }
+
+  .color-swatch1.black {
+    background: linear-gradient(135deg, #434343 0%, #000000 100%);
+  }
+
+  .color-swatch1.chrome {
+    background: linear-gradient(135deg, #e8e8e8 0%, #ffffff 100%);
+    border: 1px solid #ddd;
+  }
+
+  .color-name {
+    font-weight: 600;
+    color: #1a1a1a;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .color-desc {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .specs-section {
+      padding: 40px 15px;
+    }
+
+    .specs-header h2 {
+      font-size: 2rem;
+    }
+
+    .specs-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .tech-specs,
+    .color-options1 {
+      padding: 25px 20px;
+    }
+
+    .specs-table td {
+      padding: 12px 10px;
+      font-size: 0.9rem;
+    }
+
+    .specs-table td:first-child {
+      width: 45%;
+    }
+
+    .color-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .specs-header h2 {
+      font-size: 1.7rem;
+    }
+
+    .spec-card {
+      padding: 25px 20px;
+    }
+
+    .spec-icon {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+    }
+
+    .spec-title {
+      font-size: 1.1rem;
+    }
+
+    .specs-table td:first-child {
+      font-size: 0.85rem;
+    }
+
+    .specs-table td:last-child {
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<section class="specs-section">
+  <div class="specs-container container page-width">
+    
+    <!-- Header -->
+    <div class="specs-header">
+      <h2>{{ section.settings.heading | default: "Premium Features & Specifications" }}</h2>
+      <p>{{ section.settings.subheading | default: "Designed with precision and built to last. Every detail matters." }}</p>
+    </div>
+
+    <!-- Feature Cards Grid -->
+    <div class="specs-grid">
+      
+      <!-- Feature 1: Double-Sided Magnification -->
+      <div class="spec-card">
+        <div class="spec-icon">🔍</div>
+        <h3 class="spec-title">Dual Magnification</h3>
+        <p class="spec-description">
+          Perfect vision with 1X normal view for overall makeup and 10X magnification for precise detail work like eyebrows, eyeliner, and contact lenses.
+        </p>
+        <span class="spec-highlight">1X & 10X Sides</span>
+      </div>
+
+      <!-- Feature 2: Smart Lighting -->
+      <div class="spec-card">
+        <div class="spec-icon">💡</div>
+        <h3 class="spec-title">3-Mode Smart Lighting</h3>
+        <p class="spec-description">
+          Choose from natural daylight, warm ambient, or cool white light. Touch controls with stepless dimming let you customize brightness to perfection.
+        </p>
+        <span class="spec-highlight">Adjustable Brightness</span>
+      </div>
+
+      <!-- Feature 3: Rechargeable Battery -->
+      <div class="spec-card">
+        <div class="spec-icon">🔋</div>
+        <h3 class="spec-title">Long-Lasting Battery</h3>
+        <p class="spec-description">
+          Built-in 2000mAh rechargeable battery with USB Type-C charging. No wire clutter, complete freedom of placement. Auto shut-off after 30 minutes.
+        </p>
+        <span class="spec-highlight">Cordless Design</span>
+      </div>
+
+      <!-- Feature 4: Flexible Positioning -->
+      <div class="spec-card">
+        <div class="spec-icon">🔄</div>
+        <h3 class="spec-title">360° Full Rotation</h3>
+        <p class="spec-description">
+          Extendable metal arm stretches up to 14.7 inches. Smoothly adjust height, angle, and rotation for the perfect viewing position every time.
+        </p>
+        <span class="spec-highlight">Max Extension: 14.7"</span>
+      </div>
+
+      <!-- Feature 5: Premium Build -->
+      <div class="spec-card">
+        <div class="spec-icon">⭐</div>
+        <h3 class="spec-title">Premium Construction</h3>
+        <p class="spec-description">
+          Solid metal arm and high-quality mirror glass ensure durability and stability. Wall-mounted design saves counter space while adding elegance.
+        </p>
+        <span class="spec-highlight">Space-Saving</span>
+      </div>
+
+      <!-- Feature 6: Smart Touch Control -->
+      <div class="spec-card">
+        <div class="spec-icon">👆</div>
+        <h3 class="spec-title">Touch Screen Control</h3>
+        <p class="spec-description">
+          Intuitive touch sensor for easy operation. Single tap to switch light modes, long press to adjust brightness. Responsive and user-friendly.
+        </p>
+        <span class="spec-highlight">Easy Operation</span>
+      </div>
+
+    </div>
+
+    
+
+    <!-- Color Options -->
+    <div class="color-options1">
+      <h3>Available Finishes</h3>
+      <div class="color-grid">
+        
+        <div class="color-item">
+          <div class="color-swatch1 nickel"></div>
+          <div class="color-name">Brushed Nickel</div>
+          <p class="color-desc">Modern versatile finish that complements most bathroom fixtures</p>
+        </div>
+
+        <div class="color-item">
+          <div class="color-swatch1 black"></div>
+          <div class="color-name">Matte Black</div>
+          <p class="color-desc">Contemporary sophistication with a bold statement design</p>
+        </div>
+
+        <div class="color-item">
+          <div class="color-swatch1 chrome"></div>
+          <div class="color-name">Polished Chrome</div>
+          <p class="color-desc">Classic elegance with a highly reflective mirror-like finish</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Spec 10x mirror",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "Premium Features & Specifications"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Section Subheading",
+      "default": "Designed with precision and built to last. Every detail matters."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Spec 10x mirror"
+    }
+  ]
+}
+{% endschema %}

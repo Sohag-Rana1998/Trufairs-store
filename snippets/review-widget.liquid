@@ -1,0 +1,40 @@
+<a href="#judgeme_product_reviews">
+  {%- if product.metafields.reviews.rating.value != blank -%}
+    {% liquid
+      assign rating_obj = product.metafields.reviews.rating.value
+      assign raw_rating = rating_obj.rating | default: 0
+      assign scale_max = rating_obj.scale_max | default: 5
+
+      assign rounded_half = raw_rating | times: 2 | round | divided_by: 2.0
+    %}
+
+    <div class="rating-wrapper">
+      <div
+        class="rating"
+        role="img"
+        aria-label="{{ raw_rating }} out of {{ scale_max }} stars"
+      >
+        <span
+          aria-hidden="true"
+          class="rating-star"
+          style="--rating: {{ rounded_half }}; --rating-max: {{ scale_max }};"
+        ></span>
+      </div>
+
+      <p class="rating-text caption">
+        <span aria-hidden="true">
+          {{- raw_rating }} / {{ scale_max -}}
+        </span>
+      </p>
+
+      <p class="rating-count caption">
+        <span aria-hidden="true">
+          ({{ product.metafields.reviews.rating_count }})
+        </span>
+        <span class="visually-hidden">
+          {{ product.metafields.reviews.rating_count }} total reviews
+        </span>
+      </p>
+    </div>
+  {%- endif -%}
+</a>

@@ -1,0 +1,1630 @@
+ 
+ 
+ 
+    {%- liquid
+  assign access_allowed = false
+  assign required_tag = section.settings.required_tag | strip | downcase
+
+  if section.settings.require_login == false
+    assign access_allowed = true
+  elsif customer
+    if required_tag == blank
+      assign access_allowed = true
+    else
+      for customer_tag in customer.tags
+        assign normalized_customer_tag = customer_tag | strip | downcase
+
+        if normalized_customer_tag == required_tag
+          assign access_allowed = true
+          break
+        endif
+      endfor
+    endif
+  endif
+-%}
+
+{% if access_allowed %}
+   <style>
+  .variant-media-uploader-section .app-container {
+    max-width: {{ section.settings.max_width }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+</style>
+
+<div class="app-container">
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="app-header-icon">🛍️</div>
+    <div>
+      <div class="app-header-title">{{ section.settings.section_title }}</div>
+      <div class="app-header-sub">{{ section.settings.section_subtitle }}</div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon">🔍</span>
+      Search Product
+    </div>
+    <div class="search-row">
+      <input type="text" id="search" placeholder="Enter product name..." />
+      <button class="btn btn-secondary" onclick="searchProduct()">Search</button>
+    </div>
+  </div>
+
+  <!-- PRODUCT & VARIANT -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon">📦</span>
+      Select Product &amp; Variant
+    </div>
+    <div class="field-group">
+      <label>Product</label>
+      <select id="products"></select>
+    </div>
+    <div class="field-group">
+      <label>Variant</label>
+      <select id="variants"></select>
+    </div>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon">📤</span>
+      Upload Media
+    </div>
+
+    <div class="drop-zones-row">
+
+      <!-- IMAGE DROP ZONE -->
+      <div class="drop-zone-wrapper">
+        <div class="drop-zone-label drop-zone-label--images">
+          <span>🖼️</span> Images → Shopify
+        </div>
+        <div id="imageDropZone" class="drop-zone drop-zone--images">
+          <input type="file" id="images" multiple accept="image/*" />
+          <div class="drop-zone-content">
+            <div class="drop-icon">📷</div>
+            <div class="drop-title">Drag &amp; Drop Images</div>
+            <div class="drop-subtitle">JPG, PNG, WebP, GIF, AVIF</div>
+            <div class="drop-file-count" id="selectedImageCount">No files selected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO DROP ZONE -->
+      <div class="drop-zone-wrapper">
+        <div class="drop-zone-label drop-zone-label--videos">
+          <span>🎬</span> Videos → Bunny.net
+        </div>
+        <div id="videoDropZone" class="drop-zone drop-zone--videos">
+          <input type="file" id="videos" multiple accept="video/*" />
+          <div class="drop-zone-content">
+            <div class="drop-icon">🎥</div>
+            <div class="drop-title">Drag &amp; Drop Videos</div>
+            <div class="drop-subtitle">MP4, MOV, WebM, AVI · Serial from filename (e.g. 3-name.mp4)</div>
+            <div class="drop-file-count" id="selectedVideoCount">No files selected</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn btn-primary btn-upload" id="uploadBtn" onclick="uploadAll()">
+      ⬆️ Upload All
+    </button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="card" id="progressSection" style="display:none">
+    <div class="card-title">
+      <span class="card-icon">📊</span>
+      Upload Progress
+    </div>
+
+    <!-- IMAGE PROGRESS -->
+    <div id="imageProgressBlock" class="progress-block" style="display:none">
+      <div class="progress-block-header">
+        <div class="progress-block-title">🖼️ Images</div>
+        <div class="progress-block-pct" id="imageProgressPercent">0%</div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar progress-bar--images" id="imageProgressBar"></div>
+      </div>
+      <div class="status-box status-box--images" id="imageProgressMessage">Waiting...</div>
+    </div>
+
+    <!-- VIDEO PROGRESS -->
+    <div id="videoProgressBlock" class="progress-block" style="display:none">
+      <div class="progress-block-header">
+        <div class="progress-block-title">🎬 Videos</div>
+        <div class="progress-block-pct" id="videoProgressPercent">0%</div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar progress-bar--videos" id="videoProgressBar"></div>
+      </div>
+      <div class="status-box status-box--videos" id="videoProgressMessage">Waiting...</div>
+    </div>
+
+    <div class="log-box" id="logBox"></div>
+  </div>
+
+  <!-- VERIFICATION -->
+  <div class="card" id="verificationCard" style="display:none">
+    <div class="card-title">
+      <span class="card-icon">✅</span>
+      Verification
+    </div>
+    <div class="verify-grid">
+      <div class="verify-item">
+        <div class="verify-label">Variant Media Assigned</div>
+        <div class="verify-value" id="verifyVariantMedia">-</div>
+      </div>
+      <div class="verify-item">
+        <div class="verify-label">Metafield Confirmed</div>
+        <div class="verify-value" id="verifyMetafield">-</div>
+      </div>
+    </div>
+    <div class="verify-url-label">Saved Metafield Value</div>
+    <div class="verify-block" id="verifyMetafieldValue">-</div>
+  </div>
+
+  <!-- MEDIA MANAGEMENT -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon">🗑️</span>
+      Media Management
+    </div>
+    <button class="btn btn-danger" onclick="confirmDeleteMedia()">
+      Delete Existing Media
+    </button>
+  </div>
+
+  <!-- VARIANT URL EDITOR -->
+  <div class="card">
+    <div class="card-title">
+      <span class="card-icon">🧩</span>
+      Variant URL Editor
+    </div>
+
+    <div class="field-group">
+      <label>Current Main Variant Image URL</label>
+      <input type="text" id="currentVariantImageUrl" placeholder="Variant image URL will appear here" readonly />
+    </div>
+
+    <div class="editor-header">
+      <div class="editor-header-title">Metafield URLs (Images &amp; Videos combined)</div>
+      <button class="btn btn-secondary btn-sm" onclick="loadVariantEditorData()">↺ Refresh</button>
+    </div>
+
+    <div id="metafieldUrlFields" class="metafield-fields"></div>
+
+    <div class="editor-actions">
+      <button class="btn btn-primary" onclick="updateMetafieldOnly()">
+        💾 Update Metafield
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast-container"></div>
+
+<style>
+  /* ---- Reset & Base ---- */
+  .app-container * {
+    box-sizing: border-box;
+  }
+
+  .app-container {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 0 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1a1a2e;
+  }
+
+  /* ---- Header ---- */
+  .app-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(15, 52, 96, 0.3);
+  }
+
+  .app-header-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+  }
+
+  .app-header-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  .app-header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* ---- Card ---- */
+  .card {
+    background: #fff;
+    padding: 24px;
+    margin-bottom: 16px;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid #f0f0f5;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-icon {
+    font-size: 18px;
+  }
+
+  /* ---- Forms ---- */
+  .field-group {
+    margin-bottom: 14px;
+  }
+
+  .field-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .app-container label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a4a68;
+    margin-bottom: 6px;
+  }
+
+  .app-container input[type="text"],
+  .app-container select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e0e0ee;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1a1a2e;
+    background: #fafafd;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+
+  .app-container input[type="text"]:focus,
+  .app-container select:focus {
+    border-color: #4361ee;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.12);
+    background: #fff;
+  }
+
+  /* ---- Search row ---- */
+  .search-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .search-row input {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  /* ---- Buttons ---- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+  }
+
+  .btn:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+
+  .btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.25);
+  }
+
+  .btn-secondary {
+    background: linear-gradient(135deg, #1565c0, #1976d2);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(21,101,192,0.25);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #c62828, #e53935);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(198,40,40,0.25);
+  }
+
+  .btn-sm {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .btn-upload {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 12px;
+    margin-top: 4px;
+  }
+
+  /* ---- Drop Zones ---- */
+  .drop-zones-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .drop-zone-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .drop-zone-label {
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .drop-zone-label--images { color: #1565c0; }
+  .drop-zone-label--videos { color: #7c3aed; }
+
+  .drop-zone {
+    position: relative;
+    border: 2px dashed;
+    border-radius: 14px;
+    min-height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .drop-zone--images {
+    border-color: #90caf9;
+    background: linear-gradient(145deg, #f8fbff, #eff6ff);
+  }
+
+  .drop-zone--images.dragover {
+    background: #dbeafe;
+    border-color: #1565c0;
+    box-shadow: 0 0 0 4px rgba(21,101,192,0.12);
+  }
+
+  .drop-zone--videos {
+    border-color: #c4b5fd;
+    background: linear-gradient(145deg, #fdf8ff, #f5f0ff);
+  }
+
+  .drop-zone--videos.dragover {
+    background: #ede9fe;
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 4px rgba(124,58,237,0.12);
+  }
+
+  .drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .drop-zone-content {
+    text-align: center;
+    pointer-events: none;
+    padding: 20px;
+  }
+
+  .drop-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  .drop-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #1f2937;
+  }
+
+  .drop-subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  .drop-file-count {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .drop-zone--images .drop-file-count { color: #1565c0; }
+  .drop-zone--videos .drop-file-count { color: #7c3aed; }
+
+  /* ---- Progress ---- */
+  .progress-block {
+    background: #fafafa;
+    border: 1px solid #efefef;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+
+  .progress-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .progress-block-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+
+  .progress-block-pct {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .progress-wrap {
+    width: 100%;
+    height: 10px;
+    background: #e8e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    width: 0%;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-bar--images {
+    background: linear-gradient(90deg, #1565c0, #42a5f5);
+  }
+
+  .progress-bar--videos {
+    background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  }
+
+  #imageProgressBlock .progress-block-pct { color: #1565c0; }
+  #videoProgressBlock .progress-block-pct { color: #7c3aed; }
+
+  .status-box {
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    line-height: 1.4;
+  }
+
+  .status-box--images {
+    background: #eff6ff;
+    color: #1565c0;
+    border: 1px solid #bfdbfe;
+  }
+
+  .status-box--videos {
+    background: #f5f3ff;
+    color: #6d28d9;
+    border: 1px solid #ddd6fe;
+  }
+
+  .log-box {
+    max-height: 180px;
+    overflow-y: auto;
+    border: 1px solid #efefef;
+    border-radius: 10px;
+    background: #fcfcfc;
+    padding: 10px 12px;
+    margin-top: 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    font-family: "SFMono-Regular", Consolas, monospace;
+  }
+
+  .log-item {
+    padding: 3px 0;
+    border-bottom: 1px dashed #eee;
+    color: #555;
+  }
+
+  .log-item:last-child { border-bottom: none; }
+
+  .log-item--image { color: #1565c0; }
+  .log-item--video { color: #7c3aed; }
+  .log-item--error { color: #c62828; }
+
+  /* ---- Verification ---- */
+  .verify-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .verify-item {
+    background: #f9f9fd;
+    border: 1px solid #ececf5;
+    border-radius: 10px;
+    padding: 14px;
+  }
+
+  .verify-label {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .verify-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+
+  .verify-url-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a4a68;
+    margin-bottom: 6px;
+  }
+
+  .verify-block {
+    padding: 12px;
+    background: #f7f9fb;
+    border-radius: 8px;
+    border: 1px solid #e3e7ec;
+    word-break: break-all;
+    font-size: 12px;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    color: #374151;
+    max-height: 100px;
+    overflow-y: auto;
+  }
+
+  /* ---- URL Editor ---- */
+  .editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 6px 0 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f5;
+  }
+
+  .editor-header-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #4a4a68;
+  }
+
+  .metafield-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .url-row {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .url-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #4361ee, #7c3aed);
+    border-radius: 8px;
+    padding: 5px 8px;
+    white-space: nowrap;
+  }
+
+  .metafield-url-input {
+    padding: 9px 12px !important;
+    font-size: 13px !important;
+    font-family: "SFMono-Regular", Consolas, monospace;
+    border-color: #e0e0ee !important;
+    background: #fafafd !important;
+    margin-bottom: 0 !important;
+  }
+
+  .editor-actions {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f5;
+  }
+
+  /* ---- Toast ---- */
+  #toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toast {
+    padding: 13px 18px;
+    border-radius: 10px;
+    color: #fff;
+    min-width: 260px;
+    max-width: 380px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+    font-size: 14px;
+    font-weight: 500;
+    animation: toastIn 0.25s ease;
+    line-height: 1.4;
+  }
+
+  .toast.success { background: linear-gradient(135deg, #2e7d32, #43a047); }
+  .toast.error   { background: linear-gradient(135deg, #c62828, #e53935); }
+  .toast.info    { background: linear-gradient(135deg, #1565c0, #1976d2); }
+  .toast.warning { background: linear-gradient(135deg, #e65100, #ef6c00); }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 680px) {
+    .app-container { margin: 16px auto; }
+
+    .app-header { padding: 18px; }
+    .app-header-title { font-size: 18px; }
+
+    .drop-zones-row { grid-template-columns: 1fr; }
+    .verify-grid { grid-template-columns: 1fr; }
+
+    .url-row { grid-template-columns: 70px 1fr; }
+
+    .editor-header { flex-direction: column; align-items: flex-start; }
+
+    .search-row { flex-direction: column; }
+  }
+</style>
+
+<script>
+  const API = {{ section.settings.api_url | default: 'http://localhost:5000' | json }};
+
+  // SSE listeners
+  let imageEventSource = null;
+  let videoEventSource = null;
+
+  // Pending serial results for merge (null = still in progress, [] = done/skipped)
+  let pendingImageSerials = null;
+  let pendingVideoSerials = null;
+  let uploadAllDone = false; // prevents double-fire if both SSE and XHR fallback resolve
+
+  /* ---- Toast ---- */
+  function showToast(message, type = "info") {
+    const container = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.innerText = message;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+
+  /* ---- Upload button ---- */
+  function setUploadButtonState(disabled) {
+    document.getElementById("uploadBtn").disabled = disabled;
+  }
+
+  /* ---- Log ---- */
+  function addLog(message, type = "") {
+    const logBox = document.getElementById("logBox");
+    const item = document.createElement("div");
+    item.className = `log-item${type ? " log-item--" + type : ""}`;
+    const time = new Date().toLocaleTimeString();
+    item.textContent = `[${time}] ${message}`;
+    logBox.prepend(item);
+  }
+
+  /* ---- XSS-safe HTML escape ---- */
+  function escapeHtml(str) {
+    return String(str || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  /* ---- Serial extraction ---- */
+  function extractFileNumber(filename) {
+    const base = String(filename || "").split("/").pop();
+    const match = base.match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
+  }
+
+  // Video: first integer before first "-"
+  function extractVideoSerial(filename) {
+    const base = String(filename || "").split(/[\/\\]/).pop().replace(/\.[^/.]+$/, "");
+    const beforeDash = base.split("-")[0];
+    const match = beforeDash.match(/^(\d+)/);
+    return match ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
+  }
+
+  /* ---- UUID ---- */
+  function generateUploadId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "upload_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+  }
+
+  /* ---- File count display ---- */
+  function updateSelectedImageCount() {
+    const files = document.getElementById("images").files;
+    const el = document.getElementById("selectedImageCount");
+    el.textContent = files && files.length
+      ? `${files.length} file(s) selected`
+      : "No files selected";
+  }
+
+  function updateSelectedVideoCount() {
+    const files = document.getElementById("videos").files;
+    const el = document.getElementById("selectedVideoCount");
+    el.textContent = files && files.length
+      ? `${files.length} file(s) selected`
+      : "No files selected";
+  }
+
+  /* ---- Progress UI ---- */
+  function setImageProgress(percent, message) {
+    document.getElementById("imageProgressBar").style.width = `${Math.max(0, Math.min(100, percent))}%`;
+    document.getElementById("imageProgressPercent").textContent = `${Math.round(percent)}%`;
+    if (message !== undefined) {
+      document.getElementById("imageProgressMessage").textContent = message;
+    }
+  }
+
+  function setVideoProgress(percent, message) {
+    document.getElementById("videoProgressBar").style.width = `${Math.max(0, Math.min(100, percent))}%`;
+    document.getElementById("videoProgressPercent").textContent = `${Math.round(percent)}%`;
+    if (message !== undefined) {
+      document.getElementById("videoProgressMessage").textContent = message;
+    }
+  }
+
+  /* ---- SSE listeners ---- */
+  function closeImageProgressListener() {
+    if (imageEventSource) { imageEventSource.close(); imageEventSource = null; }
+  }
+
+  function closeVideoProgressListener() {
+    if (videoEventSource) { videoEventSource.close(); videoEventSource = null; }
+  }
+
+  function startImageProgressListener(uploadId) {
+    closeImageProgressListener();
+    imageEventSource = new EventSource(`${API}/progress/${encodeURIComponent(uploadId)}`);
+
+    imageEventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        setImageProgress(data.percent || 0, data.message || "");
+        if (data.message) addLog(`[Images] ${data.message}`, "image");
+
+        if (data.done) {
+          closeImageProgressListener();
+
+          if (data.error) {
+            showToast(`Image upload failed: ${data.message}`, "error");
+            pendingImageSerials = [];
+          } else {
+            const serials = (data.meta?.imageSerialFields || [])
+              .filter(s => s.serial !== undefined && s.url)
+              .map(s => ({ serial: Number(s.serial), url: s.url, type: "image" }));
+            pendingImageSerials = serials;
+            showToast(`Images uploaded (${serials.length} file(s))`, "success");
+
+            // Update verification panel
+            if (data.meta) {
+              document.getElementById("verificationCard").style.display = "block";
+              document.getElementById("verifyVariantMedia").textContent =
+                data.meta.variantMediaConfirmed === true ? "✅ Yes" :
+                data.meta.variantMediaConfirmed === false ? "❌ No" : "-";
+              document.getElementById("verifyMetafield").textContent =
+                data.meta.metafieldConfirmed === true ? "✅ Yes" :
+                data.meta.metafieldConfirmed === false ? "❌ No" : "-";
+              document.getElementById("verifyMetafieldValue").textContent =
+                data.meta.confirmedValue || data.meta.metafieldValue || "-";
+            }
+          }
+
+          checkBothDone();
+        }
+      } catch (err) {
+        console.error("Image SSE parse error:", err);
+      }
+    };
+
+    imageEventSource.onerror = () => console.warn("Image SSE interrupted");
+  }
+
+  function startVideoProgressListener(videoUploadId) {
+    closeVideoProgressListener();
+    videoEventSource = new EventSource(`${API}/progress/${encodeURIComponent(videoUploadId)}`);
+
+    videoEventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        setVideoProgress(data.percent || 0, data.message || "");
+        if (data.message) addLog(`[Videos] ${data.message}`, "video");
+
+        if (data.done) {
+          closeVideoProgressListener();
+
+          if (data.error) {
+            showToast(`Video upload failed: ${data.message}`, "error");
+            pendingVideoSerials = [];
+          } else {
+            const videos = data.meta?.videos || [];
+            const serials = videos
+              .filter(v => v.hasSerial && v.url)
+              .map(v => ({ serial: Number(v.serial), url: v.url, type: "video" }));
+            pendingVideoSerials = serials;
+
+            const noSerial = videos.filter(v => !v.hasSerial).length;
+            if (noSerial) {
+              showToast(`${noSerial} video(s) have no serial number before "-" — skipped from serial ordering`, "warning");
+            }
+            showToast(`Videos uploaded to Bunny.net (${serials.length} serialised)`, "success");
+          }
+
+          checkBothDone();
+        }
+      } catch (err) {
+        console.error("Video SSE parse error:", err);
+      }
+    };
+
+    videoEventSource.onerror = () => console.warn("Video SSE interrupted");
+  }
+
+  /* ---- Merge serial results (videos take priority at collision) ---- */
+  function mergeSerialResults(imageSerials, videoSerials) {
+    const merged = new Map();
+
+    // Images first (lower priority)
+    for (const item of (imageSerials || [])) {
+      if (item.serial !== Number.MAX_SAFE_INTEGER && item.url) {
+        merged.set(item.serial, item);
+      }
+    }
+
+    // Videos override images at same serial
+    for (const item of (videoSerials || [])) {
+      if (item.serial !== Number.MAX_SAFE_INTEGER && item.url) {
+        merged.set(item.serial, item);
+      }
+    }
+
+    return [...merged.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([, item]) => item);
+  }
+
+  /* ---- Check if both uploads finished; then merge + render ---- */
+  function checkBothDone() {
+    if (uploadAllDone) return;
+    if (pendingImageSerials === null || pendingVideoSerials === null) return;
+
+    uploadAllDone = true;
+
+    const merged = mergeSerialResults(pendingImageSerials, pendingVideoSerials);
+    const serialFields = merged.map(item => ({ serial: item.serial, url: item.url }));
+    renderMetafieldFields(serialFields);
+
+    setUploadButtonState(false);
+
+    if (merged.length > 0) {
+      showToast("All uploads complete — review URLs below before saving", "success");
+    }
+  }
+
+  /* ---- Render URL editor fields (dynamic, not fixed 10) ---- */
+  function renderMetafieldFields(serialFields = [], extraEmptySlots = 3) {
+    const container = document.getElementById("metafieldUrlFields");
+    container.innerHTML = "";
+
+    const fieldMap = new Map();
+    serialFields.forEach(item => {
+      fieldMap.set(Number(item.serial), item.url || "");
+    });
+
+    const maxSerial = serialFields.length > 0
+      ? Math.max(...serialFields.map(f => Number(f.serial)))
+      : 0;
+
+    const totalSlots = Math.min(Math.max(maxSerial, 1) + extraEmptySlots, 100);
+
+    for (let i = 1; i <= totalSlots; i++) {
+      const row = document.createElement("div");
+      row.className = "url-row";
+      row.innerHTML = `
+        <div class="url-badge">No.${i}</div>
+        <input
+          type="text"
+          class="metafield-url-input"
+          data-serial="${i}"
+          placeholder="Image or video URL for position ${i}"
+          value="${escapeHtml(fieldMap.get(i) || "")}"
+        />
+      `;
+      container.appendChild(row);
+    }
+  }
+
+  /* ---- Reset UI ---- */
+  function resetProgressUI(clearFiles = false) {
+    document.getElementById("progressSection").style.display = "none";
+    document.getElementById("imageProgressBlock").style.display = "none";
+    document.getElementById("videoProgressBlock").style.display = "none";
+    document.getElementById("verificationCard").style.display = "none";
+
+    setImageProgress(0, "Waiting...");
+    setVideoProgress(0, "Waiting...");
+    document.getElementById("logBox").innerHTML = "";
+    document.getElementById("verifyVariantMedia").textContent = "-";
+    document.getElementById("verifyMetafield").textContent = "-";
+    document.getElementById("verifyMetafieldValue").textContent = "-";
+
+    if (clearFiles) {
+      document.getElementById("images").value = "";
+      document.getElementById("videos").value = "";
+      updateSelectedImageCount();
+      updateSelectedVideoCount();
+    }
+
+    setUploadButtonState(false);
+    closeImageProgressListener();
+    closeVideoProgressListener();
+    uploadAllDone = false;
+    pendingImageSerials = null;
+    pendingVideoSerials = null;
+  }
+
+  /* ---- Product search ---- */
+  async function searchProduct() {
+    const q = document.getElementById("search").value.trim();
+    if (!q) { showToast("Please enter a search term", "error"); return; }
+
+    showToast("Searching products...", "info");
+
+    try {
+      const res = await fetch(`${API}/products?q=${encodeURIComponent(q)}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+      const productSelect = document.getElementById("products");
+      const variantSelect = document.getElementById("variants");
+
+      productSelect.innerHTML = "";
+      variantSelect.innerHTML = "";
+
+      if (!data.success || !Array.isArray(data.products) || !data.products.length) {
+        resetProgressUI(true);
+        document.getElementById("currentVariantImageUrl").value = "";
+        renderMetafieldFields([]);
+        showToast("No products found", "error");
+        return;
+      }
+
+      data.products.forEach(product => {
+        const option = document.createElement("option");
+        option.value = product.id;
+        option.textContent = product.title;
+        option.dataset.variants = JSON.stringify(product.variants?.edges || []);
+        productSelect.appendChild(option);
+      });
+
+      resetProgressUI(true);
+      loadVariants();
+      await loadVariantEditorData();
+      showToast(`${data.products.length} product(s) found`, "success");
+    } catch (err) {
+      console.error("Search error:", err);
+      showToast("Failed to fetch products", "error");
+    }
+  }
+
+  /* ---- Load variants dropdown ---- */
+  function loadVariants() {
+    const product = document.getElementById("products").selectedOptions[0];
+    if (!product) return;
+
+    const variants = JSON.parse(product.dataset.variants || "[]");
+    const variantSelect = document.getElementById("variants");
+    variantSelect.innerHTML = "";
+
+    if (!variants.length) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "No variants found";
+      variantSelect.appendChild(option);
+      return;
+    }
+
+    variants.forEach(v => {
+      const option = document.createElement("option");
+      option.value = v.node.id;
+      option.textContent = v.node.title;
+      variantSelect.appendChild(option);
+    });
+  }
+
+  /* ---- Delete media ---- */
+  function confirmDeleteMedia() {
+    const confirmed = confirm(
+      "Are you sure you want to delete the existing Shopify media? This action cannot be undone."
+    );
+    if (confirmed) deleteMedia();
+  }
+
+  async function deleteMedia() {
+    const productId = document.getElementById("products").value;
+    const variantId = document.getElementById("variants").value;
+
+    if (!productId) { showToast("Select a product first", "error"); return; }
+
+    showToast("Deleting media...", "info");
+
+    try {
+      const res = await fetch(`${API}/delete-media`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, variantId }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.details || data.error || "Delete failed");
+
+      showToast(`Deleted ${data.deletedCount || 0} media item(s)`, "success");
+      resetProgressUI(true);
+      await loadVariantEditorData();
+    } catch (err) {
+      console.error("Delete media error:", err);
+      showToast(err.message || "Failed to delete media", "error");
+    }
+  }
+
+  /* ---- Image XHR upload ---- */
+  function doImageUpload(uploadId, productId, variantId, files) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append("uploadId", uploadId);
+      formData.append("productId", productId);
+      formData.append("variantId", variantId);
+      for (const file of files) formData.append("images", file);
+
+      addLog("Image upload started...", "image");
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `${API}/upload`);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
+          setImageProgress(pct * 0.35, `Uploading images from browser... ${pct}%`);
+        }
+      };
+
+      xhr.onload = () => {
+        let data = {};
+        try { data = JSON.parse(xhr.responseText || "{}"); } catch {}
+        if (xhr.status >= 200 && xhr.status < 300 && data.success) {
+          // Fallback: populate serials from XHR response if SSE hasn't done it yet
+          if (pendingImageSerials === null) {
+            pendingImageSerials = (data.imageSerialFields || [])
+              .filter(s => s.url)
+              .map(s => ({ serial: Number(s.serial), url: s.url, type: "image" }));
+            checkBothDone();
+          }
+          resolve(data);
+        } else {
+          const msg = data.details || data.error || "Image upload error";
+          addLog(`Image upload failed: ${msg}`, "error");
+          if (pendingImageSerials === null) { pendingImageSerials = []; checkBothDone(); }
+          reject(new Error(msg));
+        }
+      };
+
+      xhr.onerror = () => {
+        addLog("Image upload: network error", "error");
+        if (pendingImageSerials === null) { pendingImageSerials = []; checkBothDone(); }
+        reject(new Error("Network error during image upload"));
+      };
+
+      xhr.send(formData);
+    });
+  }
+
+  /* ---- Video XHR upload ---- */
+  function doVideoUpload(videoUploadId, files) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append("videoUploadId", videoUploadId);
+      for (const file of files) formData.append("videos", file);
+
+      addLog("Video upload started...", "video");
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `${API}/upload-videos`);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
+          setVideoProgress(pct * 0.35, `Uploading videos from browser... ${pct}%`);
+        }
+      };
+
+      xhr.onload = () => {
+        let data = {};
+        try { data = JSON.parse(xhr.responseText || "{}"); } catch {}
+        if (xhr.status >= 200 && xhr.status < 300 && data.success) {
+          // Fallback: populate serials from XHR response if SSE hasn't done it yet
+          if (pendingVideoSerials === null) {
+            pendingVideoSerials = (data.videos || [])
+              .filter(v => v.hasSerial && v.url)
+              .map(v => ({ serial: Number(v.serial), url: v.url, type: "video" }));
+            checkBothDone();
+          }
+          resolve(data);
+        } else {
+          const msg = data.details || data.error || "Video upload error";
+          addLog(`Video upload failed: ${msg}`, "error");
+          if (pendingVideoSerials === null) { pendingVideoSerials = []; checkBothDone(); }
+          reject(new Error(msg));
+        }
+      };
+
+      xhr.onerror = () => {
+        addLog("Video upload: network error", "error");
+        if (pendingVideoSerials === null) { pendingVideoSerials = []; checkBothDone(); }
+        reject(new Error("Network error during video upload"));
+      };
+
+      xhr.send(formData);
+    });
+  }
+
+  /* ---- Main upload orchestrator ---- */
+  function uploadAll() {
+    const imageFiles = document.getElementById("images").files;
+    const videoFiles = document.getElementById("videos").files;
+    const productId = document.getElementById("products").value;
+    const variantId = document.getElementById("variants").value;
+
+    if (!productId) { showToast("Select a product first", "error"); return; }
+    if (!variantId) { showToast("Select a variant first", "error"); return; }
+    if (!imageFiles.length && !videoFiles.length) {
+      showToast("Select at least one image or video to upload", "error");
+      return;
+    }
+
+    // Reset state for new upload
+    uploadAllDone = false;
+    pendingImageSerials = imageFiles.length ? null : [];
+    pendingVideoSerials = videoFiles.length ? null : [];
+
+    setUploadButtonState(true);
+
+    // Show progress section
+    const progressSection = document.getElementById("progressSection");
+    progressSection.style.display = "block";
+    document.getElementById("logBox").innerHTML = "";
+
+    const imageBlock = document.getElementById("imageProgressBlock");
+    const videoBlock = document.getElementById("videoProgressBlock");
+
+    if (imageFiles.length) {
+      imageBlock.style.display = "block";
+      setImageProgress(0, "Starting...");
+    } else {
+      imageBlock.style.display = "none";
+    }
+
+    if (videoFiles.length) {
+      videoBlock.style.display = "block";
+      setVideoProgress(0, "Starting...");
+    } else {
+      videoBlock.style.display = "none";
+    }
+
+    // Fire both uploads simultaneously
+    if (imageFiles.length) {
+      const uploadId = generateUploadId();
+      startImageProgressListener(uploadId);
+      doImageUpload(uploadId, productId, variantId, imageFiles).catch(err => {
+        // SSE done handler will set pendingImageSerials = [] and call checkBothDone
+        console.error("Image upload XHR error:", err.message);
+        // Fallback: if SSE never fires a done event, force resolve
+        if (pendingImageSerials === null) {
+          pendingImageSerials = [];
+          checkBothDone();
+        }
+      });
+    }
+
+    if (videoFiles.length) {
+      const videoUploadId = generateUploadId();
+      startVideoProgressListener(videoUploadId);
+      doVideoUpload(videoUploadId, videoFiles).catch(err => {
+        console.error("Video upload XHR error:", err.message);
+        if (pendingVideoSerials === null) {
+          pendingVideoSerials = [];
+          checkBothDone();
+        }
+      });
+    }
+  }
+
+  /* ---- Load variant editor data (on variant change / refresh) ---- */
+  async function loadVariantEditorData() {
+    const variantId = document.getElementById("variants").value;
+
+    if (!variantId) {
+      document.getElementById("currentVariantImageUrl").value = "";
+      renderMetafieldFields([]);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/variant-editor-data?variantId=${encodeURIComponent(variantId)}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.details || data.error || "Failed to load variant editor data");
+      }
+
+      document.getElementById("currentVariantImageUrl").value =
+        data.currentVariantImageUrl || "";
+
+      renderMetafieldFields(data.serialFields || []);
+    } catch (err) {
+      console.error("Variant editor data error:", err);
+      showToast(err.message || "Failed to load variant URLs", "error");
+    }
+  }
+
+  /* ---- Update metafield only ---- */
+  async function updateMetafieldOnly() {
+    const variantId = document.getElementById("variants").value;
+    if (!variantId) { showToast("Select a variant first", "error"); return; }
+
+    const inputs = [...document.querySelectorAll(".metafield-url-input")];
+    const urls = inputs
+      .sort((a, b) => Number(a.dataset.serial) - Number(b.dataset.serial))
+      .map(input => input.value.trim())
+      .filter(Boolean);
+
+    try {
+      const res = await fetch(`${API}/update-variant-metafield`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ variantId, urls }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.details || data.error || "Failed to update metafield");
+
+      document.getElementById("verificationCard").style.display = "block";
+      document.getElementById("verifyMetafield").textContent =
+        data.metafieldConfirmed ? "✅ Yes" : "❌ No";
+      document.getElementById("verifyMetafieldValue").textContent =
+        data.confirmedValue || data.metafieldValue || "-";
+
+      renderMetafieldFields(data.serialFields || []);
+      showToast("Metafield updated successfully", "success");
+    } catch (err) {
+      console.error("Update metafield error:", err);
+      showToast(err.message || "Failed to update metafield", "error");
+    }
+  }
+
+  /* ---- Event listeners ---- */
+  document.getElementById("products").addEventListener("change", async () => {
+    resetProgressUI(true);
+    loadVariants();
+    await loadVariantEditorData();
+  });
+
+  document.getElementById("variants").addEventListener("change", async () => {
+    resetProgressUI(true);
+    await loadVariantEditorData();
+  });
+
+  // Image drop zone
+  const imageDropZone = document.getElementById("imageDropZone");
+  const imageInput = document.getElementById("images");
+
+  ["dragenter", "dragover"].forEach(evt => {
+    imageDropZone.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation();
+      imageDropZone.classList.add("dragover");
+    });
+  });
+  ["dragleave", "drop"].forEach(evt => {
+    imageDropZone.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation();
+      imageDropZone.classList.remove("dragover");
+    });
+  });
+  imageDropZone.addEventListener("drop", e => {
+    const files = e.dataTransfer.files;
+    if (files && files.length) {
+      imageInput.files = files;
+      updateSelectedImageCount();
+    }
+  });
+  imageInput.addEventListener("change", updateSelectedImageCount);
+
+  // Video drop zone
+  const videoDropZone = document.getElementById("videoDropZone");
+  const videoInput = document.getElementById("videos");
+
+  ["dragenter", "dragover"].forEach(evt => {
+    videoDropZone.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation();
+      videoDropZone.classList.add("dragover");
+    });
+  });
+  ["dragleave", "drop"].forEach(evt => {
+    videoDropZone.addEventListener(evt, e => {
+      e.preventDefault(); e.stopPropagation();
+      videoDropZone.classList.remove("dragover");
+    });
+  });
+  videoDropZone.addEventListener("drop", e => {
+    const files = e.dataTransfer.files;
+    if (files && files.length) {
+      videoInput.files = files;
+      updateSelectedVideoCount();
+    }
+  });
+  videoInput.addEventListener("change", updateSelectedVideoCount);
+
+  // Init
+  renderMetafieldFields([]);
+  resetProgressUI(true);
+</script>
+ 
+
+
+{% else %}
+
+  {% if customer %}
+    <style>
+      .variant-media-uploader-section .app-container {
+        max-width: {{ section.settings.max_width }}px;
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+
+      .variant-media-uploader-access-card {
+        max-width: 680px;
+        margin: 40px auto;
+        padding: 28px;
+        background: #ffffff;
+        border: 1px solid #f0f0f5;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #1a1a2e;
+        text-align: center;
+      }
+
+      .variant-media-uploader-access-card h2 {
+        margin: 0 0 12px;
+        font-size: 24px;
+        line-height: 1.25;
+      }
+
+      .variant-media-uploader-access-card p {
+        margin: 0 0 12px;
+        color: #4a4a68;
+        line-height: 1.6;
+      }
+
+      .variant-media-uploader-access-card a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        padding: 11px 18px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #1565c0, #1976d2);
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    </style>
+
+    <div class="app-container">
+      <div class="variant-media-uploader-access-card">
+        <h2>Access Pending</h2>
+        <p>
+          Your account is logged in, but it does not currently have permission
+          to access this page.
+        </p>
+
+        {% if section.settings.required_tag != blank %}
+          <p>
+            Required customer tag:
+            <strong>{{ section.settings.required_tag | escape }}</strong>
+          </p>
+        {% endif %}
+
+        <a href="{{ routes.account_url }}">Return to My Account</a>
+      </div>
+    </div>
+  {% else %}
+    <script>
+      window.location.replace(
+        {{ routes.account_login_url | append: '?return_url=' | append: request.path | json }}
+      );
+    </script>
+  {% endif %}
+
+{% endif %}
+ 
+
+
+
+ 
+
+{% schema %}
+{
+  "name": "Variant Media Uploader",
+  "tag": "section",
+  "class": "variant-media-uploader-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "API Configuration"
+    },
+    {
+      "type": "text",
+      "id": "api_url",
+      "label": "API Base URL",
+      "default": "https://variant-image-uploader-trufairs.vercel.app",
+      "info": "The base URL of your upload server. No trailing slash."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Variant Media Uploader"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "Upload images to Shopify · Upload videos to Bunny.net"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max Width (px)",
+      "min": 600,
+      "max": 1400,
+      "step": 20,
+      "default": 960
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Access Control"
+    },
+    {
+      "type": "checkbox",
+      "id": "require_login",
+      "label": "Require customer to be logged in",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "required_tag",
+      "label": "Required customer tag (leave blank to allow all logged-in customers)",
+      "default": "approved",
+      "info": "Customer must have this tag to access the uploader. Leave blank to allow any logged-in customer."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Variant Media Uploader"
+    }
+  ]
+}
+{% endschema %}

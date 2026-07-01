@@ -1,0 +1,389 @@
+{% comment %}
+  ULTRA LCP OPTIMIZED HERO (PICTURE VERSION)
+  - Mobile image = LCP
+  - Desktop image loaded only on desktop
+  - No double download
+{% endcomment %}
+
+{% if request.page_type == 'index' and section.settings.mobile_background_image != blank %}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ section.settings.mobile_background_image | image_url: width: 750, format: 'webp' }}"
+    fetchpriority="high">
+{% endif %}
+
+<style>
+.hero-banner-section {
+  position: relative;
+  width: 100%;
+  background: #111;
+}
+
+.hero-banner-wrapper {
+  position: relative;
+  min-height: {{ section.settings.mobile_height }}vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.hero-bg-picture,
+.hero-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-bg-image {
+  object-fit: cover;
+  z-index: 1;
+}
+
+.hero-headline {
+  font-weight: 700;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.3),
+    rgba(0,0,0,.6)
+  );
+  z-index: 2;
+}
+
+.hero-content-container {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    gap: 33px;
+}
+
+.hero-headline {
+  font-size: clamp(32px, 4vw, 52px);
+  color: #fff;
+  margin-bottom: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+.hero-pre-headline,
+.hero-subheadline {
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+.hero-subheadline {
+  font-size: 20px;
+  margin-bottom: 28px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-cta-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 14px 32px;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  transition: .2s;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  width: auto;
+  max-width: max-content;
+}
+
+.btn-primary {
+  background: #E0C081;
+  color: #000000;
+}
+
+.btn-secondary {
+  border: 2px solid #fff;
+  color: #fff;
+}
+
+/* Feature icons row */
+.hero-feature-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 28px 18px;
+  color: #fff;
+}
+
+.hero-feature-row::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(1100px, 92vw);
+  height: 130px;
+  transform: translateX(-50%);
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.48) 42%,
+    rgba(0, 0, 0, 0) 78%
+  );
+  pointer-events: none;
+}
+
+.hero-feature-item {
+  display: flex;
+  flex-direction: column ;
+  align-items: center;
+  gap: 9px;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+.hero-feature-title {
+  font-size: 17px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 4px 8px rgba(0,0,0,.65);
+}
+
+.hero-feature-icon {
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,.6));
+}
+
+.hero-feature-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .hero-subheadline {
+    font-size: 24px;
+  }
+
+  .hero-banner-wrapper {
+    min-height: {{ section.settings.desktop_height }}vh;
+  }
+
+  .hero-cta-wrapper {
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .hero-content {
+    max-width: 60%;
+  }
+
+  .btn-primary:hover {
+    background: #000;
+    color: #fff;
+  }
+
+  .btn-secondary:hover {
+    background: #c9b896;
+    color: #000;
+  }
+}
+
+.hero-pre-headline,
+.hero-headline,
+.hero-subheadline {
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  text-shadow: 0 5px 10px rgba(0, 0, 0, {{ section.settings.text_shadow_opacity | divided_by: 100.0 }});
+}
+
+.hero-content-container::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    ellipse at center,
+    var(--bg, #0f172a) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 767px) {
+.hero-feature-item {
+  flex-direction: column-reverse;
+}
+
+  .hero-feature-row {
+    bottom: 18px;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 18px 20px 12px;
+  }
+
+  .hero-feature-row::before {
+    height: 220px;
+  }
+
+  .hero-feature-title {
+    font-size: 15px;
+  }
+
+  .hero-feature-icon {
+    width: 26px;
+    height: 26px;
+  }
+}
+</style>
+
+<div class="hero-banner-section" data-section-id="{{ section.id }}">
+  <div class="hero-banner-wrapper">
+
+    <!-- LCP SAFE HERO IMAGE -->
+    <picture class="hero-bg-picture">
+      {% if section.settings.background_image != blank %}
+        <source
+          media="(min-width: 1024px)"
+          srcset="{{ section.settings.background_image | image_url: width: 1920, format: 'webp' }}"
+        >
+      {% endif %}
+
+      <img
+        class="hero-bg-image"
+        src="{{ section.settings.mobile_background_image | default: section.settings.background_image | image_url: width: 750, format: 'webp' }}"
+        alt="{{ section.settings.main_headline | escape }}"
+        fetchpriority="high"
+        width="{{ section.settings.mobile_background_image.width | default: section.settings.background_image.width }}"
+        height="{{ section.settings.mobile_background_image.height | default: section.settings.background_image.height }}"
+      >
+    </picture>
+
+    {% if section.settings.overlay_opacity > 0 %}
+      <div class="hero-overlay" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+    {% endif %}
+
+    <div class="hero-content-container">
+      <div class="hero-content">
+
+        {% if section.settings.pre_headline != blank %}
+          <p class="hero-pre-headline">{{ section.settings.pre_headline }}</p>
+        {% endif %}
+
+        {% if section.settings.main_headline != blank %}
+          <h2 class="hero-headline">{{ section.settings.main_headline }}</h2>
+        {% endif %}
+
+        {% if section.settings.subheadline != blank %}
+          <p class="hero-subheadline">{{ section.settings.subheadline }}</p>
+        {% endif %}
+
+        <div class="hero-cta-wrapper">
+          {% if section.settings.primary_button_text != blank %}
+            <a href="{{ section.settings.primary_button_url }}" class="btn-primary">
+              {{ section.settings.primary_button_text }}
+            </a>
+          {% endif %}
+
+          {% if section.settings.secondary_button_text != blank %}
+            <a href="{{ section.settings.secondary_button_url }}" class="btn-secondary">
+              {{ section.settings.secondary_button_text }}
+            </a>
+          {% endif %}
+        </div>
+
+      </div>
+      
+    <div class="hero-feature-row">
+      <div class="hero-feature-item">
+        <div class="hero-feature-title">Tested. Compared. Verified.</div>
+        <div class="hero-feature-icon" aria-hidden="true">
+      <img title="This item is trufairs verified" class="verified-white-logo" style="max-width:35px;" src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Untitled_design_6_c3c5f4d4-9a3b-4340-a9cc-cdfb2c4c7bd2.png?v=1776979310" height="35" width="35" alt="">
+        </div>
+      </div>
+
+      <div class="hero-feature-item">
+        <div class="hero-feature-title">Real-Use Tested</div>
+        <div class="hero-feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M8 3h8l2 2v16H6V5l2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M9 8h6M9 12h6M9 16h3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <path d="M15.5 15.5l1.3 1.3 2.8-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="hero-feature-item">
+        <div class="hero-feature-title">30-day Hassle-Free Returns</div>
+        <div class="hero-feature-icon" aria-hidden="true">
+<svg id="Icons" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="#ffffff">
+  <path d="m98 50c0 26.467-21.533 48-48 48s-48-21.533-48-48c0-1.658 1.342-3 3-3s3 1.342 3 3c0 23.159 18.841 42 42 42s42-18.841 42-42-18.841-42-42-42c-11.163 0-21.526 4.339-29.322 12h11.322c1.658 0 3 1.342 3 3s-1.342 3-3 3h-18c-1.658 0-3-1.342-3-3v-18c0-1.658 1.342-3 3-3s3 1.342 3 3v10.234c8.851-8.448 20.481-13.234 33-13.234 26.467 0 48 21.533 48 48zm-21-12v27c0 1.251-.776 2.37-1.945 2.81l-24 9c-.34.126-.698.19-1.055.19s-.715-.064-1.055-.19l-24-9c-1.169-.44-1.945-1.559-1.945-2.81v-27c0-1.251.776-2.37 1.945-2.81l24-9c.68-.252 1.43-.252 2.109 0l24 9c1.17.44 1.946 1.559 1.946 2.81zm-42.457 0 15.457 5.795 15.457-5.795-15.457-5.795zm-5.543 24.92 18 6.75v-20.59l-18-6.75zm42 0v-20.59l-18 6.75v20.59z"/>
+</svg>
+    </div>
+      </div>
+    </div>
+    </div>
+
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero Banner ",
+  "settings": [
+    { "type": "image_picker", "id": "background_image", "label": "Desktop Image" },
+    { "type": "image_picker", "id": "mobile_background_image", "label": "Mobile Image" },
+    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 80, "step": 5, "unit": "%", "label": "Overlay Darkness", "default": 40 },
+    {
+      "type": "range",
+      "id": "text_shadow_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Text Shadow Opacity",
+      "default": 60
+    },
+    { "type": "range", "id": "desktop_height", "min": 60, "max": 100, "step": 5, "unit": "vh", "label": "Desktop Height", "default": 85 },
+    { "type": "range", "id": "mobile_height", "min": 60, "max": 100, "step": 5, "unit": "vh", "label": "Mobile Height", "default": 75 },
+    { "type": "text", "id": "pre_headline", "label": "Pre Headline" },
+    { "type": "textarea", "id": "main_headline", "label": "Main Headline" },
+    { "type": "textarea", "id": "subheadline", "label": "Subheadline" },
+    { "type": "text", "id": "primary_button_text", "label": "Primary Button Text" },
+    { "type": "url", "id": "primary_button_url", "label": "Primary Button URL" },
+    { "type": "text", "id": "secondary_button_text", "label": "Secondary Button Text" },
+    { "type": "url", "id": "secondary_button_url", "label": "Secondary Button URL" }
+  ],
+  "presets": [
+    { "name": "Hero Banner ", "category": "Hero" }
+  ]
+}
+{% endschema %}

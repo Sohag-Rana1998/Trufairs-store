@@ -1,0 +1,492 @@
+{% style %}
+  #shopify-section-{{ section.id }} .trufairs-process {
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__container {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__header {
+    max-width: 760px;
+    margin: 0 auto 58px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__heading {
+    margin: 0 0 14px;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__text {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.7;
+    color: {{ section.settings.muted_text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 64px;
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__steps {
+    position: relative;
+    display: grid;
+    gap: 34px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 22px;
+    align-items: flex-start;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 37px;
+    top: 76px;
+    width: 2px;
+    height: calc(100% - 34px);
+    background: {{ section.settings.accent_color }};
+    opacity: 0.35;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__badge {
+    position: relative;
+    z-index: 2;
+    width: 76px;
+    height: 76px;
+    border-radius: 999px;
+    background: {{ section.settings.accent_color }};
+    color: {{ section.settings.accent_text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 16px 32px rgba(64, 111, 224, 0.25);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__badge-inner {
+    display: grid;
+    gap: 2px;
+    text-align: center;
+    line-height: 1;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__number {
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__icon svg {
+    width: 26px;
+    height: 26px;
+    color:black;
+     
+  }
+  #shopify-section-{{ section.id }} .trufairs-process__icon img {
+    width: 30px;
+     margin-left:5px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__content {
+    padding-top: 14px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__card-heading {
+    margin: 0 0 10px;
+    font-size: 21px;
+    line-height: 1.3;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__card-text {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: {{ section.settings.muted_text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__image-wrap {
+    border-radius: {{ section.settings.image_radius }}px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__button-wrap {
+    margin-top: 46px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 14px 32px;
+    border-radius: 999px;
+    background: {{ section.settings.accent_color }};
+    color: {{ section.settings.accent_text_color }};
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 14px 28px rgba(64, 111, 224, 0.22);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-process__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(64, 111, 224, 0.28);
+  }
+
+  @media screen and (max-width: 900px) {
+    #shopify-section-{{ section.id }} .trufairs-process__layout {
+      grid-template-columns: 1fr;
+      gap: 42px;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    #shopify-section-{{ section.id }} .trufairs-process {
+      padding: {{ section.settings.mobile_padding_top }}px 16px {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-process__header {
+      margin-bottom: 38px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-process__heading {
+      font-size: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-process__step {
+      grid-template-columns: 64px 1fr;
+      gap: 18px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-process__badge {
+      width: 64px;
+      height: 64px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-process__step:not(:last-child)::after {
+      left: 31px;
+      top: 64px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-process__number {
+      font-size: 20px;
+    }
+  }
+{% endstyle %}
+
+<section class="trufairs-process" aria-labelledby="trufairs-process-heading-{{ section.id }}">
+  <div class="trufairs-process__container">
+    <div class="trufairs-process__header">
+      {% if section.settings.heading != blank %}
+        <h2 id="trufairs-process-heading-{{ section.id }}" class="trufairs-process__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <p class="trufairs-process__text">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="trufairs-process__layout">
+      <div>
+        <div class="trufairs-process__steps">
+          {% for block in section.blocks %}
+            <article class="trufairs-process__step" {{ block.shopify_attributes }}>
+              <div class="trufairs-process__badge">
+                <span class="trufairs-process__badge-inner">
+                       {% comment %} <span class="trufairs-process__icon" aria-hidden="true">
+                    {% case block.settings.icon %}
+                      {% when 'apply' %}
+                   <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                    </svg>
+                      {% when 'review' %}
+                       <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M9 3h6M10 3v6l-4.8 8.4A2.4 2.4 0 0 0 7.3 21h9.4a2.4 2.4 0 0 0 2.1-3.6L14 9V3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M8 16h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    </svg>
+                      {% when 'approved' %}
+                          <img
+                      src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Verified_logo_black.png?v=1777097772"
+                      alt=""
+                      width="34"
+                      height="34"
+                      loading="lazy"
+                    >
+                      {% when 'earning' %}
+                       <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                      {% else %}
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path d="M20 7L10 17l-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    {% endcase %}
+                  </span> {% endcomment %}
+                  <span class="trufairs-process__number">
+                    {{ forloop.index  }}
+                  </span>
+               
+                </span>
+              </div>
+
+              <div class="trufairs-process__content">
+                {% if block.settings.title != blank %}
+                  <h3 class="trufairs-process__card-heading">{{ block.settings.title }}</h3>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <p class="trufairs-process__card-text">{{ block.settings.text }}</p>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if section.settings.button_label != blank %}
+          <div class="trufairs-process__button-wrap">
+            <a class="trufairs-process__button" href="{{ section.settings.button_link }}">
+              {{ section.settings.button_label }}
+              <span aria-hidden="true">›</span>
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if section.settings.side_image != blank %}
+        <div class="trufairs-process__image-wrap">
+          {{
+            section.settings.side_image
+            | image_url: width: 1200
+            | image_tag:
+              class: 'trufairs-process__image',
+              loading: 'lazy',
+              sizes: '(min-width: 990px) 52vw, 100vw',
+              widths: '360, 540, 720, 900, 1200'
+          }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Affiliate Steps",
+  "tag": "section",
+  "class": "section-affiliate-steps",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How To Become An Affiliate"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Ready to grow with us? Applying takes only a minute."
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image",
+      "label": "Right side image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Apply Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f8fbff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main text color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text color",
+      "default": "#556070"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#4f7df0"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Accent text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 36,
+      "step": 2,
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 76
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 76
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "apply",
+          "options": [
+            {
+              "value": "apply",
+              "label": "Apply"
+            },
+            {
+              "value": "review",
+              "label": "Review"
+            },
+            {
+              "value": "approved",
+              "label": "Approved"
+            },
+            {
+              "value": "earning",
+              "label": "Earning"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step title",
+          "default": "Apply"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Step text",
+          "default": "Fill out the application form."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Affiliate Steps",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "icon": "apply",
+            "title": "Apply",
+            "text": "Fill out the application form."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "review",
+            "title": "We review your application",
+            "text": "Our team evaluates your profile."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "approved",
+            "title": "Get approved",
+            "text": "Once confirmed, we’ll send your personal discount code."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "earning",
+            "title": "Start earning",
+            "text": "Share your code with your community and earn commission from every qualifying purchase."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

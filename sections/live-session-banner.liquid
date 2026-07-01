@@ -1,0 +1,933 @@
+{% schema %}
+{
+  "name": "Weekly Live Sessions",
+  "tag": "section",
+  "class": "weekly-live-sessions-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Left Content"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main Heading",
+      "default": "Weekly Live Sessions with Jennifer"
+    },
+    {
+      "type": "richtext",
+      "id": "main_description",
+      "label": "Description",
+      "default": "<p>Join our founder Jennifer every week for an interactive live session where she discusses product insights, answers your questions, and provides solutions to your concerns.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "BOOK YOUR SEAT"
+    },
+    {
+      "type": "header",
+      "content": "Google Meet Button Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_meet_button",
+      "label": "Enable Google Meet Button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "meet_button_text",
+      "label": "Meet Button Text",
+      "default": "Join Now Our Session"
+    },
+    {
+      "type": "url",
+      "id": "meet_url",
+      "label": "Google Meet URL"
+    },
+    {
+      "type": "header",
+      "content": "Right Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "presenter_image",
+      "label": "Presenter Image"
+    },
+    {
+      "type": "text",
+      "id": "meet_text",
+      "label": "Meet Text",
+      "default": "Meet Jennifer"
+    },
+    {
+      "type": "text",
+      "id": "position_text",
+      "label": "Position Text",
+      "default": "Co-Founder"
+    },
+    {
+      "type": "text",
+      "id": "company_website",
+      "label": "Company Website",
+      "default": "of Trufairs.com"
+    },
+    {
+      "type": "richtext",
+      "id": "presenter_description",
+      "label": "Presenter Description",
+      "default": "<p>Jennifer is passionate about answering your questions and helping you get the most out of Trufairs products. Join her live sessions to connect directly!</p>"
+    },
+    {
+      "type": "header",
+      "content": "Social Media Links"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Form Settings"
+    },
+    {
+      "type": "text",
+      "id": "form_title",
+      "label": "Form Title",
+      "default": "Book Your Seat for the Next Session"
+    },
+    {
+      "type": "text",
+      "id": "form_subtitle",
+      "label": "Form Subtitle",
+      "default": "Fill in your details below to secure your spot"
+    },
+    {
+      "type": "text",
+      "id": "submit_button_text",
+      "label": "Submit Button Text",
+      "default": "Secure My Spot"
+    },
+    {
+      "type": "header",
+      "content": "Google Meet Form Settings"
+    },
+    {
+      "type": "text",
+      "id": "meet_form_title",
+      "label": "Meet Form Title",
+      "default": "Join Our Live Google Meet Session"
+    },
+    {
+      "type": "text",
+      "id": "meet_form_subtitle",
+      "label": "Meet Form Subtitle",
+      "default": "Enter your details to join the live session"
+    },
+    {
+      "type": "text",
+      "id": "meet_submit_button_text",
+      "label": "Meet Continue Button Text",
+      "default": "Continue"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Weekly Live Sessions",
+      "category": "Custom Content"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .weekly-live-sessions-section {
+    padding: 50px 0px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background:#f9f9f9;
+    padding-bottom:30px;
+  }
+  
+  .weekly-live-sessions-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 30px;
+     padding: 0px 20px;
+     
+  }
+  
+  .weekly-live-left-content {
+    flex: 1;
+    min-width: 300px;
+    padding-right: 20px;
+  }
+  
+  .weekly-live-heading {
+    font-size: 2.6rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    background:linear-gradient(135deg, #1a1a1a, #e74c6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+    text-transform:capitalize !important;
+  }
+  
+  .weekly-live-description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 30px;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .weekly-live-button {
+    background-color: #e94a64;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .weekly-live-button:hover {
+    background-color: #d03652;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 74, 100, 0.2);
+  }
+  
+  .google-meet-button {
+    background-color: #4285F4;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .google-meet-button:hover {
+    background-color: #3367D6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2);
+  }
+  
+  .google-meet-button.disabled {
+    background-color: #cccccc;
+    color: #888888;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .google-meet-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+  }
+  
+  .weekly-live-right-content {
+    flex: 1;
+    max-width: 450px;
+    position: relative;
+  }
+  
+  .weekly-live-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    background-color: #f5f5f5;
+    position: relative;
+  }
+  
+  .weekly-live-join-text {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .weekly-live-platform {
+    font-weight: 500;
+    color: #555;
+    font-size: 14px;
+  }
+  
+  .weekly-live-image-container {
+    width: 100%;
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+  }
+  
+  .weekly-live-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+ 
+  .weekly-live-presenter-info {
+    padding: 25px;
+    background-color: white;
+  }
+  
+  .weekly-live-meet {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 3px;
+  }
+  
+  .meet-text {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .presenter-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .presenter-position {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #e74c6b;
+  }
+  
+  .presenter-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .presenter-description p{
+    margin-top: 0px;
+  }
+  
+  .weekly-live-social {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .social-icon {
+    color: #333;
+    transition: all 0.3s ease;
+  }
+
+  .social-icon svg {
+    stroke: unset !important;
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .social-icon:hover {
+    color: #e94a64;
+    transform: translateY(-2px);
+  }
+
+  /* Modal Styles */
+  .weekly-live-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .weekly-live-modal.active {
+    display: flex;
+    background-color:transparent !important;
+  }
+  
+  .modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.4s ease-out;
+  }
+  
+  .close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .close-modal:hover {
+    color: #333;
+  }
+  
+.modal-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+
+  
+.modal-subtitle {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 25px;
+    text-align: center;
+}
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .form-input:focus {
+    border-color: #e94a64;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(233, 74, 100, 0.1);
+  }
+  
+  .form-submit {
+    background-color: #e94a64;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+#meetModal svg, #bookingModal svg {
+  
+    width: 2rem !important;
+    height: 2rem !important;
+ 
+}
+
+  
+  .form-submit:hover {
+    background-color: #d03652;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 74, 100, 0.2);
+  }
+  
+  .meet-form-submit {
+    background-color: #4285F4;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .meet-form-submit:hover {
+    background-color: #3367D6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.2);
+  }
+
+
+  
+
+   .google-meet-button svg {
+    display: inline-block;
+    vertical-align: middle;
+    fill: currentColor;
+    stroke: unset;
+    width: 3rem;
+    height: 3rem;
+    transition: var(--anchor-transition);
+}
+
+  .google-meet-button  {
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+  
+  @keyframes modalFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 991px) {
+    .weekly-live-sessions-container {
+      flex-direction: column;
+    }
+    
+    .weekly-live-left-content,
+    .weekly-live-right-content {
+      width: 100%;
+      padding: 0;
+    }
+    
+    .weekly-live-heading {
+      font-size: 2.2rem;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .weekly-live-sessions-section {
+      padding: 20px 10px;
+    }
+    .weekly-live-sessions-container {
+  
+    padding: 0px 0px;
+}
+    .weekly-live-heading {
+      font-size: 2rem;
+    }
+    
+    .weekly-live-description {
+      font-size: 16px;
+    }
+    
+    .weekly-live-overlay {
+      width: 75%;
+    }
+    
+    .button-container {
+      flex-direction: column;
+    }
+
+
+    
+  }
+</style>
+
+<div class="weekly-live-sessions-section">
+  <div class="weekly-live-sessions-container">
+    <div class="weekly-live-left-content">
+      <h2 class="weekly-live-heading">{{ section.settings.main_heading }}</h2>
+      <div class="weekly-live-description">{{ section.settings.main_description }}</div>
+      <div class="button-container">
+          {% unless section.settings.enable_meet_button %}
+        <button class="weekly-live-button" id="bookSeatButton">{{ section.settings.button_text }}</button>
+        {% endunless %}
+       
+         
+       
+          <button id="googleMeetButton" class="google-meet-button disabled"    {% if section.settings.enable_meet_button %} disabled {% endif %} >
+            <?xml version="1.0" ?><svg height="48px" viewBox="0 0 48 48" width="48px" xmlns="http://www.w3.org/2000/svg"><rect fill="#fff" height="16" transform="rotate(-90 20 24)" width="16" x="12" y="16"/><polygon fill="#1e88e5" points="3,17 3,31 8,32 13,31 13,17 8,16"/><path d="M37,24v14c0,1.657-1.343,3-3,3H13l-1-5l1-5h14v-7l5-1L37,24z" fill="#4caf50"/><path d="M37,10v14H27v-7H13l-1-5l1-5h21C35.657,7,37,8.343,37,10z" fill="#fbc02d"/><path d="M13,31v10H6c-1.657,0-3-1.343-3-3v-7H13z" fill="#1565c0"/><polygon fill="#e53935" points="13,7 13,17 3,17"/><polygon fill="#2e7d32" points="38,24 37,32.45 27,24 37,15.55"/><path d="M46,10.11v27.78c0,0.84-0.98,1.31-1.63,0.78L37,32.45v-16.9l7.37-6.22C45.02,8.8,46,9.27,46,10.11z" fill="#4caf50"/></svg>
+            {{ section.settings.meet_button_text }}
+          </button>
+       
+      </div>
+    </div>
+    
+    <div class="weekly-live-right-content">
+      <div class="weekly-live-card">
+        <div class="weekly-live-image-container">
+          {% if section.settings.presenter_image %}
+            {{ section.settings.presenter_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'weekly-live-image', alt: section.settings.meet_text }}
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'weekly-live-image placeholder' }}
+          {% endif %}
+        </div>
+        
+        <div class="weekly-live-presenter-info">
+          <div class="weekly-live-meet">
+            <div class="meet-text">{{ section.settings.meet_text }}</div>
+            <div class="presenter-name">{{ section.settings.main_heading | split: ' with ' | last }}</div>
+          </div>
+          
+          <div class="presenter-position">
+            <span>{{ section.settings.position_text }}</span>
+            <span>{{ section.settings.company_website }}</span>
+          </div>
+          
+          <div class="presenter-description">{{ section.settings.presenter_description }}</div>
+          
+          <div class="weekly-live-social">
+            {% if section.settings.instagram_url != blank %}
+              <a href="{{ section.settings.instagram_url }}" class="social-icon" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+            {% endif %}
+            
+            {% if section.settings.facebook_url != blank %}
+              <a href="{{ section.settings.facebook_url }}" class="social-icon" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.644c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.125-5.864 10.125-11.854z"/>
+                </svg>
+              </a>
+            {% endif %}
+            
+            {% if section.settings.pinterest_url != blank %}
+              <a href="{{ section.settings.pinterest_url }}" class="social-icon" target="_blank" rel="noopener" aria-label="Pinterest">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0c-6.627 0-12 5.373-12 12 0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146 1.124.347 2.317.535 3.554.535 6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
+                </svg>
+              </a>
+            {% endif %}
+            
+            {% if section.settings.youtube_url != blank %}
+              <a href="{{ section.settings.youtube_url }}" class="social-icon" target="_blank" rel="noopener" aria-label="YouTube">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+                
+  </div>
+</div>
+
+
+
+
+                    
+<!-- Book Seat Modal Popup -->
+<div class="weekly-live-modal" id="bookingModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <h3 class="modal-title">{{ section.settings.form_title }}</h3>
+    <p class="modal-subtitle">{{ section.settings.form_subtitle }}</p>
+    <div class="klaviyo-form-SRtgaZ"></div>
+  </div>
+</div>
+
+<!-- Google Meet Modal Popup -->
+<div class="weekly-live-modal" id="meetModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeMeetModal">&times;</span>
+    <h3 class="modal-title">{{ section.settings.meet_form_title }}</h3>
+    <p class="modal-subtitle">{{ section.settings.meet_form_subtitle }}</p>
+<div class="klaviyo-form-XxyszG"></div>
+  </div>
+</div>
+
+<script>
+/**
+ * Enhanced Website Functionality
+ * - Modal handling for booking seats and Google Meet
+ * - Button state management based on time (Wednesdays 5:30 PM - 7:00 PM EST)
+ * - Klaviyo form integration
+ */
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Unified button and modal initialization
+  initializeModalSystem();
+  initializeButtonManager();
+});
+
+/**
+ * Modal system initialization and event handling
+ */
+function initializeModalSystem() {
+  // Modal configuration objects
+  const modalConfigs = [
+    {
+      buttonId: 'bookSeatButton',
+      buttonSelector: '.weekly-live-button',
+      modalId: 'bookingModal',
+      closeId: 'closeModal'
+    },
+    {
+      buttonId: 'googleMeetButton',
+      buttonSelector: '.google-meet-button',
+      modalId: 'meetModal',
+      closeId: 'closeMeetModal'
+    }
+  ];
+
+  // Initialize each modal
+  modalConfigs.forEach(config => {
+    const button = document.getElementById(config.buttonId) || 
+                  document.querySelector(config.buttonSelector);
+    const modal = document.getElementById(config.modalId);
+    const closeBtn = document.getElementById(config.closeId);
+    
+    if (button && modal && closeBtn) {
+      // Always setup the modal regardless of button state
+      // We'll handle button state separately
+      
+      // Open modal
+      button.addEventListener('click', function(e) {
+        // Only open if button is not disabled
+        if (!button.disabled && !button.classList.contains('disabled')) {
+          e.preventDefault();
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden'; // Prevent background scrolling
+          
+          // Ensure Klaviyo form is properly loaded if it exists
+          if (window._klOnsite && typeof window._klOnsite.revalidateRecaptcha === 'function') {
+            window._klOnsite.revalidateRecaptcha();
+          }
+        }
+      });
+      
+      // Close modal with X button
+      closeBtn.addEventListener('click', function() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+      
+      // Close modal when clicking outside
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      console.warn(`Could not set up modal for ${config.buttonId || config.buttonSelector}: missing elements`);
+    }
+  });
+
+  // Listen for Klaviyo form submission success
+  document.addEventListener('klaviyoForms', function(event) {
+    if (event.detail && event.detail.type === 'submit' && event.detail.formId) {
+      // Close all modals after successful form submission
+      const modals = document.querySelectorAll('.weekly-live-modal');
+      setTimeout(function() {
+        modals.forEach(modal => {
+          if (modal.classList.contains('active')) {
+            modal.classList.remove('active');
+          }
+        });
+        document.body.style.overflow = '';
+      }, 2000); // 2 second delay to show success message
+    }
+  });
+}
+
+/**
+ * Button manager to control button states based on time
+ */
+function initializeButtonManager() {
+  // Find buttons with a retry mechanism
+  let attempts = 0;
+  const maxAttempts = 5;
+  const retryInterval = 500;
+  
+  function findButtons() {
+    const bookSeatButton = document.getElementById('bookSeatButton') || 
+                          document.querySelector('.weekly-live-button');
+    const googleMeetButton = document.getElementById('googleMeetButton') || 
+                            document.querySelector('.google-meet-button');
+    
+    if ((!bookSeatButton && !googleMeetButton) && attempts < maxAttempts) {
+      console.log(`Buttons not found yet, attempt ${attempts + 1}/${maxAttempts}`);
+      attempts++;
+      setTimeout(findButtons, retryInterval);
+      return;
+    }
+
+    if (bookSeatButton || googleMeetButton) {
+      console.log('Button manager initialized successfully');
+      setupButtonManager(bookSeatButton, googleMeetButton);
+    } else {
+      console.log('Button manager initialization failed: buttons not found');
+    }
+  }
+  
+  findButtons();
+}
+
+/**
+ * Sets up button state management based on time
+ */
+function setupButtonManager(bookSeatButton, googleMeetButton) {
+  // Check if current time is Wednesday between 5:30 PM and 7:00 PM EST
+  function isMeetingTimeNow() {
+    // Get the current date/time in user's local timezone
+    const now = new Date();
+    
+    // Convert to EST/EDT (UTC-5 or UTC-4 depending on daylight saving)
+    // We need to account for daylight saving time
+    const estNow = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    
+    // Get day of week (0 = Sunday, 1 = Monday, ..., 3 = Wednesday, ..., 6 = Saturday)
+    const dayOfWeek = estNow.getDay();
+    
+    // Get hours and minutes in EST
+    const hours = estNow.getHours();      // Hours in EST (0-23)
+    const minutes = estNow.getMinutes();  // Minutes in EST (0-59)
+    
+    // Convert to total minutes since midnight
+    const currentMinutes = hours * 60 + minutes;
+    
+    // Define meeting time window (Wednesday 5:30 PM - 7:00 PM)
+    const isWednesday = dayOfWeek === 3;
+    const startTime = 17 * 60 + 30;  // 5:30 PM = 17:30 = 17*60 + 30 minutes
+    const endTime = 19 * 60;         // 7:00 PM = 19:00 = 19*60 minutes
+    
+    // For testing - you can temporarily override with this:
+    // return true;
+    console.log(isWednesday)
+    console.log(startTime)
+    console.log(currentMinutes)
+  
+    // Check if it's Wednesday AND within the time window
+    return isWednesday && (currentMinutes >= startTime && currentMinutes < endTime);
+  }
+
+  function updateButtonStates() {
+    const isMeetingActive = isMeetingTimeNow();
+    
+    // Log current state for debugging
+    console.log('Meeting active:', isMeetingActive, new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    
+    if (googleMeetButton) {
+      if (isMeetingActive) {
+        // Enable Google Meet button during meeting time
+        googleMeetButton.disabled = false;
+        googleMeetButton.removeAttribute('disabled');
+        googleMeetButton.classList.remove('disabled');
+        googleMeetButton.style.opacity = '1';
+        googleMeetButton.style.cursor = 'pointer';
+        googleMeetButton.style.pointerEvents = 'auto';
+        
+        // Find and fix parent element with pointer-events: none
+        fixParentPointerEvents(googleMeetButton, true);
+      } else {
+        // Disable Google Meet button outside meeting time
+        googleMeetButton.disabled = true;
+        googleMeetButton.setAttribute('disabled', 'disabled');
+        googleMeetButton.classList.add('disabled');
+        googleMeetButton.style.opacity = '0.5';
+        googleMeetButton.style.cursor = 'not-allowed';
+        googleMeetButton.style.pointerEvents = 'none';
+        
+        // Restore parent pointer-events
+        fixParentPointerEvents(googleMeetButton, false);
+      }
+    }
+
+    if (bookSeatButton) {
+      // Show booking button only outside meeting time
+      bookSeatButton.style.display = isMeetingActive ? 'none' : '';
+    }
+  }
+
+  // Fix pointer-events on parent elements that might interfere with button clicks
+  function fixParentPointerEvents(button, enable) {
+    if (!button) return;
+    
+    let parent = button.parentElement;
+    let fixed = false;
+    
+    while (parent && !fixed) {
+      if (window.getComputedStyle(parent).pointerEvents === 'none') {
+        if (!parent.hasAttribute('data-original-pointer-events')) {
+          parent.setAttribute('data-original-pointer-events', parent.style.pointerEvents || 'none');
+        }
+        
+        parent.style.pointerEvents = enable ? 'auto' : parent.getAttribute('data-original-pointer-events');
+        fixed = true;
+      }
+      parent = parent.parentElement;
+    }
+  }
+
+  // Initialize button states and set up interval for updates
+  updateButtonStates();
+  setInterval(updateButtonStates, 30000); // Check every 30 seconds
+
+  // Add additional one-time check for immediate testing (helpful during development)
+  setTimeout(updateButtonStates, 3000);
+}
+
+// For immediate debugging - log if the modal elements exist
+console.log('bookingModal exists:', !!document.getElementById('bookingModal'));
+console.log('meetModal exists:', !!document.getElementById('meetModal'));
+console.log('bookSeatButton exists:', !!document.getElementById('bookSeatButton'));
+console.log('googleMeetButton exists:', !!document.getElementById('googleMeetButton'));
+</script>

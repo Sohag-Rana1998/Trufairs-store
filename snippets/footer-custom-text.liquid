@@ -1,0 +1,35 @@
+<div class="footer__item-padding">
+   
+  <div
+    {% if block.settings.show_footer_title %}
+      id="Footer-{{ block.id }}" class=" "
+    {% endif %}>
+    <div class="">
+      <div class="  footer_collapsible--disabled  footer-logo-custom">
+        {%- if block.settings.image != blank -%}
+          <div class="image-wrap text-spacing" style="height: 0; padding-bottom: {{ 100 | divided_by: block.settings.image.aspect_ratio }}%;">
+            {%- assign sizeVariable = container_width | append: 'vw' -%}
+            {%- render 'image-element',
+              img: block.settings.image,
+              widths: '360, 540, 720, 900, 1080, 1600',
+              role: 'presentation',
+              sizeVariable: sizeVariable,
+            -%}
+          </div>
+        {%- endif -%}
+
+        {{ block.settings.text }}
+      </div>
+    </div>
+  </div>
+  <style>
+    @media (max-width:768px){
+
+       .footer-logo-custom .image-wrap.text-spacing.loaded {
+    width: 200px;
+    margin: 0 auto;
+}
+    }
+  
+  </style>
+</div>

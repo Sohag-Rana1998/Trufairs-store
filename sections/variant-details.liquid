@@ -1,0 +1,849 @@
+{% comment %} Section: Variant Details {% endcomment %}
+
+{% assign variant_id = section.settings.variant_id | plus: 0 %}
+{% assign variant = product.variants | where: "id", variant_id | first %}
+
+{% if variant %}
+  {% assign variant_images_meta = variant.metafields.custom.variant_image | split: ',' %}
+  {% assign variant_title = variant.metafields.custom.variant_title %}
+  {% assign variant_details = variant.metafields.custom.variant_details %}
+  {% assign compare_price = variant.compare_at_price %}
+  {% assign current_price = variant.price %}
+  
+  {% comment %} Use metafield images or fallback to variant image {% endcomment %}
+  {% if variant_images_meta.size > 0 and variant_images_meta.first != blank %}
+    {% assign variant_images = variant_images_meta %}
+    {% assign is_custom_images = true %}
+  {% elsif variant.image %}
+    {% assign variant_images = variant.image | split: '|' %}
+    {% assign is_custom_images = false %}
+  {% else %}
+    {% assign variant_images = product.featured_image | split: '|' %}
+    {% assign is_custom_images = false %}
+  {% endif %}
+  
+  {% if compare_price and compare_price > current_price %}
+    {% assign savings = compare_price | minus: current_price %}
+    {% assign savings_percent = savings | times: 100.0 | divided_by: compare_price | round %}
+  {% endif %}
+{% endif %}
+
+<section class="variant-details-section" data-section-id="{{ section.id }}" id="variant-{{ variant_id }}" data-variant-section>
+  <div class="variant-container">
+    {% if variant %}
+      <div class="variant-grid">
+        <!-- Left Column: Image Slider -->
+        <div class="variant-images">
+          <div class="swiper variant-swiper" data-swiper-id="{{ section.id }}">
+            <div class="swiper-wrapper">
+              {% if is_custom_images %}
+                {% for image_url in variant_images %}
+                  {% assign clean_url = image_url | strip %}
+                  {% if clean_url != blank %}
+                    <div class="swiper-slide">
+                      <img src="{{ clean_url }}" alt="{{ variant_title }}">
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                <div class="swiper-slide">
+                  <img src="{{ variant.image | img_url: '1000x' }}" alt="{{ variant_title }}">
+                </div>
+              {% endif %}
+            </div>
+            
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
+          </div>
+          
+          <!-- Thumbnail Gallery -->
+          {% assign image_count = 0 %}
+          {% if is_custom_images %}
+            {% for image_url in variant_images %}
+              {% assign clean_url = image_url | strip %}
+              {% if clean_url != blank %}
+                {% assign image_count = image_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% assign image_count = 1 %}
+          {% endif %}
+          
+          {% if image_count > 1 %}
+            <div class="variant-thumbnails">
+              {% if is_custom_images %}
+                {% for image_url in variant_images %}
+                  {% assign clean_url = image_url | strip %}
+                  {% if clean_url != blank %}
+                    <div class="thumbnail {% if forloop.first %}active{% endif %}" data-index="{{ forloop.index0 }}">
+                      <img src="{{ clean_url }}" alt="Thumbnail {{ forloop.index }}">
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Right Column: Variant Details -->
+        <div class="variant-info">
+          <h2 class="variant-title">{{ variant_title | default: variant.title }}</h2>
+          
+          <div class="variant-pricing">
+            <span class="current-price">{{ current_price | money }}</span>
+            {% if compare_price and compare_price > current_price %}
+              <span class="compare-price">{{ compare_price | money }}</span>
+              <span class="savings-badge">Save {{ savings_percent }}%</span>
+            {% endif %}
+          </div>
+
+          <div class="variant-details-content">
+            {{ variant_details }}
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="quantity-wrapper">
+            <label for="quantity-{{ section.id }}" class="quantity-label">Quantity:</label>
+            <div class="quantity-selector">
+              <button type="button" class="quantity-btn quantity-minus" data-action="minus">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <input 
+                type="number" 
+                id="quantity-{{ section.id }}" 
+                class="quantity-input" 
+                value="1" 
+                min="1" 
+                max="99"
+                data-quantity-input
+              >
+              <button type="button" class="quantity-btn quantity-plus" data-action="plus">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button class="add-to-cart-btn" data-variant-id="{{ variant_id }}">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3.33334 3.33334H4.79168L7.20001 13.3333H15.8333L17.5 6.66668H6.25001" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="8.33334" cy="16.6667" r="1.25" fill="currentColor"/>
+              <circle cx="15" cy="16.6667" r="1.25" fill="currentColor"/>
+            </svg>
+            <span>Add to Cart</span>
+          </button>
+
+          <div class="stock-indicator">
+            {% if variant.available %}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="7" stroke="#10B981" stroke-width="2"/>
+                <path d="M5 8L7 10L11 6" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="in-stock">In Stock - Ready to Ship</span>
+            {% else %}
+              <span class="out-of-stock">Out of Stock</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="no-variant-message">
+        <p>Please select a variant ID in the theme editor.</p>
+        <p style="font-size: 14px; color: #999; margin-top: 8px;">Entered ID: {{ section.settings.variant_id }}</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+.variant-details-section {
+  padding: 60px 20px;
+  background: #FAFAFA;
+}
+
+.variant-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.variant-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Image Slider Styles */
+.variant-images {
+  position: sticky;
+  top: 20px;
+}
+
+.variant-swiper {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.variant-swiper .swiper-wrapper {
+  position: relative;
+}
+
+.variant-swiper .swiper-slide {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.variant-swiper .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Pagination Styles */
+.swiper-pagination {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 1;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.swiper-pagination-bullet:hover {
+  background: rgba(224, 194, 129, 0.8);
+  transform: scale(1.2);
+}
+
+.swiper-pagination-bullet-active {
+  background: #E0C281;
+  width: 28px;
+  border-radius: 5px;
+  border-color: #E0C281;
+}
+
+/* Thumbnails */
+.variant-thumbnails {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: calc(20% - 10px);
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.thumbnail:hover {
+  border-color: #E0C281;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(224, 194, 129, 0.3);
+}
+
+.thumbnail.active {
+  border-color: #E0C281;
+  box-shadow: 0 4px 12px rgba(224, 194, 129, 0.4);
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Variant Info Styles */
+.variant-info {
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.variant-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 24px 0;
+  line-height: 1.3;
+}
+
+.variant-pricing {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.current-price {
+  font-size: 36px;
+  font-weight: 700;
+  color: #E0C281;
+}
+
+.compare-price {
+  font-size: 24px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.savings-badge {
+  background: linear-gradient(135deg, #E0C281 0%, #d4b571 100%);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(224, 194, 129, 0.3);
+}
+
+.variant-details-content {
+  margin-bottom: 32px;
+  color: #4a4a4a;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.variant-details-content h3,
+.variant-details-content h4 {
+  color: #1a1a1a;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.variant-details-content ul,
+.variant-details-content ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.variant-details-content li {
+  margin-bottom: 8px;
+}
+
+.variant-details-content strong {
+  color: #1a1a1a;
+}
+
+/* Quantity Selector Styles */
+.quantity-wrapper {
+  margin-bottom: 24px;
+}
+
+.quantity-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: fit-content;
+  border: 2px solid #E0C281;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(224, 194, 129, 0.15);
+}
+
+.quantity-btn {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #E0C281;
+}
+
+.quantity-btn:hover {
+  background: #E0C281;
+  color: #fff;
+}
+
+.quantity-btn:active {
+  transform: scale(0.95);
+}
+
+.quantity-input {
+  width: 70px;
+  height: 48px;
+  text-align: center;
+  border: none;
+  border-left: 1px solid #E0C281;
+  border-right: 1px solid #E0C281;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  background: #fff;
+  -moz-appearance: textfield;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-input:focus {
+  outline: none;
+  background: #FFFBF5;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #E0C281 0%, #d4b571 100%);
+  color: #fff;
+  border: none;
+  padding: 18px 32px;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(224, 194, 129, 0.4);
+  margin-bottom: 20px;
+}
+
+.add-to-cart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(224, 194, 129, 0.5);
+  background: linear-gradient(135deg, #d4b571 0%, #c9a865 100%);
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(0);
+}
+
+.add-to-cart-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.add-to-cart-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.add-to-cart-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* Stock Indicator */
+.stock-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #F0FDF4;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.in-stock {
+  color: #10B981;
+  font-weight: 500;
+}
+
+.out-of-stock {
+  color: #EF4444;
+  font-weight: 500;
+}
+
+/* No Variant Message */
+.no-variant-message {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.no-variant-message p {
+  font-size: 18px;
+  color: #666;
+}
+.variant-images {
+    max-width:700px;
+    
+}
+/* Mobile Responsive */
+@media (max-width: 968px) {
+  .variant-details-section {
+    padding: 40px 16px;
+  }
+ .variant-images {
+    max-width: 450px;
+    margin: 0 auto;
+}
+  .variant-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .variant-images {
+    position: static;
+  }
+
+  .variant-info {
+    padding: 28px 20px;
+  }
+
+  .variant-title {
+    font-size: 22px;
+  }
+
+  .current-price {
+    font-size: 28px;
+  }
+
+  .compare-price {
+    font-size: 20px;
+  }
+
+  .thumbnail {
+    width: calc(25% - 10px);
+  }
+
+  .quantity-selector {
+    width: 100%;
+  }
+
+  .quantity-input {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .variant-title {
+    font-size: 22px;
+  }
+ .variant-images {
+    max-width: 350px;
+    margin: 0 auto;
+}
+  .current-price {
+    font-size: 24px;
+  }
+
+  .add-to-cart-btn {
+    font-size: 16px;
+    padding: 16px 24px;
+  }
+
+  .thumbnail {
+    width: calc(33.333% - 8px);
+  }
+}
+
+
+</style>
+
+{% schema %}
+{
+  "name": "Variant Details",
+  "settings": [
+    {
+      "type": "text",
+      "id": "variant_id",
+      "label": "Variant ID",
+      "info": "Enter the variant ID to display its details"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Variant Details"
+    }
+  ]
+}
+{% endschema %}
+
+
+
+
+      {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+        <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer="defer"></script>
+ 
+
+{% comment %} Common Script for All Variant Detail Sections {% endcomment %}
+
+<script>
+if (typeof window.VariantDetailsManager === 'undefined') {
+  window.VariantDetailsManager = {
+    initialized: false,
+    swiperInstances: {},
+    
+    init: function() {
+      if (this.initialized) return;
+      
+      if (typeof Swiper === 'undefined') {
+        console.error('Swiper library not loaded. Please include Swiper JS and CSS.');
+        return;
+      }
+      
+      this.initialized = true;
+      
+      document.querySelectorAll('[data-variant-section]').forEach(section => {
+        this.initSection(section);
+      });
+    },
+    
+    initSection: function(section) {
+      const sectionId = section.dataset.sectionId;
+      const swiperElement = section.querySelector('[data-swiper-id="' + sectionId + '"]');
+      
+      if (!swiperElement) return;
+      
+      const slides = swiperElement.querySelectorAll('.swiper-slide');
+      
+      if (slides.length === 0) return;
+      
+      // Swiper configuration with slide effect and pagination
+      const swiperConfig = {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        speed: 600,
+        effect: 'slide',
+        grabCursor: true,
+        pagination: {
+          el: swiperElement.querySelector('.swiper-pagination'),
+          clickable: true,
+          dynamicBullets: false,
+        }
+      };
+      
+      // Only add loop and autoplay if we have multiple slides
+      if (slides.length > 1) {
+        swiperConfig.loop = true;
+        swiperConfig.autoplay = {
+          delay: 4000,
+          disableOnInteraction: false,
+        };
+      }
+      
+      // Initialize Swiper
+      const swiperInstance = new Swiper(swiperElement, swiperConfig);
+      this.swiperInstances[sectionId] = swiperInstance;
+      
+      // Thumbnail Handler
+      const thumbnails = section.querySelectorAll('.thumbnail');
+      if (thumbnails.length > 0) {
+        thumbnails.forEach((thumb, index) => {
+          thumb.addEventListener('click', function() {
+            const slideIndex = parseInt(this.dataset.index);
+            
+            if (slides.length > 1) {
+              swiperInstance.slideToLoop(slideIndex);
+            }
+            
+            thumbnails.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+        
+        // Update active thumbnail on slide change
+        swiperInstance.on('slideChange', function() {
+          const realIndex = swiperInstance.realIndex;
+          thumbnails.forEach((thumb, index) => {
+            thumb.classList.toggle('active', index === realIndex);
+          });
+        });
+      }
+      
+      // Quantity Controls
+      const quantityInput = section.querySelector('[data-quantity-input]');
+      const minusBtn = section.querySelector('[data-action="minus"]');
+      const plusBtn = section.querySelector('[data-action="plus"]');
+      
+      if (minusBtn && quantityInput) {
+        minusBtn.addEventListener('click', () => {
+          const currentValue = parseInt(quantityInput.value) || 1;
+          if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+          }
+        });
+      }
+      
+      if (plusBtn && quantityInput) {
+        plusBtn.addEventListener('click', () => {
+          const currentValue = parseInt(quantityInput.value) || 1;
+          const maxValue = parseInt(quantityInput.getAttribute('max')) || 99;
+          if (currentValue < maxValue) {
+            quantityInput.value = currentValue + 1;
+          }
+        });
+      }
+      
+      if (quantityInput) {
+        quantityInput.addEventListener('change', function() {
+          let value = parseInt(this.value) || 1;
+          const min = parseInt(this.getAttribute('min')) || 1;
+          const max = parseInt(this.getAttribute('max')) || 99;
+          
+          if (value < min) value = min;
+          if (value > max) value = max;
+          
+          this.value = value;
+        });
+      }
+      
+      // Add to Cart
+      const addToCartBtn = section.querySelector('.add-to-cart-btn');
+      if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', async function() {
+          const button = this;
+          const variantId = button.dataset.variantId;
+          const quantity = parseInt(quantityInput?.value) || 1;
+          const originalText = button.innerHTML;
+          
+          button.disabled = true;
+          button.innerHTML = '<span>Adding...</span>';
+          
+          try {
+            const response = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id: variantId,
+                quantity: quantity
+              })
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              
+              button.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8 14L16 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Added!</span>';
+              
+              setTimeout(() => {
+                document.dispatchEvent(new CustomEvent('ajaxProduct:added', {
+                  bubbles: true,
+                  detail: { product: data, addToCartBtn: button, quantity: quantity }
+                }));
+
+                const altEvents = ['cart:item-added', 'cart:updated', 'product:added-to-cart'];
+                altEvents.forEach(eventName => {
+                  document.dispatchEvent(new CustomEvent(eventName, {
+                    bubbles: true,
+                    detail: { product: data, variant: data, quantity: quantity, addToCartBtn: button }
+                  }));
+                });
+
+                if (window.theme && typeof window.theme.cartCount === 'function') {
+                  window.theme.cartCount();
+                }
+
+                fetch('/cart.js')
+                  .then(res => res.json())
+                  .then(cart => {
+                    const cartCountSelectors = [
+                      '.cart-count',
+                      '[data-cart-count]',
+                      '#cart-count',
+                      '.cart-count-bubble',
+                      '[data-header-cart-count]'
+                    ];
+                    
+                    cartCountSelectors.forEach(selector => {
+                      const elements = document.querySelectorAll(selector);
+                      elements.forEach(element => {
+                        element.textContent = cart.item_count;
+                        if (cart.item_count > 0) {
+                          element.classList.add('cart-count--active');
+                        }
+                      });
+                    });
+
+                    if (typeof jQuery !== 'undefined') {
+                      jQuery(document).trigger('added.ajaxProduct', button);
+                      jQuery(document).trigger('cart.requestComplete', [cart]);
+                    }
+                  })
+                  .catch(err => console.error('Error updating cart count:', err));
+              }, 300);
+              
+              setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+              }, 2000);
+            } else {
+              throw new Error('Failed to add to cart');
+            }
+          } catch (error) {
+            console.error('Error adding to cart:', error);
+            button.innerHTML = '<span>Error - Try Again</span>';
+            setTimeout(() => {
+              button.innerHTML = originalText;
+              button.disabled = false;
+            }, 2000);
+          }
+        });
+      }
+    }
+  };
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        window.VariantDetailsManager.init();
+      }, 100);
+    });
+  } else {
+    setTimeout(() => {
+      window.VariantDetailsManager.init();
+    }, 100);
+  }
+  
+  document.addEventListener('shopify:section:load', function(event) {
+    const section = event.target.querySelector('[data-variant-section]');
+    if (section) {
+      setTimeout(() => {
+        window.VariantDetailsManager.initSection(section);
+      }, 200);
+    }
+  });
+}
+</script>

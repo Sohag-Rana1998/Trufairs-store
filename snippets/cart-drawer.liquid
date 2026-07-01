@@ -1,0 +1,175 @@
+{%- if settings.cart_type == 'drawer' -%}
+  <div id="CartDrawer" class="drawer drawer--right">
+    <form id="CartDrawerForm" action="{{ routes.cart_url }}" method="post" novalidate class="drawer__contents" data-location="cart-drawer">
+      <div class="drawer__fixed-header">
+        <div class="drawer__header appear-animation appear-delay-1">
+          <div class="h2 drawer__title">{{ 'cart.general.title' | t }}</div>
+             <a href="/cart" style=" min-width: 130px ; padding:12px 5px;" class="btn">View Cart</a>
+          <div class="drawer__close">
+            <button type="button" class="drawer__close-button js-drawer-close">
+              <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-close" viewBox="0 0 64 64"><title>icon-X</title><path d="m19 17.61 27.12 27.13m0-27.12L19 44.74"/></svg>
+              <span class="icon__fallback-text">{{ 'cart.general.close_cart' | t }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer__inner">
+        <div class="drawer__scrollable">
+          <div data-products class="appear-animation appear-delay-2"></div>
+
+          {% if settings.cart_notes_enable %}
+            <div class="appear-animation appear-delay-3">
+              <label for="CartNoteDrawer">{{ 'cart.general.note' | t }}</label>
+              <textarea name="note" class="input-full cart-notes" id="CartNoteDrawer">{{ cart.note }}</textarea>
+            </div>
+          {% endif %}
+        </div>
+<div class="klaviyo-premium-banner">
+  <div class="klaviyo-premium-banner__content">
+    <span class="klaviyo-premium-banner__text">
+      Subscribe & get <strong>5% OFF</strong>
+    </span>
+
+    <button 
+      type="button" 
+      class="klaviyo-premium-banner__button" 
+      onclick="openKlaviyoPopup()"
+    >
+      Unlock Offer
+    </button>
+  </div>
+</div>
+
+<script>
+  function openKlaviyoPopup() {
+    window._klOnsite = window._klOnsite || [];
+    window._klOnsite.push(['openForm', 'S3yECY']);
+  }
+</script>
+
+<style>
+  .klaviyo-premium-banner {
+    width: 100%;
+    background: #000;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(224, 192, 129, 0.3);
+  }
+
+  .klaviyo-premium-banner__content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .klaviyo-premium-banner__text {
+    color: #E0C081;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+  }
+
+  .klaviyo-premium-banner__text strong {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .klaviyo-premium-banner__button {
+    background: linear-gradient(135deg, #E0C081, #c9a968);
+    color: #000;
+    border: none;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    cursor: pointer;
+    border-radius: 999px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(224, 192, 129, 0.3);
+  }
+
+  .klaviyo-premium-banner__button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(224, 192, 129, 0.4);
+    background: linear-gradient(135deg, #f0d79c, #d4b374);
+  }
+
+  .klaviyo-premium-banner__button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 10px rgba(224, 192, 129, 0.25);
+  }
+
+  @media screen and (max-width: 749px) {
+    .klaviyo-premium-banner__content {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .klaviyo-premium-banner__text {
+      font-size: 14px;
+      text-align: center;
+    }
+  }
+</style>
+        <div class="drawer__footer appear-animation appear-delay-4">
+          <div data-discounts>
+            {% if cart.cart_level_discount_applications != blank %}
+              <div class="cart__discounts cart__item-sub cart__item-row">
+                <div>{{ 'cart.general.discounts' | t }}</div>
+                <div class="text-right">
+                  {% for cart_discount in cart.cart_level_discount_applications %}
+                    <div class="cart__discount">
+                      {{ cart_discount.title }} (-{{ cart_discount.total_allocated_amount | money }})
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="cart__item-sub cart__item-row">
+            <div class="ajaxcart__subtotal">{{ 'cart.general.subtotal' | t }}</div>
+            <div data-subtotal>{{ cart.total_price | money }}</div>
+          </div>
+
+          <div class="cart__item-row text-center">
+            <small>
+              {{ 'cart.general.shipping_at_checkout' | t }}<br />
+            </small>
+          </div>
+
+          {% if settings.cart_terms_conditions_enable %}
+            <div class="cart__item-row cart__terms">
+              <input type="checkbox" id="CartTermsDrawer" class="cart__terms-checkbox">
+              <label for="CartTermsDrawer">
+                {% if settings.cart_terms_conditions_page != blank %}
+                  {{ 'cart.general.terms_html' | t: url: settings.cart_terms_conditions_page.url }}
+                {% else %}
+                  {{ 'cart.general.terms' | t }}
+                {% endif %}
+              </label>
+            </div>
+          {% endif %}
+
+          <div class="cart__checkout-wrapper">
+            <button type="submit" name="checkout" data-terms-required="{{ settings.cart_terms_conditions_enable }}" class="btn cart__checkout">
+              {{ 'cart.general.checkout' | t }}
+            </button>
+
+           
+             
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer__cart-empty appear-animation appear-delay-2">
+        <div class="drawer__scrollable">
+          {{ 'cart.general.empty' | t }}
+        </div>
+      </div>
+    </form>
+  </div>
+{%- endif -%}

@@ -1,0 +1,82 @@
+{%- liquid
+  assign output_tab = true
+
+  if title == blank and content == blank
+    assign output_tab = false
+  endif
+
+  if title == "Product Dimensions and Weight"
+    if product.metafields.custom.product_dimensions_and_weight1 == blank
+      assign output_tab = false
+    endif
+  endif
+
+  if title == "Product Specifications"
+    if product.metafields.custom.product_specifications == blank
+      assign output_tab = false
+    endif
+  endif
+-%}
+
+{%- if output_tab -%}
+<div class="collapsibles-wrapper collapsibles-wrapper--border-bottom">
+
+  {% if title == "Shipping Policy" %}
+    <button
+      type="button"
+      class="tfsp-btn collapsible-trigger-btn--borders collapsible-trigger-btn"
+      data-tfsp-open
+      data-tfsp-url="/policies/shipping-policy"
+      data-tfsp-title="Shipping Policy">
+      Shipping Policy
+    </button>
+
+  {% elsif title == "Return & Refund Policy" %}
+    <button
+      type="button"
+      class="tfsp-btn collapsible-trigger-btn--borders collapsible-trigger-btn"
+      data-tfsp-open
+      data-tfsp-url="/policies/refund-policy"
+      data-tfsp-title="Refund Policy">
+      Refund Policy
+    </button>
+
+  {% else %}
+    <button
+      type="button"
+      class=" {{ title }} label collapsible-trigger collapsible-trigger-btn collapsible-trigger-btn--borders collapsible--auto-height{% if force_open %} is-open{% endif %}"
+      aria-controls="Product-content-{{ id }}"
+      {% if force_open %}aria-expanded="true"{% endif %}>
+      {{ title }}
+      {%- render 'collapsible-icons' -%}
+    </button>
+  {% endif %}
+
+  <div
+    id="Product-content-{{ id }}"
+    class="collapsible-content collapsible-content--all{% if force_open %} is-open{% endif %}"
+    {% if force_open %}style="height: auto;"{% endif %}>
+
+    <div class="collapsible-content__inner rte {{ title }}">
+
+      {% if title == "Product Dimensions and Weight" %}
+        {{ product.metafields.custom.product_dimensions_and_weight1 | metafield_tag }}
+
+      {% elsif title == "Product Specifications" %}
+        {{ product.metafields.custom.product_specifications | metafield_tag }}
+
+      {% else %}
+        {{ content }}
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{%- endif -%}
+
+<style>
+.collapsible-trigger-btn {
+  margin-top: 25px !important;
+}
+</style>

@@ -1,0 +1,599 @@
+{% style %}
+  #shopify-section-{{ section.id }} .trufairs-use-cases {
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+  }
+
+ 
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__header {
+    max-width: 760px;
+    margin: 0 auto 42px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__eyebrow {
+    margin: 0 0 12px;
+    color: {{ section.settings.accent_color }};
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__heading {
+    margin: 0 0 14px;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08;
+    font-weight: 750;
+    letter-spacing: -0.045em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__description {
+    margin: 0;
+    color: {{ section.settings.muted_text_color }};
+    font-size: 16.5px;
+    line-height: 1.7;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__card {
+    position: relative;
+    display: flex;
+    min-height: 360px;
+    overflow: hidden;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.card_background }};
+    border: 1px solid {{ section.settings.border_color }};
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.055);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__image {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__image img,
+  #shopify-section-{{ section.id }} .trufairs-use-cases__placeholder {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    background: {{ section.settings.image_background }};
+    transition: transform 320ms ease;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__card:hover .trufairs-use-cases__image img {
+    transform: scale(1.04);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(0, 0, 0, {{ section.settings.overlay_top_opacity }}) 0%,
+        rgba(0, 0, 0, {{ section.settings.overlay_bottom_opacity }}) 100%
+      );
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    margin-top: auto;
+    padding: 28px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__tag {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 14px;
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: {{ section.settings.tag_background }};
+    color: {{ section.settings.tag_text_color }};
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__title {
+    margin: 0 0 10px;
+    color: {{ section.settings.card_text_color }};
+    font-size: 24px;
+    line-height: 1.18;
+    font-weight: 750;
+    letter-spacing: -0.035em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__text {
+    margin: 0 0 20px;
+    color: {{ section.settings.card_muted_text_color }};
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: {{ section.settings.card_text_color }};
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__link svg {
+    width: 15px;
+    height: 15px;
+    transition: transform 180ms ease;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__card:hover .trufairs-use-cases__link svg {
+    transform: translateX(3px);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__note {
+    max-width: 860px;
+    margin: 42px auto 0;
+    padding: 24px 28px;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.note_background }};
+    border: 1px solid {{ section.settings.border_color }};
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__note p {
+    margin: 0;
+    color: {{ section.settings.muted_text_color }};
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-use-cases__note strong {
+    color: {{ section.settings.text_color }};
+  }
+
+  @media screen and (max-width: 990px) {
+    #shopify-section-{{ section.id }} .trufairs-use-cases__grid {
+      grid-template-columns: repeat(3, minmax(260px, 1fr));
+      gap: 18px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .trufairs-use-cases {
+      padding: {{ section.settings.mobile_padding_top }}px 0 {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__header {
+      padding: 0 16px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__heading {
+      font-size: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__description {
+      font-size: 15.5px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__scroller {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 0 16px 6px;
+      margin-left: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__scroller::-webkit-scrollbar {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__grid {
+      display: flex;
+      width: max-content;
+      gap: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__card {
+      width: 82vw;
+      max-width: 340px;
+      min-width: 270px;
+      min-height: 390px;
+      scroll-snap-align: start;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__content {
+      padding: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-use-cases__note {
+      margin: 34px 16px 0;
+      padding: 22px;
+      text-align: left;
+    }
+  }
+
+
+  .trufairs-process__eyebrow::before,
+  .trufairs-process__eyebrow::after {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background:  #b8893b;
+    opacity: 0.45;
+  }
+
+{% endstyle %}
+
+<section class="trufairs-use-cases" aria-labelledby="trufairs-use-cases-heading-{{ section.id }}">
+  <div class="container">
+
+    <div class="trufairs-use-cases__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="trufairs-use-cases__eyebrow trufairs-process__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 id="trufairs-use-cases-heading-{{ section.id }}" class="trufairs-use-cases__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <p class="trufairs-use-cases__description">
+          {{ section.settings.description }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="trufairs-use-cases__scroller">
+        <div class="trufairs-use-cases__grid">
+          {% for block in section.blocks %}
+            {% assign card_link = block.settings.link %}
+
+            {% if card_link != blank %}
+              <a class="trufairs-use-cases__card" href="{{ card_link }}" {{ block.shopify_attributes }}>
+            {% else %}
+              <article class="trufairs-use-cases__card" {{ block.shopify_attributes }}>
+            {% endif %}
+
+              <div class="trufairs-use-cases__image" aria-hidden="true">
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 700 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 360 }} 360w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w,
+                      {{ block.settings.image | image_url: width: 800 }} 800w
+                    "
+                    sizes="(max-width: 749px) 82vw, 33vw"
+                    alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                    loading="lazy"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                  >
+                {% else %}
+                  {{ 'lifestyle-2' | placeholder_svg_tag: 'trufairs-use-cases__placeholder' }}
+                {% endif %}
+              </div>
+
+              <div class="trufairs-use-cases__overlay"></div>
+
+              <div class="trufairs-use-cases__content">
+                {% if block.settings.tag != blank %}
+                  <span class="trufairs-use-cases__tag">
+                    {{ block.settings.tag }}
+                  </span>
+                {% endif %}
+
+                {% if block.settings.title != blank %}
+                  <h3 class="trufairs-use-cases__title">
+                    {{ block.settings.title }}
+                  </h3>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <p class="trufairs-use-cases__text">
+                    {{ block.settings.text }}
+                  </p>
+                {% endif %}
+
+                {% if block.settings.link_label != blank %}
+                  <span class="trufairs-use-cases__link">
+                    {{ block.settings.link_label }}
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                {% endif %}
+              </div>
+
+            {% if card_link != blank %}
+              </a>
+            {% else %}
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if section.settings.note != blank %}
+      <div class="trufairs-use-cases__note">
+        {{ section.settings.note }}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Guided Shopping",
+  "tag": "section",
+  "class": "section-guided-shopping",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Shop by Need"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find the Right Product Faster"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Shop around real needs, problems, and use cases — not endless categories. Trufairs helps you move from “What should I buy?” to a confident choice."
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Bottom insight",
+      "default": "<p>Customers do not think in categories. <strong>They think in problems and use cases.</strong></p>"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#fbf7ef"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Image background",
+      "default": "#efe7da"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main text color",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text color",
+      "default": "#625a50"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#b8893b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#eadfcd"
+    },
+    {
+      "type": "color",
+      "id": "note_background",
+      "label": "Bottom note background",
+      "default": "#fffaf0"
+    },
+    {
+      "type": "color",
+      "id": "tag_background",
+      "label": "Tag background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "tag_text_color",
+      "label": "Tag text",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_muted_text_color",
+      "label": "Card muted text",
+      "default": "#f4ead8"
+    },
+    {
+      "type": "range",
+      "id": "overlay_top_opacity",
+      "label": "Image overlay top opacity",
+      "min": 0,
+      "max": 0.8,
+      "step": 0.1,
+      "default": 0.1
+    },
+    {
+      "type": "range",
+      "id": "overlay_bottom_opacity",
+      "label": "Image overlay bottom opacity",
+      "min": 0.2,
+      "max": 0.9,
+      "step": 0.1,
+      "default": 0.7
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 10,
+      "max": 34,
+      "step": 2,
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "use_case",
+      "name": "Use case",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag",
+          "default": "Guided Pick"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Use case title",
+          "default": "Best mirrors for low-light makeup"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Use case description",
+          "default": "A focused selection for shoppers who need a clearer, more practical choice."
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Explore picks"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Card link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Guided Shopping",
+      "blocks": [
+        {
+          "type": "use_case",
+          "settings": {
+            "title": "Best mirrors for low-light makeup",
+            "text": "Find mirrors selected for brightness, clarity, and everyday usability.",
+            "tag": "Beauty & Home"
+          }
+        },
+        {
+          "type": "use_case",
+          "settings": {
+            "title": "Storage solutions for small spaces",
+            "text": "Practical picks for keeping compact rooms organized without clutter.",
+            "tag": "Small Spaces"
+          }
+        },
+        {
+          "type": "use_case",
+          "settings": {
+            "title": "Travel-ready essentials",
+            "text": "Compact, useful products selected for easier packing and everyday travel.",
+            "tag": "Travel"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

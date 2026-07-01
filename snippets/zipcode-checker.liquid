@@ -1,0 +1,224 @@
+<div id="zipcode-checker-{{ blockId }}" class="zipcode-checker" style="background-color: {{ bgColor }}; border-color: {{ borderColor }};" {{ blockAttribute }}>
+  <div class="zipcode-checker__container">
+    <h3 class="zipcode-checker__title" style="font-family:Inter, sans-serif;text-transform:uppercase;">{{ title }}</h3>
+    <div class="zipcode-checker__form">
+      <div class="zipcode-checker__input-group">
+        <input 
+          type="text" 
+          id="zipcode-input-{{ blockId }}" 
+          class="zipcode-checker__input" 
+          placeholder="Enter your zipcode" 
+          maxlength="10"
+          aria-label="Enter your zipcode"
+        >
+        <button 
+          id="check-zipcode-btn-{{ blockId }}" 
+          class="zipcode-checker__button" 
+          aria-label="Check delivery availability"
+          style="background-color: {{ buttonColor }};"
+        >
+          <span class="zipcode-checker__button-text">Check</span>
+          <span class="zipcode-checker__spinner" style="display: none;"></span>
+        </button>
+      </div>
+      <div id="zipcode-message-{{ blockId }}" class="zipcode-checker__message" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+ .zipcode-checker {
+    margin: 20px 0;
+
+    max-width: 100%;
+}
+  
+  .zipcode-checker__container {
+    width: 100%;
+  }
+  
+.zipcode-checker__title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333333;
+    margin: 5px;
+}
+  
+  .zipcode-checker__form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .zipcode-checker__input-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .zipcode-checker__input {
+    flex-grow: 1;
+    padding: 10px 12px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    font-size: 14px;
+    width:100%;
+  }
+  
+  .zipcode-checker__input:focus {
+    outline: none;
+    border-color: {{ settings.accent_color }};
+    box-shadow: 0 0 0 1px {{ settings.accent_color }};
+  }
+  
+  .zipcode-checker__button {
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .zipcode-checker__button:hover {
+    opacity: 0.9;
+  }
+   .zipcode-checker__message {
+    font-size: 14px;
+    margin-top: 0;
+    min-height: 0;
+}
+  
+ 
+  
+  .zipcode-checker__message.success {
+    color: #2e7d32;
+  }
+  
+  .zipcode-checker__message.error {
+    color: #d32f2f;
+  }
+  
+  .zipcode-checker__message.info {
+    color: #0277bd;
+  }
+  
+  /* Loading spinner */
+  .zipcode-checker__spinner {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 2px solid white;
+    width: 16px;
+    height: 16px;
+    animation: spin 0.8s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+
+ 
+ 
+  
+</style>
+
+<script>document.addEventListener('DOMContentLoaded', function() {
+  
+  
+  
+  
+  
+  
+
+
+    // Use block-specific IDs to prevent conflicts with multiple instances
+    const blockId = "{{ blockId }}";
+    const checkZipcodeBtn = document.getElementById('check-zipcode-btn-' + blockId);
+    const zipcodeInput = document.getElementById('zipcode-input-' + blockId);
+    const zipcodeMessage = document.getElementById('zipcode-message-' + blockId);
+    const spinner = document.querySelector('#zipcode-checker-' + blockId + ' .zipcode-checker__spinner');
+    const buttonText = document.querySelector('#zipcode-checker-' + blockId + ' .zipcode-checker__button-text');
+    
+    // Get eligible zipcodes from block settings
+    const eligibleZipcodesString = "{{ eligibleZipcode }}";
+    const eligibleZipcodes = eligibleZipcodesString.split(',').map(zip => zip.trim());
+    
+    // Success and error messages from settings
+    const successMessage = "{{ successMessage }}";
+    const errorMessage = "{{ errorMessage}}";
+    
+    // Check zipcode function
+    function checkZipcode() {
+      const zipcode = zipcodeInput.value.trim();
+      
+      // Validate input
+      if (!zipcode) {
+        showMessage('Please enter a zipcode.', 'info');
+        return;
+      }
+      
+      // Show loading state
+      showLoading(true);
+      
+      // Simulate network request (for a realistic user experience)
+      setTimeout(() => {
+        if (eligibleZipcodes.includes(zipcode)) {
+          showMessage(successMessage, 'success');
+        } else {
+          showMessage(errorMessage, 'error');
+        }
+        showLoading(false);
+      }, 800);
+    }
+    
+    // Show loading state
+    function showLoading(isLoading) {
+      if (isLoading) {
+        spinner.style.display = 'block';
+        buttonText.style.display = 'none';
+        checkZipcodeBtn.disabled = true;
+      } else {
+        spinner.style.display = 'none';
+        buttonText.style.display = 'block';
+        checkZipcodeBtn.disabled = false;
+      }
+    }
+    
+    // Show message
+    function showMessage(message, type) {
+      zipcodeMessage.textContent = message;
+      zipcodeMessage.className = 'zipcode-checker__message ' + type;
+    }
+    
+    // Event listeners
+    if (checkZipcodeBtn) {
+      checkZipcodeBtn.addEventListener('click', checkZipcode);
+      
+      if (zipcodeInput) {
+        zipcodeInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            checkZipcode();
+          }
+        });
+        
+        // Clear message when input changes
+        zipcodeInput.addEventListener('input', function() {
+          zipcodeMessage.textContent = '';
+          zipcodeMessage.className = 'zipcode-checker__message';
+        });
+      }
+    }
+
+
+ });
+
+  
+  </script>

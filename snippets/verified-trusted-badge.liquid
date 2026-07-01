@@ -1,0 +1,35 @@
+<div>
+
+{% if product.metafields.custom.varified_product and product.metafields.custom.verified_aprroved  %}
+ <span class="trufairs-featured-picks__badge-2 verified-icon" >
+        <img
+                title="This item is trufairs"
+                class="verified-white-logo"
+                style="max-width:30px;"
+                src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Verified_Logo_Main.png?v=1777415405"
+                height="35"
+                width="35"
+                alt=""
+              >
+                    Verified Picks
+                  </span>
+
+                {% else %}
+
+
+ <span class="trufairs-featured-picks__badge-2 verified-icon" >
+        <img
+                title="This item is trufairs"
+                class="verified-white-logo"
+                style="max-width:30px;"
+                src="https://cdn.shopify.com/s/files/1/0859/6992/8495/files/Trusted_logo.png?v=1777546492"
+                height="35"
+                width="35"
+                alt=""
+              >
+                    Trufairs Trusted
+                  </span>
+{% endif %}
+
+
+</div> 

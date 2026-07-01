@@ -1,0 +1,256 @@
+{% liquid
+  assign reassurance_html = product.metafields.custom.reassurance_grid_html.value
+%}
+
+{%- if reassurance_html != blank -%}
+
+{% comment %}
+  Reassurance Section (Metafield Driven)
+{% endcomment %}
+
+<div class="reassurance-section" style="background-color: {{ section.settings.background_color }}; padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;">
+  <div class="container" style="max-width: {{ section.settings.container_width }}px; margin: 0 auto; padding: 0 20px;">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="reassurance-heading" style="
+        text-align: center;
+        font-weight: {{ section.settings.heading_weight }};
+        color: {{ section.settings.heading_color }};
+        margin-bottom: {{ section.settings.heading_margin }}px;
+        letter-spacing: 0.5px;
+        font-family: {{ section.settings.heading_font }};
+      ">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <p class="reassurance-subheading" style="
+        text-align: center;
+        font-size: {{ section.settings.subheading_size }}px;
+        color: {{ section.settings.subheading_color }};
+        margin-bottom: 50px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+      ">
+        {{ section.settings.subheading }}
+      </p>
+    {% endif %}
+
+    {% assign reassurance_html = product.metafields.custom.reassurance_grid_html.value %}
+
+    {% if reassurance_html != blank %}
+      <div class="reassurance-grid" style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax({{ section.settings.min_column_width }}px, 1fr));
+        gap: {{ section.settings.grid_gap }}px;
+        align-items: start;
+      ">
+        {{ reassurance_html }}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+  .reassurance-item {
+    position: relative;
+    text-align: center;
+    padding: {{ section.settings.item_padding }}px;
+    transition: all 0.3s ease;
+    background: {{ section.settings.item_background }};
+    border-radius: {{ section.settings.item_border_radius }}px;
+  }
+
+  .reassurance-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  }
+
+  .reassurance-icon {
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    margin: 0 auto {{ section.settings.icon_margin }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: {{ section.settings.icon_background }};
+    border-radius: {{ section.settings.icon_border_radius }}px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+  }
+
+  .reassurance-item:hover .reassurance-icon {
+    transform: scale(1.05);
+  }
+
+  .reassurance-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.04));
+  }
+
+  /* Dynamically apply icon color */
+  .reassurance-icon svg path,
+  .reassurance-icon svg circle {
+    stroke: {{ section.settings.icon_color }};
+  }
+
+  .reassurance-icon svg [fill]:not([fill="none"]) {
+    fill: {{ section.settings.icon_color }};
+  }
+
+  .reassurance-item h3 {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: {{ section.settings.title_weight }};
+    color: {{ section.settings.title_color }};
+    margin-bottom: {{ section.settings.title_margin }}px;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+  }
+
+  .reassurance-item p {
+    font-size: {{ section.settings.description_size }}px;
+    color: {{ section.settings.description_color }};
+    line-height: 1.7;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  /* Tablet */
+  @media (max-width: 768px) {
+    .reassurance-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 20px !important;
+    }
+
+    .reassurance-item {
+      padding: 25px 15px !important;
+    }
+
+    .reassurance-icon {
+      width: 60px !important;
+      height: 60px !important;
+      margin-bottom: 15px !important;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .reassurance-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 15px !important;
+    }
+
+    .reassurance-item {
+      padding: 20px 12px !important;
+    }
+
+    .reassurance-subheading {
+      font-size: 14px !important;
+      margin-bottom: 35px !important;
+    }
+
+    .reassurance-icon {
+      width: 50px !important;
+      height: 50px !important;
+      margin-bottom: 12px !important;
+      padding: 12px !important;
+    }
+
+    .reassurance-item h3 {
+      font-size: 15px !important;
+      margin-bottom: 8px !important;
+    }
+
+    .reassurance-item p {
+      font-size: 13px !important;
+      line-height: 1.5 !important;
+    }
+  }
+
+  /* Extra small */
+  @media (max-width: 360px) {
+    .reassurance-grid {
+      gap: 12px !important;
+    }
+
+    .reassurance-item {
+      padding: 18px 10px !important;
+    }
+
+    .reassurance-item h3 {
+      font-size: 14px !important;
+    }
+
+    .reassurance-item p {
+      font-size: 12px !important;
+    }
+  }
+</style>
+{%- endif -%}
+{% schema %}
+{
+  "name": "What to Expect",
+  "class": "reassurance-section-wrapper",
+  "settings": [
+    { "type": "header", "content": "Section Settings" },
+    { "type": "text", "id": "heading", "label": "Main Heading", "default": "What to Expect" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading" },
+    { "type": "color", "id": "background_color", "label": "Background Color", "default": "#F9F9F9" },
+
+    { "type": "header", "content": "Layout Settings" },
+    { "type": "range", "id": "container_width", "label": "Container Width", "min": 900, "max": 1400, "step": 50, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "min_column_width", "label": "Minimum Column Width", "min": 200, "max": 350, "step": 5, "unit": "px", "default": 240 },
+    { "type": "range", "id": "grid_gap", "label": "Grid Gap", "min": 20, "max": 60, "step": 5, "unit": "px", "default": 35 },
+
+    { "type": "range", "id": "item_padding", "label": "Item Padding", "min": 15, "max": 50, "step": 5, "unit": "px", "default": 30 },
+    { "type": "color", "id": "item_background", "label": "Item Background Color", "default": "#ffffff" },
+    { "type": "range", "id": "item_border_radius", "label": "Item Border Radius", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 12 },
+
+    { "type": "range", "id": "padding_top", "label": "Padding Top", "min": 40, "max": 150, "step": 10, "unit": "px", "default": 70 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding Bottom", "min": 40, "max": 150, "step": 10, "unit": "px", "default": 70 },
+
+    { "type": "header", "content": "Heading" },
+    { "type": "select", "id": "heading_font", "label": "Heading Font", "options": [
+      { "value": "inherit", "label": "Theme Default" },
+      { "value": "Helvetica, Arial, sans-serif", "label": "Helvetica" }
+    ], "default": "inherit" },
+    { "type": "range", "id": "heading_size", "label": "Heading Font Size", "min": 24, "max": 56, "step": 2, "unit": "px", "default": 34 },
+    { "type": "select", "id": "heading_weight", "label": "Heading Font Weight", "options": [
+      { "value": "400", "label": "Normal" },
+      { "value": "600", "label": "Semi Bold" }
+    ], "default": "600" },
+    { "type": "color", "id": "heading_color", "label": "Heading Color", "default": "#2c2c2c" },
+    { "type": "range", "id": "heading_margin", "label": "Heading Bottom Margin", "min": 15, "max": 50, "step": 5, "unit": "px", "default": 25 },
+
+    { "type": "header", "content": "Typography" },
+    { "type": "range", "id": "title_size", "label": "Title Font Size", "min": 12, "max": 30, "step": 2, "unit": "px", "default": 20 },
+    { "type": "select", "id": "title_weight", "label": "Title Font Weight", "options": [
+      { "value": "400", "label": "Normal" },
+      { "value": "600", "label": "Semi Bold" }
+    ], "default": "600" },
+    { "type": "color", "id": "title_color", "label": "Title Color", "default": "#2c2c2c" },
+    { "type": "range", "id": "title_margin", "label": "Title Bottom Margin", "min": 8, "max": 26, "step": 2, "unit": "px", "default": 12 },
+
+    { "type": "range", "id": "description_size", "label": "Description Font Size", "min": 13, "max": 18, "step": 1, "unit": "px", "default": 15 },
+    { "type": "color", "id": "description_color", "label": "Description Color", "default": "#6b6b6b" },
+
+    { "type": "header", "content": "Icon Styling" },
+    { "type": "range", "id": "icon_size", "label": "Icon Size", "min": 50, "max": 100, "step": 5, "unit": "px", "default": 70 },
+    { "type": "color", "id": "icon_color", "label": "Icon Color", "default": "#3d3d3d" },
+    { "type": "color", "id": "icon_background", "label": "Icon Background", "default": "#f5f5f5" },
+    { "type": "range", "id": "icon_border_radius", "label": "Icon Border Radius", "min": 0, "max": 50, "step": 5, "unit": "px", "default": 20 },
+    { "type": "range", "id": "icon_margin", "label": "Icon Bottom Margin", "min": 15, "max": 35, "step": 5, "unit": "px", "default": 20 }
+  ],
+  "presets": [
+    {
+      "name": "What to Expect"
+    }
+  ]
+}
+{% endschema %}

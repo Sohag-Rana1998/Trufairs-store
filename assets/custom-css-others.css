@@ -1,0 +1,233 @@
+
+
+ .discount-section-{{ section.id }} {
+     width:100%;
+    margin: {{ block.settings.margin_top }}px 0 {{ block.settings.margin_bottom }}px;
+  }
+
+  .discount-section-{{ section.id }} .coupons-container {
+    margin-top: 15px;
+  }
+
+  .discount-section-{{ section.id }} .coupon-card {
+ 
+    border-radius: 12px;
+    
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+  }
+
+  .discount-section-{{ section.id }} .coupon-card {
+   
+   
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+  }
+ 
+
+  .discount-section-{{ section.id }} .coupon-card:hover {
+ 
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+ 
+  .discount-section-{{ section.id }}.discount-badge {
+    font-size: 20px;
+    color: #333;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    line-height: 1.2;
+    width: 100%;
+    padding: 26px;
+    background: #e2c283;
+    margin-right: 2px;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+  .discount-badge  .discount-message-bold {
+    
+    font-weight: 700;
+}
+  .discount-section-{{ section.id }} .discount-description {
+    color: #000000s;
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  .discount-section-{{ section.id }} .coupon-code-container {
+   
+      padding:32px 22px;
+    background: #e2c283;
+    margin-right: 2px;
+    height: 100%;
+   border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    position: relative;
+  }
+
+
+
+  .discount-section-{{ section.id }} .coupon-code {
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    font-size: 16px;
+    color:rgb(0, 7, 13);
+    letter-spacing: 1px;
+  }
+
+  .discount-section-{{ section.id }} .coupon-card.back-to-school .coupon-code {
+    color: {{ block.settings.back_to_school_text }};
+  }
+
+  .discount-section-{{ section.id }} .coupon-card.other .coupon-code {
+    color: {{ block.settings.other_text }};
+  }
+
+  .discount-section-{{ section.id }}   .copy-btn {
+    background: #000000;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    padding: 11px 30px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+  .discount-section-{{ section.id }} .copy-btn:hover {
+    background: #ffffff;
+    transform: scale(1.05);
+    color:black;
+  }
+
+  .discount-section-{{ section.id }} .copy-btn:active {
+    transform: scale(0.98);
+  }
+
+  .discount-section-{{ section.id }} .copy-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .discount-section-{{ section.id }} .copied-notification {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background:rgb(0, 0, 0);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+
+  .discount-section-{{ section.id }} .copied-notification.show {
+    opacity: 1;
+  }
+
+  .discount-section-{{ section.id }} .copied-notification::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color:rgb(0, 0, 0);
+  }
+  @media (min-width:1070px) and (max-width: 1450px) {
+
+    .coupon-code-container {
+    padding: 44px 22px !important;
+ 
+}
+  }
+
+  @media (min-width:768px) and (max-width: 1069px) {
+
+.coupon-code-container {
+    padding: 56px 22px !important;
+} 
+
+  }
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .discount-section-{{ section.id }} .coupon-card {
+      padding: 0px;
+    }
+
+.discount-badge {
+    font-size: 15px;
+    padding: 26px 7PX  ;
+}
+
+    .discount-section-{{ section.id }} .discount-description {
+      font-size: 14px;
+    }
+
+    .discount-section-{{ section.id }} .coupon-code-container {
+      gap: 12px;
+      text-align: center;
+        padding: 29px 13px;
+    }
+ 
+    .discount-section-{{ section.id }} .coupon-code {
+      font-size: 16px;
+    }
+ 
+    .discount-section-{{ section.id }} .copy-btn {
+      width: 100px;
+      justify-content: center;
+      padding: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .discount-section-{{ section.id }} .coupon-card {
+      padding: 0px;
+    }
+
+   .discount-section-{{ section.id }} .coupon-code-container {
+      gap: 12px;
+      text-align: center;
+        padding: 30px 8px;
+    }
+ 
+   .discount-badge  {
+    font-size: 15px;
+    padding: 17px 7PX !important;
+}
+
+    .discount-description {
+      font-size: 14px;
+    }
+
+    .discount-section-{{ section.id }} .coupon-code {
+      font-size: 18px;
+    }
+  }
+
+
+ .product-card-buttons form.product-form-cart {
+    width: 100% !important;
+}

@@ -1,0 +1,606 @@
+{% comment %}
+  Scrolling Collection Gallery Section (Syntax-corrected)
+  - Seamless JS-driven infinite scroll
+  - Drag + momentum
+  - Safe Liquid guards and fallbacks
+  - Theme Editor safe initialization/cleanup
+{% endcomment %}
+
+{% assign block_count = section.blocks.size %}
+{% assign has_blocks = block_count | plus: 0 %}
+
+
+{% if has_blocks %}
+<div class="scrolling-collection-gallery" data-section-id="{{ section.id }}">
+  <div class="collection-gallery-wrapper">
+    {% if section.settings.heading != blank %}
+      <div class="gallery-header">
+        <h2 class="gallery-heading">{{ section.settings.heading | escape }}</h2>
+        {% if section.settings.subheading != blank %}
+          <p class="gallery-subheading">{{ section.settings.subheading | escape }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="gallery-columns">
+      {% for i in (1..2) %}
+        {% assign i_str = i | append: '' %}
+        {% assign speed_key = 'column_' | append: i | append: '_speed' %}
+
+        {%- comment -%} Count how many blocks belong to this column safely {%- endcomment -%}
+        {% assign col_count = 0 %}
+        {% for b in section.blocks %}
+          {% if b.type == 'collection_item' and b.settings.column == i_str %}
+            {% assign col_count = col_count | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+
+        {% if col_count > 0 %}
+          <div class="gallery-column" data-column="{{ i_str }}" data-speed="{{ section.settings[speed_key] | default: 60 }}">
+            <div class="gallery-track">
+              {%- comment -%}
+                Duplicate items 2x for seamless infinite scroll (JS wraps at half width)
+              {%- endcomment -%}
+              {% for j in (1..2) %}
+                {% for block in section.blocks %}
+                  {% if block.type == 'collection_item' and block.settings.column == i_str %}
+                    {% assign col = block.settings.collection %}
+
+                    {%- comment -%} Resolve image with safe fallbacks {%- endcomment -%}
+                    {% assign item_image = nil %}
+                    {% if block.settings.custom_image != blank %}
+                      {% assign item_image = block.settings.custom_image %}
+                    {% elsif col != blank and col.image != blank %}
+                      {% assign item_image = col.image %}
+                    {% elsif col != blank and col.products_count > 0 and col.products.first and col.products.first.featured_image != blank %}
+                      {% assign item_image = col.products.first.featured_image %}
+                    {% endif %}
+
+                    {%- comment -%} Resolve link safely (custom over collection) {%- endcomment -%}
+                    {% assign item_link = block.settings.custom_link | default: col.url %}
+
+                    {%- comment -%} Resolve title safely {%- endcomment -%}
+                    {% assign title_text = block.settings.custom_title %}
+                    {% if title_text == blank and col %}
+                      {% assign title_text = col.title %}
+                    {% endif %}
+                    {% if title_text == blank %}
+                      {% assign title_text = '' %}
+                    {% endif %}
+
+                    {%- comment -%} Alt text fallback {%- endcomment -%}
+                    {% assign alt_text = '' %}
+                    {% if item_image and item_image.alt != blank %}
+                      {% assign alt_text = item_image.alt %}
+                    {% elsif title_text != blank %}
+                      {% assign alt_text = title_text %}
+                    {% else %}
+                      {% assign alt_text = 'Collection image' %}
+                    {% endif %}
+
+                    <div class="gallery-item" {{ block.shopify_attributes }}>
+                      {% if item_link != blank %}
+                        <a href="{{ item_link }}" class="gallery-item-link">
+                      {% endif %}
+                          <div class="gallery-item-image">
+                            {% if item_image %}
+                              <img
+                                src="{{ item_image | image_url: width: 800 }}"
+                                srcset="{{ item_image | image_url: width: 400 }} 400w,
+                                        {{ item_image | image_url: width: 600 }} 600w,
+                                        {{ item_image | image_url: width: 800 }} 800w"
+                                sizes="(min-width: 990px) 400px, (min-width: 750px) 300px, 250px"
+                                alt="{{ alt_text | escape }}"
+                               
+                                width="{{ item_image.width }}"
+                                height="{{ item_image.height }}"
+                              >
+                            {% else %}
+                              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            {% endif %}
+
+                            {% if title_text != blank %}
+                              <div class="gallery-item-overlay">
+                                <h3 class="gallery-item-title">{{ title_text | escape }}</h3>
+                              </div>
+                            {% endif %}
+                          </div>
+                      {% if item_link != blank %}
+                        </a>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<style>
+.scrolling-collection-gallery {
+  overflow: hidden;
+  padding: 60px 0;
+}
+
+.collection-gallery-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+.gallery-heading {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: #1a1a1a;
+}
+
+.gallery-subheading {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+.gallery-columns {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.gallery-column {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.gallery-column.is-dragging {
+  cursor: grabbing;
+}
+
+.gallery-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  will-change: transform;
+  transform: translateX(0);
+}
+
+.gallery-item {
+  flex: 0 0 auto;
+  width: 350px;
+  position: relative;
+}
+
+.gallery-item-link {
+  display: block;
+  text-decoration: none;
+  height: 100%;
+}
+
+.gallery-item-image {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f5f5f5;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-item-image {
+  transform: scale(1.02);
+}
+
+.gallery-item-image img,
+.gallery-item-image svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-item-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.gallery-item:hover .gallery-item-overlay {
+  opacity: 1;
+}
+
+.gallery-item-title {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+  .gallery-heading {
+    font-size: 2rem;
+  }
+
+  .gallery-item {
+    width: 250px;
+  }
+
+  .gallery-item-overlay {
+    opacity: 1;
+  }
+
+  .gallery-track {
+    gap: 15px;
+  }
+
+  .gallery-columns {
+    gap: 15px;
+  }
+
+  .scrolling-collection-gallery {
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-item {
+    width: 200px;
+  }
+
+  .gallery-item-title {
+    font-size: 1rem;
+  }
+
+  .gallery-item-overlay {
+    padding: 15px;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-track {
+    transition: none !important;
+  }
+  .gallery-item-image {
+    transition: none !important;
+  }
+}
+</style>
+
+<script>
+(function() {
+  // Utility to init a section instance
+  function initScrollingGallery(sectionEl) {
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const columns = Array.from(sectionEl.querySelectorAll('.gallery-column'));
+    const cleanups = [];
+
+    columns.forEach((column) => {
+      const track = column.querySelector('.gallery-track');
+      if (!track) return;
+
+      const durationSec = Math.max(1, parseFloat(column.dataset.speed || '60')); // seconds per half-loop
+      let contentWidth = 0; // width of half content (since duplicated 2x)
+      let offset = 0;
+      let rafId = null;
+      let lastTs = 0;
+
+      let isHover = false;
+      let isDragging = false;
+      let startX = 0;
+      let lastX = 0;
+      let velocity = 0;
+      let momentumId = null;
+      let cancelClick = false;
+
+      const measure = () => {
+        contentWidth = track.scrollWidth / 2;
+      };
+
+      const wrapOffset = () => {
+        if (!contentWidth) return;
+        while (offset <= -contentWidth) offset += contentWidth;
+        while (offset > 0) offset -= contentWidth;
+      };
+
+      const render = () => {
+        track.style.transform = 'translateX(' + offset + 'px)';
+      };
+
+      const step = (ts) => {
+        if (!lastTs) lastTs = ts;
+        const dt = (ts - lastTs) / 1000;
+        lastTs = ts;
+
+        if (!isHover && !isDragging && !prefersReduced && contentWidth > 0) {
+          const pxPerSec = contentWidth / durationSec; // move one half-loop per duration
+          offset -= pxPerSec * dt;
+          wrapOffset();
+          render();
+        }
+        rafId = requestAnimationFrame(step);
+      };
+
+      const startRAF = () => {
+        if (rafId == null) {
+          lastTs = 0;
+          rafId = requestAnimationFrame(step);
+        }
+      };
+
+      const stopRAF = () => {
+        if (rafId != null) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+      };
+
+      const onResize = () => {
+        const ratio = contentWidth ? (offset / contentWidth) : 0;
+        measure();
+        offset = ratio * contentWidth;
+        wrapOffset();
+        render();
+      };
+
+      const cancelMomentum = () => {
+        if (momentumId) {
+          cancelAnimationFrame(momentumId);
+          momentumId = null;
+        }
+      };
+
+      const applyMomentum = () => {
+        cancelMomentum();
+        const friction = 0.95;
+        const min = 0.15;
+        const tick = () => {
+          if (Math.abs(velocity) > min) {
+            offset += velocity;
+            velocity *= friction;
+            wrapOffset();
+            render();
+            momentumId = requestAnimationFrame(tick);
+          } else {
+            velocity = 0;
+            momentumId = null;
+          }
+        };
+        momentumId = requestAnimationFrame(tick);
+      };
+
+      const onDown = (e) => {
+        isDragging = true;
+        column.classList.add('is-dragging');
+        cancelMomentum();
+        lastX = startX = (e.touches ? e.touches[0].pageX : e.pageX);
+        velocity = 0;
+        cancelClick = false;
+      };
+
+      const onMove = (e) => {
+        if (!isDragging) return;
+        const x = (e.touches ? e.touches[0].pageX : e.pageX);
+        const dx = x - lastX;
+        if (Math.abs(x - startX) > 5) cancelClick = true;
+        offset += dx;
+        wrapOffset();
+        render();
+        velocity = dx;
+        lastX = x;
+        if (e.cancelable) e.preventDefault();
+      };
+
+      const onUp = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        column.classList.remove('is-dragging');
+        applyMomentum();
+      };
+
+      const onMouseEnter = () => { isHover = true; };
+      const onMouseLeave = () => { isHover = false; };
+
+      const onClickCapture = (e) => {
+        if (cancelClick) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        cancelClick = false;
+      };
+
+      // Attach listeners
+      column.addEventListener('mousedown', onDown);
+      column.addEventListener('touchstart', onDown, { passive: true });
+      window.addEventListener('mousemove', onMove, { passive: false });
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('mouseup', onUp);
+      window.addEventListener('touchend', onUp);
+      column.addEventListener('mouseenter', onMouseEnter);
+      column.addEventListener('mouseleave', onMouseLeave);
+      column.addEventListener('click', onClickCapture, true);
+      window.addEventListener('resize', onResize);
+
+      // Save cleanups
+      cleanups.push(() => {
+        stopRAF();
+        cancelMomentum();
+        column.removeEventListener('mousedown', onDown);
+        column.removeEventListener('touchstart', onDown, { passive: true });
+        window.removeEventListener('mousemove', onMove, { passive: false });
+        window.removeEventListener('touchmove', onMove, { passive: false });
+        window.removeEventListener('mouseup', onUp);
+        window.removeEventListener('touchend', onUp);
+        column.removeEventListener('mouseenter', onMouseEnter);
+        column.removeEventListener('mouseleave', onMouseLeave);
+        column.removeEventListener('click', onClickCapture, true);
+        window.removeEventListener('resize', onResize);
+      });
+
+      // Init
+      measure();
+      wrapOffset();
+      render();
+      startRAF();
+    });
+
+    // Expose cleanup for Theme Editor
+    sectionEl._scg_cleanup = () => {
+      cleanups.forEach(fn => fn());
+      cleanups.length = 0;
+    };
+  }
+
+  // Initialize on DOM ready
+  function initAll() {
+    document.querySelectorAll('.scrolling-collection-gallery').forEach((el) => {
+      if (el._scg_initialized) return;
+      el._scg_initialized = true;
+      initScrollingGallery(el);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+
+  // Theme Editor events
+  document.addEventListener('shopify:section:load', function(e) {
+    const root = e.target;
+    const el = root && (root.classList?.contains('scrolling-collection-gallery') ? root : root.querySelector('.scrolling-collection-gallery'));
+    if (el && !el._scg_initialized) {
+      el._scg_initialized = true;
+      initScrollingGallery(el);
+    }
+  });
+
+  document.addEventListener('shopify:section:unload', function(e) {
+    const root = e.target;
+    const el = root && (root.classList?.contains('scrolling-collection-gallery') ? root : root.querySelector('.scrolling-collection-gallery'));
+    if (el && el._scg_cleanup) {
+      el._scg_cleanup();
+      el._scg_initialized = false;
+      delete el._scg_cleanup;
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Collection Gallery",
+  "tag": "section",
+  "class": "section-scrolling-collection-gallery",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Explore Our Collections"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover curated collections for every style"
+    },
+    {
+      "type": "range",
+      "id": "column_1_speed",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "s",
+      "label": "Column 1 Loop Time",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "column_2_speed",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "s",
+      "label": "Column 2 Loop Time",
+      "default": 45
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Column",
+          "options": [
+            { "value": "1", "label": "Column 1" },
+            { "value": "2", "label": "Column 2" }
+          ],
+          "default": "1"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Custom Image (Optional)",
+          "info": "If set, this overrides the collection image"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Title (Optional)",
+          "info": "If set, this overrides the collection title"
+        },
+        {
+          "type": "url",
+          "id": "custom_link",
+          "label": "Custom Link (Optional)",
+          "info": "If set, this overrides the collection URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Gallery",
+      "blocks": [
+        { "type": "collection_item", "settings": { "column": "1" } },
+        { "type": "collection_item", "settings": { "column": "1" } },
+        { "type": "collection_item", "settings": { "column": "1" } },
+        { "type": "collection_item", "settings": { "column": "2" } },
+        { "type": "collection_item", "settings": { "column": "2" } },
+        { "type": "collection_item", "settings": { "column": "2" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

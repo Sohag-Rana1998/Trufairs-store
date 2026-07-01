@@ -1,0 +1,1479 @@
+{% comment %}
+  Section: Product Features Variant Showcase
+  Description: Variant-based features section with image slider and add to cart
+  Usage: Product template only
+{% endcomment %}
+
+{%- style -%}
+  .ProductFeaturesVariant-{{ section.id }} {
+    --pfv-bg-primary: {{ section.settings.bg_color }};
+    --pfv-bg-card: {{ section.settings.card_bg_color }};
+    --pfv-text-primary: {{ section.settings.text_color }};
+    --pfv-text-secondary: {{ section.settings.text_secondary }};
+    --pfv-accent: {{ section.settings.accent_color }};
+    --pfv-accent-light: {{ section.settings.accent_color | color_lighten: 45 }};
+    --pfv-highlight: {{ section.settings.highlight_color }};
+    --pfv-cta-bg: {{ section.settings.cta_color }};
+    --pfv-cta-text: {{ section.settings.cta_text_color }};
+    --pfv-padding-top: {{ section.settings.padding_top }}px;
+    --pfv-padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+{%- endstyle -%}
+
+{%- liquid
+  # Get variant from section settings
+  assign target_variant = null
+  if section.settings.variant_id != blank
+    assign target_variant_id = section.settings.variant_id | plus: 0
+    for variant in product.variants
+      if variant.id == target_variant_id
+        assign target_variant = variant
+        break
+      endif
+    endfor
+  endif
+  
+  # Fallback to first available variant if not found
+  unless target_variant
+    assign target_variant = product.selected_or_first_available_variant
+  endunless
+  
+  # Get variant metafields
+  assign variant_title = section.settings.title | default: product.title
+  assign variant_images_raw = target_variant.metafields.custom.variant_image
+  
+  # Split comma-separated image URLs
+  if variant_images_raw != blank
+    assign variant_images = variant_images_raw | split: ','
+  else
+    assign variant_images = product.images
+  endif
+  
+  # Price calculations
+  assign compare_at_price = target_variant.compare_at_price
+  assign price = target_variant.price
+  assign available = target_variant.available
+  
+  if compare_at_price > price
+    assign on_sale = true
+    assign savings = compare_at_price | minus: price
+    assign savings_percent = savings | times: 100.0 | divided_by: compare_at_price | round
+  else
+    assign on_sale = false
+  endif
+  
+  # Image position
+  assign image_position = section.settings.image_position
+-%}
+
+<section 
+  id="{% if section.settings.variant_id != blank %}{{ section.settings.variant_id }}{% else %}ProductFeaturesVariant-{{ section.id }}{% endif %}" 
+  class="pfv-section ProductFeaturesVariant-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+>
+  <!-- Decorative Background -->
+  <div class="pfv-background">
+    <div class="pfv-bg-gradient"></div>
+    <div class="pfv-bg-dots"></div>
+    <div class="pfv-bg-glow pfv-bg-glow--1"></div>
+    <div class="pfv-bg-glow pfv-bg-glow--2"></div>
+  </div>
+
+  <div id="{{ section.settings.section_anchor_id }}" class="pfv-container page-width container">
+    <!-- Section Header -->
+    {%- if section.settings.headline != blank -%}
+      <div class="pfv-header">
+        {%- if section.settings.eyebrow_text != blank -%}
+          <span class="pfv-eyebrow">
+            <span class="pfv-eyebrow-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+              </svg>
+            </span>
+            {{ section.settings.eyebrow_text }}
+          </span>
+        {%- endif -%}
+        
+        <h2 class="pfv-headline">{{ section.settings.headline }}</h2>
+        
+        {%- if section.settings.subheadline != blank -%}
+          <p class="pfv-subheadline">{{ section.settings.subheadline }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <!-- Main Layout -->
+    <div class="pfv-main-layout pfv-layout-{{ image_position }}">
+      
+      <!-- Product Column -->
+      <div class="pfv-product-column">
+        <div class="pfv-product-card">
+          <!-- Variant Title -->
+          {%- if variant_title != blank -%}
+            <h3 class="pfv-product-title">{{ variant_title }}</h3>
+          {%- endif -%}
+          
+          <!-- Image Slider -->
+          <div class="pfv-image-slider-wrapper">
+            {%- if on_sale -%}
+              <div class="pfv-sale-badge">
+                Save {{ savings_percent }}%
+              </div>
+            {%- endif -%}
+            
+            <div class="swiper pfv-swiper" data-swiper-id="{{ section.id }}">
+              <div class="swiper-wrapper">
+                {%- if variant_images.size > 0 -%}
+                  {%- for image in variant_images -%}
+                    <div class="swiper-slide">
+                      {%- assign image_url = image | strip -%}
+                      {%- if image_url contains 'http' -%}
+                        <img src="{{ image_url }}" alt="{{ variant_title }}">
+                      {%- else -%}
+                        <img src="{{ image | image_url: width: 800 }}" alt="{{ image.alt | default: variant_title }}">
+                      {%- endif -%}
+                    </div>
+                  {%- endfor -%}
+                {%- else -%}
+                  <div class="swiper-slide">
+                    {{ 'product-1' | placeholder_svg_tag: 'pfv-placeholder-svg' }}
+                  </div>
+                {%- endif -%}
+              </div>
+              
+              <!-- Pagination -->
+              {%- if variant_images.size > 1 -%}
+                <div class="swiper-pagination" data-pagination-id="{{ section.id }}"></div>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <!-- Add to Cart Section - Desktop Only -->
+          <div class="pfv-cart-section pfv-cart-desktop">
+            <product-form class="pfv-product-form" data-section-id="{{ section.id }}">
+              {%- form 'product', product, 
+                  id: 'ProductFormVariant-{{ section.id }}', 
+                  class: 'pfv-form',
+                  novalidate: 'novalidate',
+                  data-type: 'add-to-cart-form'
+              -%}
+                <input type="hidden" name="id" value="{{ target_variant.id }}" data-variant-id="{{ target_variant.id }}">
+                
+                <div class="pfv-cart-controls">
+                  <!-- Quantity Input -->
+                  <div class="pfv-quantity-control">
+                    <button type="button" class="pfv-qty-btn pfv-qty-minus" aria-label="Decrease quantity">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                    </button>
+                    <input 
+                      type="number" 
+                      name="quantity" 
+                      value="1" 
+                      min="1" 
+                      max="{{ target_variant.inventory_quantity | default: 999 }}"
+                      class="pfv-qty-input"
+                      aria-label="Quantity"
+                    >
+                    <button type="button" class="pfv-qty-btn pfv-qty-plus" aria-label="Increase quantity">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <!-- Add to Cart Button -->
+                  <button 
+                    type="submit" 
+                    class="pfv-add-cart-btn"
+                    {% unless available %}disabled{% endunless %}
+                    data-add-to-cart
+                  >
+                    <span class="pfv-btn-content">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                      </svg>
+                      <span class="pfv-btn-text">
+                        {%- if available -%}
+                          Add To Cart
+                        {%- else -%}
+                          Sold Out
+                        {%- endif -%}
+                      </span>
+                      <span class="pfv-btn-price" data-variant-price>{{ price | money }}</span>
+                    </span>
+                    <span class="pfv-btn-loading" style="display: none;">
+                      <svg class="pfv-spinner" width="20" height="20" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" opacity="0.25"/>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" stroke-dashoffset="31.4" opacity="0.75">
+                          <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                        </circle>
+                      </svg>
+                      Adding...
+                    </span>
+                  </button>
+                </div>
+
+                <!-- Price Display -->
+                {% comment %} {%- if on_sale -%}
+                  <div class="pfv-price-info">
+                    <span class="pfv-compare-price">{{ compare_at_price | money }}</span>
+                    <span class="pfv-savings">Save {{ savings | money }}</span>
+                  </div>
+                {%- endif -%} {% endcomment %}
+              {%- endform -%}
+            </product-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Column -->
+      <div class="pfv-features-column">
+        {%- assign feature_count = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'feature_card' -%}
+            {%- assign feature_count = feature_count | plus: 1 -%}
+            <div 
+              class="pfv-feature-card {% if block.settings.is_highlighted %}pfv-feature-card--highlighted{% endif %}"
+              {{ block.shopify_attributes }}
+              style="--card-index: {{ feature_count }};"
+            >
+              <!-- Card Glow Effect -->
+              <div class="pfv-card-glow"></div>
+              
+              <!-- Icon Container -->
+              <div class="pfv-feature-icon-wrapper">
+                <div class="pfv-feature-icon">
+                  {%- if block.settings.custom_icon != blank -%}
+                {{block.settings.custom_icon }} 
+                  {%- else -%}
+                    {%- case block.settings.icon_type -%}
+                      {%- when 'magnify' -%}
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <circle cx="11" cy="11" r="8"/>
+                          <path d="m21 21-4.35-4.35"/>
+                          <line x1="11" y1="8" x2="11" y2="14"/>
+                          <line x1="8" y1="11" x2="14" y2="11"/>
+                        </svg>
+                      {%- when 'battery' -%}
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <rect x="2" y="7" width="16" height="10" rx="2"/>
+                          <line x1="22" y1="11" x2="22" y2="13"/>
+                          <line x1="6" y1="11" x2="14" y2="11"/>
+                        </svg>
+                      {%- when 'height' -%}
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <path d="M12 2v20M2 12h4M18 12h4M8 5l4-3 4 3M8 19l4 3 4-3"/>
+                        </svg>
+                      {%- when 'tilt' -%}
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <rect x="2" y="7" width="20" height="14" rx="2"/>
+                          <line x1="6" y1="11" x2="18" y2="9"/>
+                        </svg>
+                      {%- when 'wheels' -%}
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <circle cx="6" cy="19" r="3"/>
+                          <circle cx="18" cy="19" r="3"/>
+                          <path d="M6 16V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"/>
+                        </svg>
+                      {%- else -%}
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                    {%- endcase -%}
+                  {%- endif -%}
+                </div>
+                
+                {%- if block.settings.icon_badge != blank -%}
+                  <span class="pfv-icon-badge">{{ block.settings.icon_badge }}</span>
+                {%- endif -%}
+              </div>
+
+              <!-- Content -->
+              <div class="pfv-feature-content">
+                <h3 class="pfv-feature-title">{{ block.settings.title }}</h3>
+                <p class="pfv-feature-description">{{ block.settings.description }}</p>
+                
+                {%- if block.settings.highlight_text != blank -%}
+                  <span class="pfv-feature-highlight">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M9 12l2 2 4-4"/>
+                      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    {{ block.settings.highlight_text }}
+                  </span>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        <!-- Add to Cart Section - Mobile Only (Below Features) -->
+        <div class="pfv-cart-section pfv-cart-mobile">
+          <product-form class="pfv-product-form" data-section-id="{{ section.id }}-mobile">
+            {%- form 'product', product, 
+                id: 'ProductFormVariantMobile-{{ section.id }}', 
+                class: 'pfv-form',
+                novalidate: 'novalidate',
+                data-type: 'add-to-cart-form'
+            -%}
+              <input type="hidden" name="id" value="{{ target_variant.id }}" data-variant-id="{{ target_variant.id }}">
+              
+              <div class="pfv-cart-controls">
+                <!-- Quantity Input -->
+                <div class="pfv-quantity-control">
+                  <button type="button" class="pfv-qty-btn pfv-qty-minus" aria-label="Decrease quantity">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </button>
+                  <input 
+                    type="number" 
+                    name="quantity" 
+                    value="1" 
+                    min="1" 
+                    max="{{ target_variant.inventory_quantity | default: 999 }}"
+                    class="pfv-qty-input"
+                    aria-label="Quantity"
+                  >
+                  <button type="button" class="pfv-qty-btn pfv-qty-plus" aria-label="Increase quantity">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"/>
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button 
+                  type="submit" 
+                  class="pfv-add-cart-btn"
+                  {% unless available %}disabled{% endunless %}
+                  data-add-to-cart
+                >
+                  <span class="pfv-btn-content">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="9" cy="21" r="1"/>
+                      <circle cx="20" cy="21" r="1"/>
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span class="pfv-btn-text">
+                      {%- if available -%}
+                        Add To Cart
+                      {%- else -%}
+                        Sold Out
+                      {%- endif -%}
+                    </span>
+                    <span class="pfv-btn-price" data-variant-price>{{ price | money }}</span>
+                  </span>
+                  <span class="pfv-btn-loading" style="display: none;">
+                    <svg class="pfv-spinner" width="20" height="20" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" opacity="0.25"/>
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4 31.4" stroke-dashoffset="31.4" opacity="0.75">
+                        <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                      </circle>
+                    </svg>
+                    Adding...
+                  </span>
+                </button>
+              </div>
+
+              <!-- Price Display -->
+              {% comment %} {%- if on_sale -%}
+                <div class="pfv-price-info">
+                  <span class="pfv-compare-price">{{ compare_at_price | money }}</span>
+                  <span class="pfv-savings">Save {{ savings | money }}</span>
+                </div>
+              {%- endif -%} {% endcomment %}
+            {%- endform -%}
+          </product-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+ 
+
+<style>
+  /* ============================================
+     PRODUCT FEATURES VARIANT SECTION
+     ============================================ */
+
+  .pfv-section {
+    position: relative;
+    padding: var(--pfv-padding-top) 0 var(--pfv-padding-bottom);
+    background: var(--pfv-bg-primary, #FFFFFF);
+    overflow: hidden;
+    {% comment %} margin-top:40px;
+    margin-bottom:40px; {% endcomment %}
+        padding-top:40px !important;
+    padding-bottom:40px !important;
+  }
+
+  /* Background Decorations */
+  .pfv-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .pfv-bg-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, 
+      var(--pfv-bg-primary) 0%, 
+      var(--pfv-accent-light) 50%,
+      var(--pfv-bg-primary) 100%
+    );
+    opacity: 0.4;
+  }
+
+  .pfv-bg-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .pfv-bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.3;
+  }
+
+  .pfv-bg-glow--1 {
+    width: 500px;
+    height: 500px;
+    background: var(--pfv-accent-light);
+    top: -150px;
+    left: -100px;
+  }
+
+  .pfv-bg-glow--2 {
+    width: 400px;
+    height: 400px;
+    background: var(--pfv-highlight, #FFF3E0);
+    bottom: -100px;
+    right: -100px;
+  }
+
+  /* Container */
+  .pfv-container {
+    position: relative;
+    z-index: 1;
+    
+  }
+
+  /* ============================================
+     SECTION HEADER
+     ============================================ */
+
+  .pfv-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 60px;
+
+  }
+
+  .pfv-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--pfv-accent-light) 0%, #FFFFFF 100%);
+    border: 1px solid var(--pfv-accent);
+    border-radius: 50px;
+    color: var(--pfv-accent);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeInDown 0.6s ease-out;
+  }
+
+  .pfv-eyebrow-icon {
+    display: flex;
+    animation: pulse-star 2s infinite;
+  }
+.pfv-feature-content  p, .pfv-feature-content  li{
+ font-size: 14px;
+}
+  @keyframes pulse-star {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  .pfv-headline {
+ 
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 700;
+    color: var(--pfv-text-primary, #2D2D2D);
+    line-height: 1.15;
+    margin: 0 0 20px;
+    animation: fadeInUp 0.6s ease-out 0.1s backwards;
+  }
+
+  .pfv-subheadline {
+    font-size: 18px;
+    color: var(--pfv-text-secondary, #666666);
+    line-height: 1.6;
+    margin: 0;
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
+  }
+
+  /* ============================================
+     MAIN LAYOUT
+     ============================================ */
+
+  .pfv-main-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items:start;
+    gap: 40px;
+     
+  }
+
+  .pfv-layout-right .pfv-features-column {
+    order: 1;
+    width:55%;
+  }
+
+  .pfv-layout-right .pfv-product-column {
+    order: 2;
+      width:40%;
+  }
+
+  .pfv-layout-left .pfv-features-column {
+    order: 2;  width:55%;
+  }
+
+  .pfv-layout-left .pfv-product-column {
+    order: 1; width:40%;
+  }
+
+  /* ============================================
+     FEATURES COLUMN
+     ============================================ */
+
+  .pfv-features-column {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .pfv-feature-card {
+    position: relative;
+    background: var(--pfv-bg-card, #FFFFFF);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.02),
+      0 8px 25px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out calc(var(--card-index) * 0.1s) backwards;
+  }
+
+  .pfv-feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.1),
+      0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: var(--pfv-accent);
+  }
+
+  /* Card Glow Effect */
+  .pfv-card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pfv-accent), var(--pfv-highlight, #FFB74D));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .pfv-feature-card:hover .pfv-card-glow {
+    opacity: 1;
+  }
+
+  /* Highlighted Card */
+  .pfv-feature-card--highlighted {
+    background: linear-gradient(145deg, #FFFBF5 0%, #FFFFFF 100%);
+    border-color: var(--pfv-accent);
+    box-shadow: 
+      0 4px 15px rgba(92, 64, 51, 0.1),
+      0 12px 40px rgba(92, 64, 51, 0.08);
+  }
+
+  .pfv-feature-card--highlighted .pfv-card-glow {
+    opacity: 1;
+  }
+
+  /* Icon Wrapper */
+  .pfv-feature-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+    margin-bottom: 20px;
+  }
+
+  .pfv-feature-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #dfc4a5 0%, #f9f8f8 100%) !important;
+    border-radius: 16px;
+    color: var(--pfv-accent);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+     font-size: 30px;
+  }
+
+  .pfv-feature-card:hover .pfv-feature-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .pfv-custom-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  /* Icon Badge */
+  .pfv-icon-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    padding: 4px 10px;
+    background: var(--pfv-highlight, #FF9800);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(255, 152, 0, 0.4);
+  }
+
+  /* Content */
+  .pfv-feature-content {
+    flex: 1;
+  }
+
+  .pfv-feature-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--pfv-text-primary);
+    margin: 0 0 10px;
+    line-height: 1.3;
+  }
+
+  .pfv-feature-description {
+    font-size: 14px;
+    color: var(--pfv-text-secondary);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .pfv-feature-highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2E7D32;
+  }
+
+  /* ============================================
+     PRODUCT COLUMN
+     ============================================ */
+
+  .pfv-product-column {
+    position: sticky;
+    top: 0px;
+  }
+
+  .pfv-product-card {
+    background: var(--pfv-bg-card, #FFFFFF);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .pfv-product-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--pfv-text-primary);
+    margin: 0 0 24px;
+    text-align: center;
+  }
+
+  /* ============================================
+     IMAGE SLIDER
+     ============================================ */
+
+  .pfv-image-slider-wrapper {
+    position: relative;
+    margin-bottom: 24px;
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 600px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .pfv-sale-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 10;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #C62828 0%, #B71C1C 100%);
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.4);
+  }
+
+  .pfv-image-slider-wrapper .swiper {
+    border-radius: 16px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .pfv-image-slider-wrapper .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F8F8F8;
+    aspect-ratio: 1;
+    width: 100%;
+  }
+
+  .pfv-image-slider-wrapper .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .pfv-placeholder-svg {
+    width: 100%;
+    height: 100%;
+    background: #F0F0F0;
+  }
+
+  /* Swiper Pagination */
+  .pfv-image-slider-wrapper .swiper-pagination {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .pfv-image-slider-wrapper .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .pfv-image-slider-wrapper .swiper-pagination-bullet-active {
+    background: #FFFFFF;
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  /* ============================================
+     ADD TO CART SECTION
+     ============================================ */
+
+.pfv-cart-section {
+  
+    max-width: 600px;
+    margin: 24px auto 0 auto;
+}
+
+  /* Mobile cart - hidden by default */
+  .pfv-cart-mobile {
+    display: none;
+  }
+
+  .pfv-product-form {
+    width: 100%;
+  }
+
+  .pfv-form {
+    width: 100%;
+  }
+
+  .pfv-cart-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  /* Quantity Control */
+  .pfv-quantity-control {
+    display: flex;
+    align-items: center;
+    background: #F5F5F5;
+    border: 1px solid #E0E0E0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .pfv-qty-btn {
+    width: 40px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--pfv-text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .pfv-qty-btn:hover {
+    background: #E0E0E0;
+    color: var(--pfv-text-primary);
+  }
+
+  .pfv-qty-input {
+    width: 50px;
+    height: 48px;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--pfv-text-primary);
+    -moz-appearance: textfield;
+  }
+
+  .pfv-qty-input::-webkit-outer-spin-button,
+  .pfv-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Add to Cart Button */
+  .pfv-add-cart-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: var(--pfv-cta-bg,rgb(0, 0, 0));
+    color: var(--pfv-cta-text, #FFFFFF);
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(232, 106, 51, 0.3);
+    min-height: 48px;
+  }
+
+  .pfv-add-cart-btn:hover:not(:disabled) {
+    background: var(--pfv-cta-bg,rgb(21, 12, 8));
+    box-shadow: 0 6px 20px rgba(232, 106, 51, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .pfv-add-cart-btn:disabled {
+    background: #CCCCCC;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .pfv-btn-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pfv-btn-text {
+    font-weight: 600;
+  }
+
+  .pfv-btn-price {
+    font-weight: 700;
+    margin-left: auto;
+  }
+
+  .pfv-add-cart-btn.is-loading .pfv-btn-content {
+    display: none;
+  }
+
+  .pfv-add-cart-btn.is-loading .pfv-btn-loading {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Price Info */
+  .pfv-price-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .pfv-compare-price {
+    font-size: 14px;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .pfv-savings {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4CAF50;
+  }
+
+  /* ============================================
+     ANIMATIONS
+     ============================================ */
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+
+  @media screen and (max-width: 1024px) {
+    .pfv-main-layout {
+      gap: 40px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+   
+
+.pfv-main-layout {
+      gap: 40px;
+    flex-direction: column;
+}
+
+
+
+    /* Force image on top for mobile */
+    .pfv-product-column {
+      order: 1 !important;
+      position: relative;
+      top: 0;
+      width:100% !important;
+    }
+
+    /* Force features below for mobile */
+    .pfv-features-column {
+      order: 2 !important;
+      
+       width:100% !important;
+    }
+
+    /* Hide desktop cart, show mobile cart */
+    .pfv-cart-desktop {
+      display: none !important;
+    }
+
+    .pfv-features-column {
+     
+    grid-template-columns: 1fr !important;
+   
+}
+    .pfv-cart-mobile {
+      display: block;
+      grid-column: 1 / -1;
+      margin-top: 20px;
+    }
+
+    .pfv-product-card {
+      padding: 24px;
+    }
+
+    /* Fix swiper container width on mobile */
+    .pfv-image-slider-wrapper {
+      max-width: 350px;
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .pfv-image-slider-wrapper .swiper {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .pfv-cart-controls {
+      flex-direction: column;
+    }
+
+    .pfv-quantity-control {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .pfv-add-cart-btn {
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .pfv-feature-card {
+      padding: 20px;
+    }
+
+    .pfv-feature-icon {
+      width: 52px;
+      height: 52px;
+    }
+
+    .pfv-feature-title {
+      font-size: 16px;
+    }
+
+    .pfv-feature-description {
+      font-size: 13px;
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    .pfv-eyebrow,
+    .pfv-headline,
+    .pfv-subheadline,
+    .pfv-feature-card {
+      animation: none;
+    }
+
+    .pfv-eyebrow-icon {
+      animation: none;
+    }
+
+    .pfv-feature-card,
+    .pfv-feature-icon,
+    .pfv-add-cart-btn {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = '{{ section.id }}';
+    const section = document.querySelector('[data-section-id="' + sectionId + '"]');
+    
+    if (!section) return;
+
+    // Initialize Swiper
+    const swiperEl = section.querySelector('[data-swiper-id="' + sectionId + '"]');
+    if (swiperEl) {
+      const slideCount = swiperEl.querySelectorAll('.swiper-slide').length;
+      
+      new Swiper(swiperEl, {
+        loop: slideCount > 1,
+        autoplay: slideCount > 1 ? {
+          delay: 3000,
+          disableOnInteraction: false,
+        } : false,
+        pagination: {
+          el: section.querySelector('[data-pagination-id="' + sectionId + '"]'),
+          clickable: true,
+        },
+        effect: 'slide',
+        speed: 500,
+      });
+    }
+
+    // Quantity Controls - Handle both desktop and mobile
+    const quantityControls = section.querySelectorAll('.pfv-quantity-control');
+    
+    quantityControls.forEach(function(control) {
+      const qtyInput = control.querySelector('.pfv-qty-input');
+      const minusBtn = control.querySelector('.pfv-qty-minus');
+      const plusBtn = control.querySelector('.pfv-qty-plus');
+
+      if (minusBtn && plusBtn && qtyInput) {
+        minusBtn.addEventListener('click', function() {
+          const current = parseInt(qtyInput.value) || 1;
+          if (current > 1) {
+            qtyInput.value = current - 1;
+          }
+        });
+
+        plusBtn.addEventListener('click', function() {
+          const current = parseInt(qtyInput.value) || 1;
+          const max = parseInt(qtyInput.getAttribute('max')) || 999;
+          if (current < max) {
+            qtyInput.value = current + 1;
+          }
+        });
+
+        qtyInput.addEventListener('change', function() {
+          let value = parseInt(this.value) || 1;
+          const min = parseInt(this.getAttribute('min')) || 1;
+          const max = parseInt(this.getAttribute('max')) || 999;
+          
+          if (value < min) value = min;
+          if (value > max) value = max;
+          
+          this.value = value;
+        });
+      }
+    });
+
+    // Add to Cart - Handle both desktop and mobile forms
+    const forms = section.querySelectorAll('.pfv-form');
+    
+    forms.forEach(function(form) {
+      const addToCartBtn = form.querySelector('.pfv-add-cart-btn');
+      const qtyInput = form.querySelector('.pfv-qty-input');
+
+      if (form && addToCartBtn) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          if (addToCartBtn.disabled) return;
+
+          // Get form data
+          const variantId = form.querySelector('[data-variant-id]').getAttribute('data-variant-id');
+          const quantity = qtyInput ? parseInt(qtyInput.value) : 1;
+
+          // Set loading state
+          addToCartBtn.classList.add('is-loading');
+          addToCartBtn.disabled = true;
+
+          // Add to cart
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: variantId,
+              quantity: quantity
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            // Reset button state
+            addToCartBtn.classList.remove('is-loading');
+            addToCartBtn.disabled = false;
+
+            // Dispatch primary event to trigger cart drawer
+            document.dispatchEvent(new CustomEvent('ajaxProduct:added', {
+              bubbles: true,
+              detail: { product: data, addToCartBtn: addToCartBtn, quantity: quantity }
+            }));
+
+            // Dispatch alternative events for wider theme compatibility
+            const altEvents = ['cart:item-added', 'cart:updated', 'product:added-to-cart'];
+            altEvents.forEach(eventName => {
+              document.dispatchEvent(new CustomEvent(eventName, {
+                bubbles: true,
+                detail: { product: data, variant: data, quantity: quantity, addToCartBtn: addToCartBtn }
+              }));
+            });
+
+            // Update cart count using common theme methods
+            if (window.theme && typeof window.theme.cartCount === 'function') {
+              window.theme.cartCount();
+            }
+
+            // Additional cart refresh methods
+            if (typeof window.refreshCart === 'function') {
+              window.refreshCart();
+            }
+            
+            if (typeof window.Shopify !== 'undefined' && window.Shopify.onCartUpdate) {
+              window.Shopify.onCartUpdate();
+            }
+
+            console.log('Product added to cart successfully:', data);
+          })
+          .catch(error => {
+            console.error('Error adding to cart:', error);
+            addToCartBtn.classList.remove('is-loading');
+            addToCartBtn.disabled = false;
+            alert('Sorry, there was an error adding this item to your cart. Please try again.');
+          });
+        });
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Features Variant",
+  "tag": "section",
+  "class": "section-product-features-variant",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Variant Settings"
+    },
+    {
+      "type": "text",
+      "id": "variant_id",
+      "label": "Variant ID",
+      "info": "Enter specific variant ID to display. Leave empty to use current product's default variant."
+    },
+    {
+      "type": "text",
+      "id": "section_anchor_id",
+      "label": "Section Anchor ID",
+      "info": "Unique ID for targeting this section (e.g., 'product-features'). Leave empty to use default."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        { "value": "right", "label": "Right (Features Left, Image Right)" },
+        { "value": "left", "label": "Left (Image Left, Features Right)" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Primary Text",
+      "default": "#2D2D2D"
+    },
+    {
+      "type": "color",
+      "id": "text_secondary",
+      "label": "Secondary Text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#5C4033"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight Color",
+      "default": "#FF9800"
+    },
+    {
+      "type": "color",
+      "id": "cta_color",
+      "label": "CTA Button Color",
+      "default": "#E86A33"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "CTA Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow Text"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline"
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Subheadline"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_card",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Icon",
+          "options": [
+            { "value": "check", "label": "Checkmark" },
+            { "value": "magnify", "label": "Magnifying Glass" },
+            { "value": "battery", "label": "Battery" },
+            { "value": "height", "label": "Height" },
+            { "value": "tilt", "label": "Tilt" },
+            { "value": "wheels", "label": "Wheels" }
+          ],
+          "default": "check"
+        },
+        {
+          "type": "text",
+          "id": "custom_icon",
+          "label": "Custom Icon URL",
+          "default": "📝"
+        },
+        {
+          "type": "text",
+          "id": "icon_badge",
+          "label": "Icon Badge Text",
+          "info": "Small badge on icon (e.g., 'NEW', 'PRO')"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Feature Description",
+          "default": "<p> Describe this feature and its benefits. </p>"
+        },
+        {
+          "type": "text",
+          "id": "highlight_text",
+          "label": "Highlight Text",
+          "info": "Green highlight badge below description"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_highlighted",
+          "label": "Highlight This Card",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Features Variant",
+      "blocks": [
+        {
+          "type": "feature_card",
+          "settings": {
+            "icon_type": "magnify",
+            "title": "30X Ultra Magnification",
+            "description": "<p>See every detail with crystal-clear precision. The 30X magnification power reveals the finest details for flawless tweezing, eyelash application, blemish removal, and intricate makeup work. </p>"
+          }
+        },
+        {
+          "type": "feature_card",
+          "settings": {
+            "icon_type": "battery",
+            "title": "Long-Lasting Rechargeable Battery",
+            "description": "<p> Built-in 1000mAh battery delivers 8-10 hours of continuous use on a single charge. Perfect for travel, daily routines, or extended grooming sessions.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

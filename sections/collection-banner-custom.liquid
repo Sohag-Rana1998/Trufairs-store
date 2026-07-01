@@ -1,0 +1,469 @@
+<!-- Collection Banner Section Schema -->
+{%- liquid
+  assign desktop_image = section.settings.desktop_image | default: collection.image
+  assign mobile_image = section.settings.mobile_image | default: collection.image | default: desktop_image
+  assign banner_title = section.settings.banner_title
+  assign banner_subtitle = section.settings.banner_subtitle | default: collection.description
+  assign coupon_code = section.settings.coupon_code
+  assign discount_text = section.settings.discount_text
+  assign cta_text = section.settings.cta_text
+  assign cta_url = section.settings.cta_url
+  assign text_alignment = section.settings.text_alignment
+  assign overlay_opacity = section.settings.overlay_opacity
+  assign text_color = section.settings.text_color
+-%}
+
+<!-- Schema Markup -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+      "@type": "CollectionPage",
+        "name": "{{ banner_title | escape }}",
+          "description": "{{ banner_subtitle | strip_html | escape }}",
+            {% if desktop_image %}
+              "image": "{{ desktop_image | image_url: width: 1920 }}",
+                {% endif %}
+                  "url": "{{ shop.url }}{{ collection.url }}",
+                    "mainEntity": {
+                        "@type": "ItemList",
+                            "numberOfItems": "{{ collection.products_count }}"
+                              }
+                              }
+</script>
+
+<section class="collection-banner" data-section-id="{{ section.id }}">
+  <div class="collection-banner__container">
+    <!-- Desktop Image -->
+    {% if desktop_image %}
+      <div class="collection-banner__image collection-banner__image--desktop">
+        <img
+          src="{{ desktop_image | image_url: width: 1920 }}"
+          srcset="
+            {{ desktop_image | image_url: width: 640 }} 640w,
+            {{ desktop_image | image_url: width: 1024 }} 1024w,
+                              {{ desktop_image | image_url: width: 1366 }} 1366w,
+                                                {{ desktop_image | image_url: width: 1920 }} 1920w
+          "
+          sizes="100vw"
+          alt="{{ desktop_image.alt | default: banner_title | escape }}"
+         
+          width="{{ desktop_image.width }}"
+          height="{{ desktop_image.height }}"
+        >
+      </div>
+    {% endif %}
+
+    <!-- Mobile Image -->
+    {% if mobile_image %}
+      <div class="collection-banner__image collection-banner__image--mobile">
+        <img
+          src="{{ mobile_image | image_url: width: 768 }}"
+          srcset="
+            {{ mobile_image | image_url: width: 320 }} 320w,
+            {{ mobile_image | image_url: width: 480 }} 480w,
+                              {{ mobile_image | image_url: width: 768 }} 768w
+          "
+          sizes="100vw"
+          alt="{{ mobile_image.alt | default: banner_title | escape }}"
+         
+          width="{{ mobile_image.width }}"
+          height="{{ mobile_image.height }}"
+        >
+      </div>
+    {% endif %}
+
+    <!-- Overlay -->
+    {% if overlay_opacity > 0 %}
+      <div class="collection-banner__overlay" style="opacity: {{ overlay_opacity | divided_by: 100.0 }};"></div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="collection-banner__content collection-banner__content--{{ text_alignment }}">
+      <div class="collection-banner__text" style="color: {{ text_color }};">
+        {% if discount_text != blank %}
+          <div class="collection-banner__discount">
+            {{ discount_text }}
+          </div>
+        {% endif %}
+
+        {% if banner_title != blank %}
+          <h1 class="collection-banner__title">
+            {{ banner_title }}
+          </h1>
+        {% endif %}
+
+        {% if banner_subtitle != blank %}
+          <div class="collection-banner__subtitle">
+            {{ banner_subtitle }}
+          </div>
+        {% endif %}
+
+        {% if coupon_code != blank %}
+          <div class="collection-banner__coupon">
+            <span class="collection-banner__coupon-label">Use Coupon:</span>
+            <span class="collection-banner__coupon-code">{{ coupon_code }}</span>
+          </div>
+        {% endif %}
+
+        {% if cta_text != blank and cta_url != blank %}
+          <div class="collection-banner__cta">
+            <a href="{{ cta_url }}" class="collection-banner__button">
+              {{ cta_text }}
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .collection-banner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .collection-banner__container {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+
+  .collection-banner__image {
+    position: relative;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    display: block;
+  }
+
+  .collection-banner__image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .collection-banner__image--mobile {
+    display: none;
+  }
+
+  .collection-banner__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+  }
+
+  .collection-banner__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+  }
+
+  .collection-banner__content--left {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .collection-banner__content--center {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .collection-banner__content--right {
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .collection-banner__text {
+    max-width: 600px;
+  }
+
+  .collection-banner__discount {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+
+  .collection-banner__title {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .collection-banner__subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    opacity: 0.9;
+  }
+
+  .collection-banner__coupon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .collection-banner__coupon-label {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .collection-banner__coupon-code {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    backdrop-filter: blur(10px);
+  }
+
+  .collection-banner__cta {
+    margin-top: 30px;
+  }
+
+  .collection-banner__button {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .collection-banner__button:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .collection-banner__image--desktop {
+      display: none;
+    }
+
+    .collection-banner__image--mobile {
+      display: block;
+    }
+
+    .collection-banner__content {
+      padding: 40px 15px;
+    }
+
+    .collection-banner__title {
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    .collection-banner__subtitle {
+      font-size: 1rem;
+    }
+
+    .collection-banner__discount {
+      font-size: 14px;
+    }
+
+    .collection-banner__coupon {
+      justify-content: center;
+    }
+
+    .collection-banner__content--left,
+    .collection-banner__content--right {
+      text-align: center;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .collection-banner__content {
+      padding: 30px 10px;
+    }
+
+    .collection-banner__title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    .collection-banner__subtitle {
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .collection-banner__button {
+      padding: 12px 24px;
+      font-size: 0.9rem;
+    }
+
+    .collection-banner__coupon {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  /* High-resolution displays */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .collection-banner__image img {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection Banner",
+  "tag": "section",
+  "class": "collection-banner-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop Image",
+      "info": "Recommended size: 1920x600px. If not set, collection featured image will be used."
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image",
+      "info": "Recommended size: 768x600px. If not set, desktop image will be used."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "discount_text",
+      "label": "Discount Text",
+      "default": "ENJOY 5% OFF YOUR FIRST ORDER - EXPLORE QUALITY & STYLE NOW!"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Banner Title",
+      "info": "Leave blank to use collection title"
+    },
+    {
+      "type": "textarea",
+      "id": "banner_subtitle",
+      "label": "Banner Subtitle",
+      "info": "Leave blank to use collection description"
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Coupon Code",
+      "default": "NEW05"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Call to Action Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Call to Action URL"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Design"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Banner",
+      "settings": {
+        "discount_text": "ENJOY 5% OFF YOUR FIRST ORDER - EXPLORE QUALITY & STYLE NOW!",
+        "banner_subtitle": "Get 5% off your first order as a welcome gift! Use Coupon: NEW05. Discover stylish furniture, elegant decor, and more – perfect pieces for every space.",
+        "coupon_code": "NEW05",
+        "cta_text": "Shop Now",
+        "text_alignment": "left",
+        "text_color": "#ffffff",
+        "overlay_opacity": 40
+      }
+    }
+  ]
+}
+{% endschema %}
+ 

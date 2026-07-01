@@ -1,0 +1,884 @@
+ 
+
+{%- liquid
+  assign video_count = 0
+  assign is_portrait_video = false
+
+  if product.metafields.custom.video_format_mobile.value == true
+    assign is_portrait_video = true
+  endif
+
+  assign video_configs = 'usage_video|usage|Usage|usage_video_thumb,verifiying_video|verifying|Verification|verifying_video_thumb,unboxing_video|unboxing|Unboxing|unboxing_video_thumb,review_video|review|Review|review_video_thumb,installation_video|installation|Installation|installation_video_thumb' | split: ','
+
+  for config in video_configs
+    assign parts = config | split: '|'
+    assign video_key = parts[0]
+    assign video_metafield = product.metafields.custom[video_key]
+
+    if video_key == 'verifiying_video' and video_metafield == blank
+      assign video_metafield = product.metafields.custom.verifying_video
+    endif
+
+    if video_metafield != blank
+      assign video_count = video_count | plus: 1
+    endif
+  endfor
+
+  assign clean_product_path = product.url | split: '?' | first
+  assign canonical_product_url = clean_product_path | prepend: request.origin
+  assign organization_id = shop.url | append: '/#organization'
+-%}
+
+{% if video_count > 0 %}
+<section
+  class="product-videos-section"
+  style="background-color: {{ section.settings.background_color }};"
+  data-video-count="{{ video_count }}"
+  data-video-format="{% if is_portrait_video %}portrait{% else %}landscape{% endif %}"
+>
+  <div class="product-videos-container">
+    {% if section.settings.section_heading != blank %}
+      <header class="product-videos-header">
+        <h2 class="product-videos-title">{{ section.settings.section_heading }}</h2>
+
+        {% if section.settings.section_description != blank %}
+          <p class="product-videos-description">{{ section.settings.section_description }}</p>
+        {% endif %}
+      </header>
+    {% endif %}
+
+    <div class="product-videos-grid" data-videos="{{ video_count }}">
+      {%- for config in video_configs -%}
+        {%- liquid
+          assign parts = config | split: '|'
+          assign video_key = parts[0]
+          assign metadata_prefix = parts[1]
+          assign video_label = parts[2]
+          assign thumb_key = parts[3]
+
+          assign video_metafield = product.metafields.custom[video_key]
+
+          if video_key == 'verifiying_video' and video_metafield == blank
+            assign video_metafield = product.metafields.custom.verifying_video
+          endif
+
+          assign video_value = video_metafield.value
+          assign video_url = ''
+          assign video_mime_type = 'video/mp4'
+          assign native_duration_ms = 0
+
+          if video_value.media_type == 'video'
+            assign mp4_sources = video_value.sources | where: 'format', 'mp4'
+            assign preferred_source = mp4_sources | last
+
+            if preferred_source == blank
+              assign preferred_source = video_value.sources | first
+            endif
+
+            if preferred_source != blank
+              assign video_url = preferred_source.url
+              assign video_mime_type = preferred_source.mime_type | default: 'video/mp4'
+            endif
+
+            assign native_duration_ms = video_value.duration | default: 0
+          elsif video_value.url != blank
+            assign video_url = video_value.url
+          elsif video_value != blank
+            assign video_url = video_value
+          elsif video_metafield != blank
+            assign video_url = video_metafield
+          endif
+
+          assign video_url = video_url | strip
+          assign video_url_absolute = video_url
+          assign video_prefix_two = video_url_absolute | slice: 0, 2
+          assign video_prefix_one = video_url_absolute | slice: 0, 1
+
+          if video_url_absolute != blank
+            unless video_url_absolute contains '://'
+              if video_prefix_two == '//'
+                assign video_url_absolute = video_url_absolute | prepend: 'https:'
+              elsif video_prefix_one == '/'
+                assign video_url_absolute = video_url_absolute | prepend: request.origin
+              else
+                assign video_url_absolute = video_url_absolute | prepend: 'https://'
+              endif
+            endunless
+          endif
+
+          assign thumb_metafield = product.metafields.custom[thumb_key]
+          assign thumb_value = thumb_metafield.value
+          assign thumbnail_url = ''
+
+          if thumb_value != blank
+            if thumb_value.media_type == 'image' or thumb_value.width != blank
+              assign thumbnail_url = thumb_value | image_url: width: 1600
+            elsif thumb_value.url != blank
+              assign thumbnail_url = thumb_value.url
+            else
+              assign thumbnail_url = thumb_value
+            endif
+          elsif video_value.preview_image != blank
+            assign thumbnail_url = video_value.preview_image | image_url: width: 1600
+          endif
+
+          assign thumbnail_url = thumbnail_url | strip
+          assign thumbnail_url_absolute = thumbnail_url
+          assign thumbnail_prefix_two = thumbnail_url_absolute | slice: 0, 2
+          assign thumbnail_prefix_one = thumbnail_url_absolute | slice: 0, 1
+
+          if thumbnail_url_absolute != blank
+            unless thumbnail_url_absolute contains '://'
+              if thumbnail_prefix_two == '//'
+                assign thumbnail_url_absolute = thumbnail_url_absolute | prepend: 'https:'
+              elsif thumbnail_prefix_one == '/'
+                assign thumbnail_url_absolute = thumbnail_url_absolute | prepend: request.origin
+              else
+                assign thumbnail_url_absolute = thumbnail_url_absolute | prepend: 'https://'
+              endif
+            endunless
+          endif
+
+          assign title_key = metadata_prefix | append: '_video_title'
+          assign description_key = metadata_prefix | append: '_video_description'
+          assign upload_date_key = metadata_prefix | append: '_video_upload_date'
+          assign duration_key = metadata_prefix | append: '_video_duration_seconds'
+        -%}
+
+        {%- case metadata_prefix -%}
+          {%- when 'usage' -%}
+            {%- capture fallback_video_title -%}{{ product.title }} – In Use{%- endcapture -%}
+            {%- capture fallback_video_description -%}See {{ product.title }} in use and review its main features and performance.{%- endcapture -%}
+          {%- when 'verifying' -%}
+            {%- capture fallback_video_title -%}{{ product.title }} – Verification and Feature Demo{%- endcapture -%}
+            {%- capture fallback_video_description -%}Watch Trufairs verify the key features and product details of {{ product.title }}.{%- endcapture -%}
+          {%- when 'unboxing' -%}
+            {%- capture fallback_video_title -%}{{ product.title }} – Unboxing{%- endcapture -%}
+            {%- capture fallback_video_description -%}Unbox {{ product.title }} and see the product, included accessories, and packaging.{%- endcapture -%}
+          {%- when 'review' -%}
+            {%- capture fallback_video_title -%}{{ product.title }} – Product Review{%- endcapture -%}
+            {%- capture fallback_video_description -%}Watch a detailed review of {{ product.title }}, including its design, features, and everyday use.{%- endcapture -%}
+          {%- when 'installation' -%}
+            {%- capture fallback_video_title -%}How to Set Up {{ product.title }}{%- endcapture -%}
+            {%- capture fallback_video_description -%}Follow this setup and installation guide for {{ product.title }}.{%- endcapture -%}
+        {%- endcase -%}
+
+        {%- liquid
+          assign custom_video_title = product.metafields.custom[title_key].value
+          assign custom_video_description = product.metafields.custom[description_key].value
+          assign video_upload_date = product.metafields.custom[upload_date_key].value
+          assign custom_duration_seconds = product.metafields.custom[duration_key].value
+
+          assign video_title = custom_video_title | default: fallback_video_title | strip
+          assign video_description = custom_video_description | default: fallback_video_description | strip
+
+          assign duration_seconds = custom_duration_seconds | default: 0 | plus: 0
+
+          if duration_seconds == 0 and native_duration_ms > 0
+            assign duration_seconds = native_duration_ms | divided_by: 1000
+          endif
+
+          assign duration_iso = ''
+
+          if duration_seconds > 0
+            assign duration_hours = duration_seconds | divided_by: 3600
+            assign duration_remainder = duration_seconds | modulo: 3600
+            assign duration_minutes = duration_remainder | divided_by: 60
+            assign duration_final_seconds = duration_remainder | modulo: 60
+
+            capture duration_iso
+              echo 'PT'
+
+              if duration_hours > 0
+                echo duration_hours
+                echo 'H'
+              endif
+
+              if duration_minutes > 0
+                echo duration_minutes
+                echo 'M'
+              endif
+
+              echo duration_final_seconds
+              echo 'S'
+            endcapture
+
+            assign duration_iso = duration_iso | strip
+          endif
+
+          assign video_anchor = 'product-video-' | append: metadata_prefix
+          assign video_page_url = canonical_product_url | append: '#' | append: video_anchor
+
+          assign video_schema_ready = false
+
+          if section.settings.enable_video_schema and video_url_absolute != blank and thumbnail_url_absolute != blank and video_upload_date != blank and video_title != blank
+            assign video_schema_ready = true
+          endif
+        -%}
+
+        {%- if video_url_absolute != blank -%}
+          <article
+            id="{{ video_anchor }}"
+            class="video-card{% if metadata_prefix == 'usage' %} video-card--primary{% endif %}"
+            data-video-type="{{ video_label | handle }}"
+          >
+            <figure class="video-card-figure">
+              <div
+                class="product-inline-video-wrapper {% if is_portrait_video %}product-inline-video-wrapper--portrait{% else %}product-inline-video-wrapper--landscape{% endif %}"
+                data-product-video-wrapper
+                data-video-url="{{ video_url_absolute | escape }}"
+                data-video-mime="{{ video_mime_type | escape }}"
+                data-video-title="{{ video_title | escape }}"
+              >
+                <div class="product-video-thumbnail" data-product-video-thumbnail>
+                  {%- if thumbnail_url_absolute != blank -%}
+                    <img
+                      src="{{ thumbnail_url_absolute }}"
+                      alt="{{ video_title | escape }}"
+                      loading="lazy"
+                      class="product-video-thumbnail-image"
+                    >
+                  {%- else -%}
+                    <video
+                      class="product-video-thumbnail-video"
+                      muted
+                      playsinline
+                      preload="metadata"
+                      aria-label="{{ video_title | escape }} thumbnail"
+                    >
+                      <source src="{{ video_url_absolute | escape }}" type="{{ video_mime_type | escape }}">
+                    </video>
+                  {%- endif -%}
+
+                  <button
+                    type="button"
+                    class="product-video-inline-play-button"
+                    aria-label="Play {{ video_title | escape }}"
+                    data-product-video-play
+                  >
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <circle cx="32" cy="32" r="30" fill="white" fill-opacity="0.95"/>
+                      <circle cx="32" cy="32" r="31" stroke="white" stroke-width="2"/>
+                      <path d="M26 22.5L44 32L26 41.5V22.5Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="product-inline-video-player" data-product-inline-video-player aria-hidden="true"></div>
+              </div>
+
+              <span
+                class="video-badge"
+                style="background-color: {{ section.settings.badge_background }}; color: {{ section.settings.badge_text_color }};"
+              >
+                {{ video_label }}
+              </span>
+
+              {%- if section.settings.show_video_titles or section.settings.show_video_descriptions -%}
+                <figcaption class="video-card-caption">
+                  {%- if section.settings.show_video_titles -%}
+                    <h3 class="video-card-title">{{ video_title }}</h3>
+                  {%- endif -%}
+
+                  {%- if section.settings.show_video_descriptions and video_description != blank -%}
+                    <p class="video-card-description">{{ video_description }}</p>
+                  {%- endif -%}
+                </figcaption>
+              {%- endif -%}
+            </figure>
+          </article>
+
+          {%- if video_schema_ready -%}
+            <script type="application/ld+json">
+              {
+                "@context": "https://schema.org",
+                "@type": "VideoObject",
+                "@id": {{ video_page_url | append: '#video-object' | json }},
+                "name": {{ video_title | json }},
+                "description": {{ video_description | strip_html | json }},
+                "thumbnailUrl": [
+                  {{ thumbnail_url_absolute | json }}
+                ],
+                "uploadDate": {{ video_upload_date | json }},
+                "contentUrl": {{ video_url_absolute | json }},
+                "url": {{ video_page_url | json }},
+                "inLanguage": {{ request.locale.iso_code | default: 'en' | json }},
+                "publisher": {
+                  "@type": "Organization",
+                  "@id": {{ organization_id | json }},
+                  "name": {{ shop.name | json }}
+                }
+                {%- if duration_iso != blank -%}
+                  ,
+                  "duration": {{ duration_iso | json }}
+                {%- endif -%}
+              }
+            </script>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+.product-videos-section {
+  padding: 60px 20px;
+  width: 100%;
+}
+
+.product-videos-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.product-videos-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.product-videos-title {
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+}
+
+.product-videos-description {
+  font-size: clamp(14px, 2vw, 16px);
+  color: #666;
+  margin: 0 auto;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+.product-videos-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.product-videos-grid[data-videos="2"] {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.product-videos-grid[data-videos="3"] {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+{% if is_portrait_video %}
+.product-videos-grid[data-videos="4"],
+.product-videos-grid[data-videos="5"] {
+  grid-template-columns: repeat(4, 1fr);
+}
+{% else %}
+.product-videos-grid[data-videos="4"],
+.product-videos-grid[data-videos="5"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+{% endif %}
+
+.video-card {
+  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.video-card-figure {
+  margin: 0;
+  position: relative;
+}
+
+.product-inline-video-wrapper {
+  position: relative;
+  width: 100%;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.product-inline-video-wrapper--landscape {
+  aspect-ratio: 16 / 9;
+}
+
+.product-inline-video-wrapper--portrait {
+  aspect-ratio: 9 / 16;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.product-video-thumbnail,
+.product-inline-video-player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.product-video-thumbnail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-video-thumbnail::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.28));
+  pointer-events: none;
+}
+
+.product-video-thumbnail-image,
+.product-video-thumbnail-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+.product-video-inline-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #1a1a1a;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.product-video-inline-play-button:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.product-video-inline-play-button:focus-visible {
+  outline: 3px solid #0066ff;
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+.product-video-inline-play-button svg {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.product-inline-video-player {
+  display: none;
+  background: #000;
+  z-index: 1;
+}
+
+.product-inline-video-player video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: #000;
+  object-fit: contain;
+}
+
+.product-inline-video-wrapper.is-playing .product-video-thumbnail {
+  display: none;
+}
+
+.product-inline-video-wrapper.is-playing .product-inline-video-player {
+  display: block;
+}
+
+.video-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  z-index: 3;
+  backdrop-filter: blur(8px);
+}
+
+.video-card-caption {
+  padding: 20px;
+}
+
+.video-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+  line-height: 1.35;
+}
+
+.video-card-description {
+  margin: 10px 0 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .product-videos-section {
+    padding: 40px 0;
+  }
+
+  .product-videos-header {
+    padding: 0 20px;
+    margin-bottom: 32px;
+  }
+
+  .product-videos-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 0 20px 20px;
+    grid-template-columns: none;
+  }
+
+  .product-videos-grid::after {
+    content: "";
+    flex: 0 0 1px;
+  }
+
+  .video-card {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+    max-width: 400px;
+  }
+
+  .product-videos-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-videos-grid {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .product-inline-video-wrapper--portrait {
+    max-width: 100%;
+  }
+
+  .video-badge {
+    top: 12px;
+    left: 12px;
+    font-size: 11px;
+    padding: 5px 12px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .product-videos-grid[data-videos="4"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-card,
+  .product-video-inline-play-button {
+    transition: none;
+  }
+}
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  class ProductVideosInlineLazyLoad {
+    constructor(section) {
+      this.section = section;
+      this.videoWrappers = section.querySelectorAll('[data-product-video-wrapper]');
+      this.playButtons = section.querySelectorAll('[data-product-video-play]');
+      this.preloadStarted = false;
+
+      if (!this.videoWrappers.length) return;
+
+      this.init();
+    }
+
+    init() {
+      this.bindPlayButtons();
+      this.observeSection();
+      this.loadDefaultThumbnailFrames();
+    }
+
+    bindPlayButtons() {
+      this.playButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const wrapper = button.closest('[data-product-video-wrapper]');
+          this.playVideo(wrapper);
+        });
+      });
+    }
+
+    loadDefaultThumbnailFrames() {
+      this.section.querySelectorAll('.product-video-thumbnail-video').forEach((thumbnailVideo) => {
+        thumbnailVideo.addEventListener('loadedmetadata', () => {
+          if (thumbnailVideo.duration > 0) {
+            thumbnailVideo.currentTime = 0.8;
+          }
+        }, { once: true });
+
+        thumbnailVideo.addEventListener('seeked', () => {
+          thumbnailVideo.pause();
+        }, { once: true });
+
+        thumbnailVideo.load();
+      });
+    }
+
+    observeSection() {
+      if (!('IntersectionObserver' in window)) {
+        this.preloadVideos();
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            this.preloadVideos();
+            observer.unobserve(this.section);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '500px 0px',
+        threshold: 0
+      });
+
+      observer.observe(this.section);
+    }
+
+    preloadVideos() {
+      if (this.preloadStarted) return;
+
+      this.preloadStarted = true;
+
+      this.videoWrappers.forEach((wrapper) => {
+        this.createVideoElement(wrapper);
+      });
+    }
+
+    createVideoElement(wrapper) {
+      if (!wrapper || wrapper.dataset.videoPreloaded === 'true') return null;
+
+      const videoUrl = wrapper.dataset.videoUrl;
+      const videoMime = wrapper.dataset.videoMime || this.getVideoType(videoUrl);
+      const player = wrapper.querySelector('[data-product-inline-video-player]');
+
+      if (!videoUrl || !player) return null;
+
+      const video = document.createElement('video');
+
+      video.setAttribute('controls', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('preload', 'metadata');
+      video.setAttribute('aria-label', wrapper.dataset.videoTitle || 'Product video');
+
+      const source = document.createElement('source');
+      source.src = videoUrl;
+      source.type = videoMime;
+
+      video.appendChild(source);
+      player.innerHTML = '';
+      player.appendChild(video);
+      player.setAttribute('aria-hidden', 'true');
+
+      wrapper.dataset.videoPreloaded = 'true';
+
+      try {
+        video.load();
+      } catch (error) {
+        // Browser may prevent eager loading in some conditions.
+      }
+
+      return video;
+    }
+
+    playVideo(wrapper) {
+      if (!wrapper) return;
+
+      this.stopOtherVideos(wrapper);
+
+      const player = wrapper.querySelector('[data-product-inline-video-player]');
+      let video = player ? player.querySelector('video') : null;
+
+      if (!video) {
+        video = this.createVideoElement(wrapper);
+      }
+
+      if (!video || !player) return;
+
+      wrapper.classList.add('is-playing');
+      player.setAttribute('aria-hidden', 'false');
+
+      video.play().catch(() => {
+        video.setAttribute('controls', '');
+      });
+    }
+
+    stopOtherVideos(activeWrapper) {
+      this.videoWrappers.forEach((wrapper) => {
+        if (wrapper === activeWrapper) return;
+
+        const player = wrapper.querySelector('[data-product-inline-video-player]');
+        const video = player ? player.querySelector('video') : null;
+
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+
+        if (player) {
+          player.setAttribute('aria-hidden', 'true');
+        }
+
+        wrapper.classList.remove('is-playing');
+      });
+    }
+
+    getVideoType(url) {
+      const cleanUrl = url.split('?')[0];
+      const extension = cleanUrl.split('.').pop().toLowerCase();
+
+      const types = {
+        mp4: 'video/mp4',
+        webm: 'video/webm',
+        ogg: 'video/ogg',
+        mov: 'video/mp4',
+        m4v: 'video/mp4',
+        m3u8: 'application/x-mpegURL'
+      };
+
+      return types[extension] || 'video/mp4';
+    }
+  }
+
+  function initProductVideosInlineLazyLoad() {
+    document.querySelectorAll('.product-videos-section').forEach((section) => {
+      if (section.dataset.productVideosInlineInitialized === 'true') return;
+
+      section.dataset.productVideosInlineInitialized = 'true';
+      new ProductVideosInlineLazyLoad(section);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProductVideosInlineLazyLoad);
+  } else {
+    initProductVideosInlineLazyLoad();
+  }
+
+  document.addEventListener('shopify:section:load', initProductVideosInlineLazyLoad);
+})();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Videos",
+  "tag": "section",
+  "class": "section-product-videos",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading",
+      "default": "See Our Products In Action"
+    },
+    {
+      "type": "textarea",
+      "id": "section_description",
+      "label": "Section Description",
+      "default": "We personally test every verified product before selling. Watch our unboxing and real usage videos to see exactly what you'll receive."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video_titles",
+      "label": "Show Video Titles",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video_descriptions",
+      "label": "Show Video Descriptions",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Video SEO"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_schema",
+      "label": "Enable VideoObject Schema",
+      "default": true,
+      "info": "Schema is generated only when a video has a thumbnail and upload-date metafield."
+    },
+    {
+      "type": "paragraph",
+      "content": "Add a unique thumbnail and the actual first-published date for every video included in schema. Title, description, and duration metafields are optional because fallback values are included."
+    },
+    {
+      "type": "header",
+      "content": "Design Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f9fafb"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge Background Color",
+      "default": "#FFA500"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Instructions"
+    },
+    {
+      "type": "paragraph",
+      "content": "Videos load from product metafields. The usage video is displayed first because it is normally the most useful product demonstration."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Videos",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

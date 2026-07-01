@@ -1,0 +1,762 @@
+<section class="about-section" style="
+  padding: {{ section.settings.section_padding_top }}px 0 {{ section.settings.section_padding_bottom }}px 0;
+  background-color: {{ section.settings.background_color }};
+">
+  <div class="container">
+    <div class="content-wrapper">
+      <div class="text-content">
+        {% if section.settings.tagline != blank %}
+          <p class="tagline" style="color: {{ section.settings.tagline_color }};">
+            {{ section.settings.tagline }}
+          </p>
+        {% endif %}
+        
+        {% if section.settings.main_heading != blank %}
+          <h2 class="main-heading" style="color: {{ section.settings.heading_color }};">
+            {{ section.settings.main_heading }}
+          </h2>
+        {% endif %}
+        
+        {% if section.settings.description != blank %}
+          <p class="description" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.description }}
+          </p>
+        {% endif %}
+        
+
+ <div class="founder-cards mobile-founder-card" style="margin:25px 0;">
+        {% if section.settings.founder1_image != blank %}
+          <div class="founder-card jennifer-card">
+            <div class="founder-image">
+              <img src="{{ section.settings.founder1_image | img_url: '600x400' }}" 
+                   alt="{{ section.settings.founder1_name }}" 
+                  >
+            </div>
+            <div class="founder-info">
+              {% if section.settings.founder1_name != blank %}
+                <h4 style="color: {{ section.settings.founder_name_color }};">{{ section.settings.founder1_name }}</h4>
+              {% endif %}
+              {% if section.settings.founder1_title != blank %}
+                <p class="title" style="color: {{ section.settings.founder_title_color }};">{{ section.settings.founder1_title }}</p>
+              {% endif %}
+              {% if section.settings.founder1_bio != blank %}
+                <p class="bio" style="color: {{ section.settings.founder_bio_color }};">{{ section.settings.founder1_bio }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.founder2_image != blank %}
+          <div class="founder-card arindam-card">
+            <div class="founder-image">
+              <img src="{{ section.settings.founder2_image | img_url: '600x400' }}" 
+                   alt="{{ section.settings.founder2_name }}" 
+                  >
+            </div>
+            <div class="founder-info">
+              {% if section.settings.founder2_name != blank %}
+                <h4 style="color: {{ section.settings.founder_name_color }};">{{ section.settings.founder2_name }}</h4>
+              {% endif %}
+              {% if section.settings.founder2_title != blank %}
+                <p class="title" style="color: {{ section.settings.founder_title_color }};">{{ section.settings.founder2_title }}</p>
+              {% endif %}
+              {% if section.settings.founder2_bio != blank %}
+                <p class="bio" style="color: {{ section.settings.founder_bio_color }};">{{ section.settings.founder2_bio }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+        <div class="mission-vision">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'feature_item' %}
+                <div class="feature-item" {{ block.shopify_attributes }}>
+                  <div class="icon1-wrapper" style="border-color: {{ section.settings.icon1_border_color }};">
+                    {% if block.settings.icon1_type == 'mission' %}
+                      <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg class="icon1" fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 width="80px" height="80px" viewBox="0 0 415.881 415.881"
+	 xml:space="preserve">
+<g>
+	<g>
+		<path d="M179.641,189.565c2.455,0,4.869,0.193,7.223,0.561l36.999-36.998c-13.193-7.048-28.249-11.051-44.221-11.051
+			c-51.92,0-94.162,42.241-94.162,94.162c0,51.921,42.242,94.162,94.162,94.162s94.161-42.241,94.161-94.162
+			c0-15.973-4.002-31.027-11.051-44.22l-36.997,36.999c0.367,2.354,0.56,4.766,0.56,7.222c0,25.736-20.937,46.674-46.672,46.674
+			c-25.736,0-46.674-20.938-46.674-46.674S153.905,189.565,179.641,189.565z"/>
+		<path d="M290.454,164.316c13.488,20.712,21.338,45.417,21.338,71.922c0,72.87-59.281,132.153-132.15,132.153
+			c-72.869,0-132.153-59.283-132.153-132.152s59.283-132.153,132.152-132.153c26.508,0,51.211,7.851,71.924,21.34l34.104-34.104
+			c-29.738-21.817-66.402-34.724-106.027-34.724c-99.055,0-179.641,80.587-179.641,179.641c0,99.054,80.586,179.642,179.641,179.642
+			c99.054,0,179.638-80.588,179.638-179.642c0-39.626-12.904-76.29-34.721-106.026L290.454,164.316z"/>
+		<path d="M415.415,56.64c-1.119-3.539-4.119-6.157-7.775-6.793l-35.449-6.157l-6.156-35.45c-0.637-3.656-3.256-6.655-6.793-7.774
+			c-3.537-1.122-7.402-0.178-10.027,2.447l-27.412,27.411c-1.863,1.864-2.91,4.393-2.912,7.029l0.002,40.896l-148.1,148.096
+			c-5.176,5.177-5.176,13.566,0,18.743c5.178,5.175,13.568,5.177,18.744,0L337.632,96.991h40.896c2.635,0,5.164-1.047,7.027-2.911
+			l27.412-27.413C415.593,64.044,416.536,60.177,415.415,56.64z"/>
+	</g>
+</g>
+</svg>
+                    {% elsif block.settings.icon1_type == 'vision' %}
+                     <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg class="icon1" width="80px" height="80px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 22C6.22876 22 4.34315 22 3.17157 20.8284C2 19.6569 2 18.7712 2 15" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M22 15C22 18.7712 22 19.6569 20.8284 20.8284C19.6569 22 17.7712 22 14 22" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M14 2C17.7712 2 19.6569 2 20.8284 3.17157C22 4.34315 22 5.22876 22 9" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M10 2C6.22876 2 4.34315 2 3.17157 3.17157C2 4.34315 2 5.22876 2 9" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M5.89243 14.0598C5.29748 13.3697 5 13.0246 5 12C5 10.9754 5.29747 10.6303 5.89242 9.94021C7.08037 8.56222 9.07268 7 12 7C14.9273 7 16.9196 8.56222 18.1076 9.94021C18.7025 10.6303 19 10.9754 19 12C19 13.0246 18.7025 13.3697 18.1076 14.0598C16.9196 15.4378 14.9273 17 12 17C9.07268 17 7.08038 15.4378 5.89243 14.0598Z" stroke="#1C274C" stroke-width="1.5"/>
+<circle cx="12" cy="12" r="2" stroke="#1C274C" stroke-width="1.5"/>
+</svg>
+                    {% elsif block.settings.icon1_type == 'custom' and block.settings.custom_icon1 != blank %}
+                      <img src="{{ block.settings.custom_icon1 | img_url: '48x48' }}" alt="{{ block.settings.feature_title }}" class="custom-icon1">
+                    {% endif %}
+                  </div>
+                  <div class="feature-content1">
+                    {% if block.settings.feature_title != blank %}
+                      <h3 style="color: {{ section.settings.feature_title_color }};">{{ block.settings.feature_title }}</h3>
+                    {% endif %}
+                    {% if block.settings.feature_description != blank %}
+                      <p style="color: {{ section.settings.feature_text_color }};">{{ block.settings.feature_description }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+        
+        {% if section.settings.show_cta_button and section.settings.cta_text != blank %}
+          <a href="{{ section.settings.cta_link | default: '/collections/all' }}" 
+             class="cta-button" 
+             style="
+               color: {{ section.settings.cta_text_color }};
+               border-color: {{ section.settings.cta_border_color }};
+               background-color: {{ section.settings.cta_bg_color }};
+             ">
+            {{ section.settings.cta_text }}
+            <svg class="arrow-icon1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12,5 19,12 12,19"></polyline>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+      
+      <div class="founder-cards desktop-founder-card">
+        {% if section.settings.founder1_image != blank %}
+          <div class="founder-card jennifer-card">
+            <div class="founder-image">
+              <img src="{{ section.settings.founder1_image | img_url: '600x400' }}" 
+                   alt="{{ section.settings.founder1_name }}" 
+                   loading="lazy">
+            </div>
+            <div class="founder-info">
+              {% if section.settings.founder1_name != blank %}
+                <h4 style="color: {{ section.settings.founder_name_color }};">{{ section.settings.founder1_name }}</h4>
+              {% endif %}
+              {% if section.settings.founder1_title != blank %}
+                <p class="title" style="color: {{ section.settings.founder_title_color }};">{{ section.settings.founder1_title }}</p>
+              {% endif %}
+              {% if section.settings.founder1_bio != blank %}
+                <p class="bio" style="color: {{ section.settings.founder_bio_color }};">{{ section.settings.founder1_bio }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.founder2_image != blank %}
+          <div class="founder-card arindam-card">
+            <div class="founder-image">
+              <img src="{{ section.settings.founder2_image | img_url: '600x400' }}" 
+                   alt="{{ section.settings.founder2_name }}" 
+                   loading="lazy">
+            </div>
+            <div class="founder-info">
+              {% if section.settings.founder2_name != blank %}
+                <h4 style="color: {{ section.settings.founder_name_color }};">{{ section.settings.founder2_name }}</h4>
+              {% endif %}
+              {% if section.settings.founder2_title != blank %}
+                <p class="title" style="color: {{ section.settings.founder_title_color }};">{{ section.settings.founder2_title }}</p>
+              {% endif %}
+              {% if section.settings.founder2_bio != blank %}
+                <p class="bio" style="color: {{ section.settings.founder_bio_color }};">{{ section.settings.founder2_bio }}</p>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .container, .page-width {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Updated layout: flex with fixed widths */
+  .content-wrapper {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+  }
+
+  /* Left text content 35% width */
+  .text-content {
+    flex: 0 0 33%;
+    max-width: 33%;
+  }
+
+  /* Right image container 65% width with row layout */
+.founder-cards {
+    flex: 0 0 62%;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-left: auto;
+    justify-content: flex-end;
+}
+
+  /* Each founder card flexes evenly */
+.founder-card {
+    flex: 1 1 0;
+    height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    max-width: 350px;
+}
+  .text-content .tagline {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+
+  .description {
+    font-size: 16px;
+    line-height: normal;
+    margin-bottom:15px;
+  }
+
+  .mission-vision {
+    margin-bottom: 10px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .icon1-wrapper {
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon1-wrapper svg{
+    width: 58px;
+    height: 58px;
+  }
+
+  .icon1, .custom-icon1 {
+    width: 24px;
+    height: 24px;
+  }
+
+  .feature-content1 h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+.feature-content1 p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid;
+    border-radius: 30px;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+
+  .arrow-icon1 {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+  }
+
+  .cta-button:hover .arrow-icon1 {
+    transform: translateX(4px);
+  }
+
+  .founder-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .founder-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .founder-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+ 
+    z-index: 2;
+  }
+
+  .founder-info h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .founder-info .title {
+    font-size: 14px;
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+
+  .founder-info .bio {
+    font-size: 14px;
+    line-height: 1.4;
+    opacity: 0.9;
+  }
+
+  
+
+.founder-cards.mobile-founder-card {
+    display: none;
+}
+
+
+.founder-info {
+    padding: 12px;
+    background: #ffffff29;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ffffffb0;
+    border-radius: 10px;
+}
+
+ 
+
+  @media (max-width: 768px) {
+    .about-section {
+      padding: 60px 0 !important;
+    }
+
+.founder-cards {
+     
+    gap: 12px;
+  
+}
+
+    
+.founder-info {
+    padding: 6px;
+    margin: 8px;
+}
+
+.founder-info .bio {
+    font-size: 11px !important;
+}
+
+.icon1-wrapper svg {
+    width: 48px;
+    height: 48px;
+}
+
+.founder-cards.mobile-founder-card {
+    display: flex;
+}
+
+.founder-cards.desktop-founder-card {
+    display: none;
+}
+
+
+    .content-wrapper {
+      flex-direction: column;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .feature-content1 {
+    text-align: left;
+}
+
+      .founder-info .title {
+    margin-bottom: 2px;
+  }
+    
+
+
+
+    .text-content  {
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+    
+    .founder-cards {
+    width: 100%;
+}
+    
+.founder-info {
+    padding: 5px;
+}
+
+   .founder-card {
+    height: 300px;
+}
+    
+     
+  }
+ 
+</style>
+
+{% schema %}
+{
+  "name": "About Founders Section",
+  "tag": "section",
+  "class": "about-founders-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fafafa"
+    },
+    {
+      "type": "header",
+      "content": "Content Settings"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Modern & Fancy"
+    },
+    {
+      "type": "color",
+      "id": "tagline_color",
+      "label": "Tagline color",
+      "default": "#ff8c42"
+    },
+    {
+      "type": "textarea",
+      "id": "main_heading",
+      "label": "Main heading",
+      "default": "Premium Furniture\nThat Lasts a Lifetime"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "At Trufairs, founded by Jennifer and Arindam in 2023, we believe luxury living is an art. Our mission is to transform spaces and elevate lifestyles with curated pieces that reflect modern, classic, or rustic styles, tailored to your taste."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Feature Items Styling"
+    },
+    {
+      "type": "color",
+      "id": "icon1_color",
+      "label": "icon1 color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "icon1_border_color",
+      "label": "icon1 border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "feature_title_color",
+      "label": "Feature title color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Feature text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Call to Action Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta_button",
+      "label": "Show CTA button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button text color",
+      "default": "#ff8c42"
+    },
+    {
+      "type": "color",
+      "id": "cta_border_color",
+      "label": "Button border color",
+      "default": "#ff8c42"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button background color",
+      "default": "transparent"
+    },
+    {
+      "type": "header",
+      "content": "Founder 1 Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "founder1_image",
+      "label": "Founder 1 image"
+    },
+    {
+      "type": "text",
+      "id": "founder1_name",
+      "label": "Founder 1 name",
+      "default": "Jennifer"
+    },
+    {
+      "type": "text",
+      "id": "founder1_title",
+      "label": "Founder 1 title",
+      "default": "Founder"
+    },
+    {
+      "type": "textarea",
+      "id": "founder1_bio",
+      "label": "Founder 1 bio",
+      "default": "Jennifer blends healthcare expertise with design, creating comfort-driven curated spaces."
+    },
+    {
+      "type": "header",
+      "content": "Founder 2 Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "founder2_image",
+      "label": "Founder 2 image"
+    },
+    {
+      "type": "text",
+      "id": "founder2_name",
+      "label": "Founder 2 name",
+      "default": "Arindam"
+    },
+    {
+      "type": "text",
+      "id": "founder2_title",
+      "label": "Founder 2 title",
+      "default": "Co-Founder"
+    },
+    {
+      "type": "textarea",
+      "id": "founder2_bio",
+      "label": "Founder 2 bio",
+      "default": "Arindam fuses wellness expertise with entrepreneurship, enriching homes through luxury."
+    },
+    {
+      "type": "header",
+      "content": "Founder Card Styling"
+    },
+    {
+      "type": "color",
+      "id": "founder_name_color",
+      "label": "Founder name color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "founder_title_color",
+      "label": "Founder title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "founder_bio_color",
+      "label": "Founder bio color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature_item",
+      "name": "Feature Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon1_type",
+          "label": "icon1 type",
+          "options": [
+            {
+              "value": "mission",
+              "label": "Mission (Checkmark)"
+            },
+            {
+              "value": "vision",
+              "label": "Vision (Eye)"
+            },
+            {
+              "value": "custom",
+              "label": "Custom Image"
+            }
+          ],
+          "default": "mission"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon1",
+          "label": "Custom icon1 image",
+          "info": "Only used when 'Custom Image' is selected above"
+        },
+        {
+          "type": "text",
+          "id": "feature_title",
+          "label": "Feature title",
+          "default": "Our Mission"
+        },
+        {
+          "type": "textarea",
+          "id": "feature_description",
+          "label": "Feature description",
+          "default": "Jennifer and Arindam blend healthcare expertise with entrepreneurial passion to curate luxurious, wellness-inspired home decor that enhances spaces and enriches daily life."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Founders",
+      "blocks": [
+        {
+          "type": "feature_item",
+          "settings": {
+            "icon1_type": "mission",
+            "feature_title": "Our Mission",
+            "feature_description": "Jennifer and Arindam blend healthcare expertise with entrepreneurial passion to curate luxurious, wellness-inspired home decor that enhances spaces and enriches daily life."
+          }
+        },
+        {
+          "type": "feature_item",
+          "settings": {
+            "icon1_type": "vision",
+            "feature_title": "Our Vision",
+            "feature_description": "Jennifer and Arindam aim to transform homes into sanctuaries of elegance and well-being, offering luxury decor that inspires joy, nurtures comfort, and reflects individuality."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

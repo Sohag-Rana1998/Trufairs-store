@@ -1,0 +1,244 @@
+{% schema %}
+{
+  "name": "Difference Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading",
+      "default": "Our Services"
+    },
+    {
+      "type": "text",
+      "id": "section_subheading",
+      "label": "Section Subheading",
+      "default": "We offer the best services to ensure customer satisfaction."
+    },
+    {
+      "type": "checkbox",
+      "id": "icons_availablility",
+      "label": "Enable image",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "desktop_heading_font_size",
+      "label": "Heading Font Size (Desktop)",
+      "default": 28,
+      "min": 14,
+      "max": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_font_size",
+      "label": "Heading Font Size (Mobile)",
+      "default": 24,
+      "min": 14,
+      "max": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "desktop_subheading_font_size",
+      "label": "Subheading Font Size (Desktop)",
+      "default": 16,
+      "min": 12,
+      "max": 32,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_subheading_font_size",
+      "label": "Subheading Font Size (Mobile)",
+      "default": 14,
+      "min": 12,
+      "max": 32,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_weight",
+      "label": "Heading Font Weight",
+      "default": "bold",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "bold",
+          "label": "Bold"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Service",
+      "settings": [
+        {
+          "type": "text",
+          "id": "service_title",
+          "label": "Service Title",
+          "default": "Fast Delivery"
+        },
+        {
+          "type": "richtext",
+          "id": "service_description",
+          "label": "Service Description",
+          "default": "<p>We ensure that your orders are delivered quickly and safely.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "service_icon",
+          "label": "Service Icon (Use Icons from Flaticon)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom service",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}
+
+
+<section class="services-section">
+
+<div  class="container">
+  
+
+  {% if section.settings.section_heading != blank %}
+  <div class="section-header">
+    <h2>{{ section.settings.section_heading }}</h2>
+    <p>{{ section.settings.section_subheading }}</p>
+  </div>
+{% endif %}
+  <div class="services-container">
+    {%- for block in section.blocks -%}
+      <div class="service-item">
+        {% if section.settings.icons_availablility %}
+        <img src="{{ block.settings.service_icon | img_url: 'small' }}" alt="{{ block.settings.service_title }}" width="200" height="200" class="service-icon">
+        {% endif %}
+        <div class="service-content">
+          <h3>{{ block.settings.service_title }}</h3>
+
+          {% if  block.settings.service_title == "Phone"%}
+
+<a href="tel:1-844-833-3267">{{ block.settings.service_description }}</a>
+
+
+          {% elsif block.settings.service_title == "Email" %}
+<a href="mailto:sales@trufairs.com">{{ block.settings.service_description }}</a>
+          {% else %}
+          <p>{{ block.settings.service_description }}</p>
+
+          {% endif %}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+</div>
+
+  
+</section>
+
+<style>
+
+  .service-item img{
+    object-fit:contain;
+  }
+  .services-section {
+    padding: 0px 20px;
+   
+    margin:20px 0;
+  }
+
+.service-content strong {
+
+font-size:16px;
+color:black;
+
+}
+
+
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .section-header h2 {
+    font-size: {{ section.settings.desktop_heading_font_size }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+    margin-bottom: 10px;
+    color: #000;
+  }
+
+  .section-header p {
+    font-size: {{ section.settings.desktop_subheading_font_size }}px;
+    color: #000;
+  }
+
+.services-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+    align-items: center;
+  max-width:1440px;
+  margin: 0 auto;
+}
+
+.service-item {
+    text-align: center;
+    width: 32%;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+  .service-icon {
+    max-width: 60px;
+    height: auto;
+    margin-bottom: 15px;
+  }
+
+  .service-content h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .service-content p {
+    font-size: 14px;
+    color: #666;
+  }
+
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    .section-header h2 {
+      font-size: {{ section.settings.mobile_heading_font_size }}px;
+    }
+
+    .section-header p {
+      font-size: {{ section.settings.mobile_subheading_font_size }}px;
+    }
+
+    .services-container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .service-item {
+      width: 100%;
+    }
+  }
+</style>

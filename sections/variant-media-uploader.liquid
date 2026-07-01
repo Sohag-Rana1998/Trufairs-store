@@ -1,0 +1,992 @@
+{% comment %} {% if  customer.tags contains "approved" %} {% endcomment %}
+  <div class="app-container">
+  <div class="card">
+    <h2>🔍 Search Product</h2>
+    <div class="row">
+      <input type="text" id="search" placeholder="Enter product name..." />
+      <button class="btn-custom" onclick="searchProduct()">Search</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📦 Select Product & Variant</h2>
+
+    <label>Product</label>
+    <select id="products"></select>
+
+    <label>Variant</label>
+    <select id="variants"></select>
+  </div>
+
+
+
+  <div class="card">
+    <h2>📤 Upload Images</h2>
+
+    <div id="dropZone" class="drop-zone">
+      <input type="file" id="images" multiple accept="image/*" />
+      <div class="drop-zone-content">
+        <div class="drop-title">Drag & Drop Images Here</div>
+        <div class="drop-subtitle">or click to browse files</div>
+        <div class="drop-file-count" id="selectedFileCount">No files selected</div>
+      </div>
+    </div>
+
+    <button class="primary btn-custom " id="uploadBtn" onclick="uploadImages()">Upload Images</button>
+  </div>
+
+  <div class="card progress-section">
+    <h2>📊 Upload Progress</h2>
+
+    <div class="progress-labels">
+      <span>Overall Progress</span>
+      <span id="progressPercent">0%</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="progress-mini-grid">
+      <div>
+        <div class="mini-label">Browser Upload</div>
+        <div class="mini-value" id="browserUploadPercent">0%</div>
+      </div>
+      <div>
+        <div class="mini-label">Server Processing</div>
+        <div class="mini-value" id="serverPercent">0%</div>
+      </div>
+      <div>
+        <div class="mini-label">Stage</div>
+        <div class="mini-value" id="progressStage">Idle</div>
+      </div>
+    </div>
+
+    <div class="status-box" id="progressMessage">Waiting for upload...</div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Total Files</span>
+        <span class="meta-value" id="metaTotalFiles">-</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Storage Uploaded</span>
+        <span class="meta-value" id="metaStorageUploaded">-</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Media Ready</span>
+        <span class="meta-value" id="metaReadyCount">-</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Current File</span>
+        <span class="meta-value" id="metaCurrentFile">-</span>
+      </div>
+    </div>
+
+    <div class="log-box" id="logBox"></div>
+  </div>
+
+  <div class="card">
+    <h2>✅ Verification</h2>
+    <div class="verify-row">
+      <strong>Variant Media Assigned:</strong>
+      <span id="verifyVariantMedia">-</span>
+    </div>
+    <div class="verify-row">
+      <strong>Variant Metafield Confirmed:</strong>
+      <span id="verifyMetafield">-</span>
+    </div>
+    <div class="verify-row">
+      <strong>Metafield Value:</strong>
+      <div class="verify-block" id="verifyMetafieldValue">-</div>
+    </div>
+  </div>
+
+<div class="card">
+  <h2>🗑️ Media Management</h2>
+  <button
+    class="danger btn-custom"
+    onclick="confirmDeleteMedia()"
+  >
+    Delete Existing Media
+  </button>
+</div>
+
+<script>
+  function confirmDeleteMedia() {
+    const confirmed = confirm(
+      "Are you sure you want to delete the existing media? This action cannot be undone."
+    );
+
+    if (confirmed) {
+      deleteMedia();
+    }
+  }
+</script>
+
+
+  <div class="card">
+    <h2>🧩 Variant URL Editor</h2>
+
+    <label>Current Main Variant Image URL</label>
+    <input type="text" id="currentVariantImageUrl" placeholder="Variant image URL will appear here" />
+
+    <div class="editor-header">
+      <h3>Current Variant Metafield URLs</h3>
+      <button class="secondary btn-custom " onclick="loadVariantEditorData()">Refresh URLs</button>
+    </div>
+
+    <div id="metafieldUrlFields" class="metafield-fields"></div>
+
+    <div class="editor-actions">
+      <button class="primary btn-custom " onclick="updateMetafieldOnly()">Update Metafield Value</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<style>
+ .progress-section{
+display:none !important;
+}
+  .app-container {
+    max-width: 920px;
+    margin:50px auto;
+  }
+
+  .card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+  }
+
+  h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .app-container input,.app-container select {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+
+  .btn-custom {
+    padding: 11px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #333;
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+  margin-bottom: 12px;
+  }
+
+  button.primary {
+    background: #2e7d32;
+  }
+
+  button.secondary {
+    background: #1565c0;
+  }
+
+  button.danger {
+    background: #c62828;
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  button:hover:not(:disabled) {
+    opacity: 0.92;
+  }
+
+  .drop-zone {
+    position: relative;
+    border: 2px dashed #9fb3c8;
+    background: #f8fbff;
+    border-radius: 12px;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .drop-zone.dragover {
+    background: #eef6ff;
+    border-color: #1565c0;
+  }
+
+  .drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .drop-zone-content {
+    text-align: center;
+    pointer-events: none;
+    padding: 24px;
+  }
+
+  .drop-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1f2937;
+  }
+
+  .drop-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 10px;
+  }
+
+  .drop-file-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1565c0;
+  }
+
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .progress-wrap {
+    width: 100%;
+    height: 18px;
+    background: #e6e9ee;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #1565c0, #2e7d32);
+    transition: width 0.25s ease;
+  }
+
+  .progress-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .mini-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+  }
+
+  .mini-value {
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .status-box {
+    background: #f7f9fb;
+    border: 1px solid #e3e7ec;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .meta-item {
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .meta-label {
+    display: block;
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  .meta-value {
+    font-size: 14px;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  .log-box {
+    max-height: 220px;
+    overflow: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fcfcfc;
+    padding: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .log-item {
+    padding: 6px 0;
+    border-bottom: 1px dashed #eee;
+  }
+
+  .log-item:last-child {
+    border-bottom: none;
+  }
+
+  .verify-row {
+    margin-bottom: 14px;
+  }
+
+  .verify-block {
+    margin-top: 8px;
+    padding: 10px;
+    background: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    word-break: break-all;
+    font-size: 13px;
+  }
+
+  .editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 16px;
+  }
+
+  .metafield-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .url-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .url-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .editor-actions {
+    margin-top: 16px;
+  }
+
+  #toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+
+  .toast {
+    padding: 12px 18px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: #fff;
+    min-width: 240px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    animation: fadeIn 0.25s ease;
+  }
+
+  .toast.success { background: #2e7d32; }
+  .toast.error { background: #c62828; }
+  .toast.info { background: #0277bd; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 700px) {
+    .row {
+      flex-direction: column;
+    }
+
+    .meta-grid,
+    .progress-mini-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .url-row {
+      grid-template-columns: 1fr;
+    }
+
+    .editor-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>
+
+<script>
+    {% comment %} const API = "https://variant-image-uploader-trufairs.vercel.app/"; {% endcomment %}
+  const API = "http://localhost:5000";
+  let currentEventSource = null;
+
+  function generateUploadId() {
+    if (window.crypto && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return "upload_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+  }
+
+  function showToast(message, type = "info") {
+    const container = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.innerText = message;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+
+  function setUploadButtonState(disabled) {
+    document.getElementById("uploadBtn").disabled = disabled;
+  }
+
+  function setProgress(percent, browserUploadPercent, serverPercent, stage, message, meta = {}) {
+    document.getElementById("progressBar").style.width = `${percent}%`;
+    document.getElementById("progressPercent").textContent = `${Math.round(percent || 0)}%`;
+    document.getElementById("browserUploadPercent").textContent = `${Math.round(browserUploadPercent || 0)}%`;
+    document.getElementById("serverPercent").textContent = `${Math.round(serverPercent || 0)}%`;
+    document.getElementById("progressStage").textContent = stage || "Idle";
+    document.getElementById("progressMessage").textContent = message || "Waiting...";
+
+    document.getElementById("metaTotalFiles").textContent =
+      meta.totalFiles ?? meta.totalFilesReceived ?? "-";
+    document.getElementById("metaStorageUploaded").textContent =
+      meta.uploadedToStorage ?? "-";
+    document.getElementById("metaReadyCount").textContent =
+      meta.readyCount ?? "-";
+    document.getElementById("metaCurrentFile").textContent =
+      meta.currentFile ?? "-";
+  }
+
+  function addLog(message) {
+    const logBox = document.getElementById("logBox");
+    const item = document.createElement("div");
+    item.className = "log-item";
+    const time = new Date().toLocaleTimeString();
+    item.textContent = `[${time}] ${message}`;
+    logBox.prepend(item);
+  }
+
+  function updateSelectedFileCount() {
+    const files = document.getElementById("images").files;
+    const countEl = document.getElementById("selectedFileCount");
+
+    if (!files || !files.length) {
+      countEl.textContent = "No files selected";
+      return;
+    }
+
+    countEl.textContent = `${files.length} file(s) selected`;
+  }
+
+  function closeProgressListener() {
+    if (currentEventSource) {
+      currentEventSource.close();
+      currentEventSource = null;
+    }
+  }
+
+  function prepareForNewSubmission(clearFiles = true) {
+    if (clearFiles) {
+      document.getElementById("images").value = "";
+      updateSelectedFileCount();
+    }
+
+    closeProgressListener();
+    setUploadButtonState(false);
+  }
+
+  function resetProgressUI(clearFiles = false) {
+    setProgress(0, 0, 0, "Idle", "Waiting for upload...");
+    document.getElementById("logBox").innerHTML = "";
+    document.getElementById("verifyVariantMedia").textContent = "-";
+    document.getElementById("verifyMetafield").textContent = "-";
+    document.getElementById("verifyMetafieldValue").textContent = "-";
+
+    if (clearFiles) {
+      document.getElementById("images").value = "";
+      updateSelectedFileCount();
+    }
+
+    setUploadButtonState(false);
+    closeProgressListener();
+  }
+
+  function escapeHtml(str) {
+    return String(str || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function renderMetafieldFields(serialFields = []) {
+    const container = document.getElementById("metafieldUrlFields");
+    container.innerHTML = "";
+
+    const fieldMap = new Map();
+
+    serialFields.forEach((item) => {
+      fieldMap.set(Number(item.serial), item.url || "");
+    });
+
+    for (let i = 1; i <= 10; i++) {
+      const row = document.createElement("div");
+      row.className = "url-row";
+
+      row.innerHTML = `
+        <div class="url-label">No.${i} URL</div>
+        <input
+          type="text"
+          class="metafield-url-input"
+          data-serial="${i}"
+          placeholder="Enter image URL"
+          value="${escapeHtml(fieldMap.get(i) || "")}"
+        />
+      `;
+
+      container.appendChild(row);
+    }
+  }
+
+  async function searchProduct() {
+    const q = document.getElementById("search").value.trim();
+
+    if (!q) {
+      showToast("Please enter a search term", "error");
+      return;
+    }
+
+    showToast("Searching products...", "info");
+
+    try {
+      const res = await fetch(`${API}/products?q=${encodeURIComponent(q)}`);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      const productSelect = document.getElementById("products");
+      const variantSelect = document.getElementById("variants");
+
+      productSelect.innerHTML = "";
+      variantSelect.innerHTML = "";
+
+      if (!data.success || !Array.isArray(data.products) || !data.products.length) {
+        resetProgressUI(true);
+        document.getElementById("currentVariantImageUrl").value = "";
+        renderMetafieldFields([]);
+        showToast("No products found", "error");
+        return;
+      }
+
+      data.products.forEach((product) => {
+        const option = document.createElement("option");
+        option.value = product.id;
+        option.textContent = product.title;
+        option.dataset.variants = JSON.stringify(product.variants?.edges || []);
+        productSelect.appendChild(option);
+      });
+
+      resetProgressUI(true);
+      loadVariants();
+      await loadVariantEditorData();
+      showToast("Products loaded", "success");
+    } catch (err) {
+      console.error("Search error:", err);
+      showToast("Failed to fetch products", "error");
+    }
+  }
+
+  function loadVariants() {
+    const product = document.getElementById("products").selectedOptions[0];
+    if (!product) return;
+
+    const variants = JSON.parse(product.dataset.variants || "[]");
+    const variantSelect = document.getElementById("variants");
+    variantSelect.innerHTML = "";
+
+    if (!variants.length) {
+      const option = document.createElement("option");
+      option.value = "";
+      option.textContent = "No variants found";
+      variantSelect.appendChild(option);
+      return;
+    }
+
+    variants.forEach((v) => {
+      const option = document.createElement("option");
+      option.value = v.node.id;
+      option.textContent = v.node.title;
+      variantSelect.appendChild(option);
+    });
+  }
+
+  async function deleteMedia() {
+    const productId = document.getElementById("products").value;
+    const variantId = document.getElementById("variants").value;
+
+    if (!productId) {
+      showToast("Select a product first", "error");
+      return;
+    }
+
+    showToast("Deleting media...", "info");
+
+    try {
+      const res = await fetch(`${API}/delete-media`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ productId, variantId })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.details || data.error || "Delete failed");
+      }
+
+      showToast(`Deleted ${data.deletedCount || 0} media item(s)`, "success");
+      resetProgressUI(true);
+      await loadVariantEditorData();
+    } catch (err) {
+      console.error("Delete media error:", err);
+      showToast(err.message || "Failed to delete media", "error");
+    }
+  }
+
+  function startProgressListener(uploadId) {
+    closeProgressListener();
+
+    currentEventSource = new EventSource(`${API}/progress/${encodeURIComponent(uploadId)}`);
+
+    currentEventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        setProgress(
+          Number(data.percent || 0),
+          Number(data.browserUploadPercent || 0),
+          Number(data.serverPercent || 0),
+          data.stage || "Idle",
+          data.message || "",
+          data.meta || {}
+        );
+
+        addLog(data.message || data.stage || "Updated");
+
+        if (data.done) {
+          if (data.error) {
+            showToast(data.message || "Upload failed", "error");
+          } else {
+            showToast("Upload complete ✅", "success");
+          }
+
+          if (data.meta) {
+            document.getElementById("verifyVariantMedia").textContent =
+              data.meta.variantMediaConfirmed === true ? "Yes" :
+              data.meta.variantMediaConfirmed === false ? "No" : "-";
+
+            document.getElementById("verifyMetafield").textContent =
+              data.meta.metafieldConfirmed === true ? "Yes" :
+              data.meta.metafieldConfirmed === false ? "No" : "-";
+
+            document.getElementById("verifyMetafieldValue").textContent =
+              data.meta.confirmedValue || data.meta.metafieldValue || "-";
+          }
+
+          setUploadButtonState(false);
+
+          if (!data.error) {
+            document.getElementById("images").value = "";
+            updateSelectedFileCount();
+          }
+
+          closeProgressListener();
+        }
+      } catch (err) {
+        console.error("Progress parse error:", err);
+      }
+    };
+
+    currentEventSource.onerror = () => {
+      console.warn("Progress connection interrupted");
+    };
+  }
+
+  function uploadImages() {
+    const files = document.getElementById("images").files;
+    const productId = document.getElementById("products").value;
+    const variantId = document.getElementById("variants").value;
+
+    if (!productId) {
+      showToast("Select a product first", "error");
+      return;
+    }
+
+    if (!variantId) {
+      showToast("Select a variant first", "error");
+      return;
+    }
+
+    if (!files.length) {
+      showToast("Select images first", "error");
+      return;
+    }
+
+    resetProgressUI(false);
+    setUploadButtonState(true);
+
+    const uploadId = generateUploadId();
+    startProgressListener(uploadId);
+
+    const formData = new FormData();
+    formData.append("uploadId", uploadId);
+    formData.append("productId", productId);
+    formData.append("variantId", variantId);
+
+    for (const file of files) {
+      formData.append("images", file);
+    }
+
+    addLog("Upload started...");
+    setProgress(1, 0, 0, "starting", "Starting upload...", {
+      totalFiles: files.length
+    });
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${API}/upload`);
+
+    xhr.upload.onprogress = function (e) {
+      if (e.lengthComputable) {
+        const browserPercent = Math.round((e.loaded / e.total) * 100);
+        setProgress(
+          browserPercent * 0.35,
+          browserPercent,
+          0,
+          "uploading_files",
+          `Uploading files from browser... ${browserPercent}%`,
+          { totalFiles: files.length }
+        );
+      }
+    };
+
+    xhr.onload = async function () {
+      let data = {};
+      try {
+        data = JSON.parse(xhr.responseText || "{}");
+      } catch {}
+
+      if (xhr.status >= 200 && xhr.status < 300 && data.success) {
+        document.getElementById("verifyVariantMedia").textContent =
+          data.variantMediaConfirmed ? "Yes" : "No";
+
+        document.getElementById("verifyMetafield").textContent =
+          data.metafieldConfirmed ? "Yes" : "No";
+
+        document.getElementById("verifyMetafieldValue").textContent =
+          data.confirmedValue || data.metafieldValue || "-";
+
+        prepareForNewSubmission(true);
+        await loadVariantEditorData();
+      } else {
+        showToast(data.details || data.error || "Upload failed ❌", "error");
+        addLog(`Upload failed: ${data.details || data.error || "Unknown error"}`);
+        prepareForNewSubmission(false);
+      }
+    };
+
+    xhr.onerror = function () {
+      showToast("Network error ❌", "error");
+      addLog("Network error during upload");
+      prepareForNewSubmission(false);
+    };
+
+    xhr.send(formData);
+  }
+
+  async function loadVariantEditorData() {
+    const variantId = document.getElementById("variants").value;
+
+    if (!variantId) {
+      document.getElementById("currentVariantImageUrl").value = "";
+      renderMetafieldFields([]);
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/variant-editor-data?variantId=${encodeURIComponent(variantId)}`);
+      const data = await res.json();
+
+      console.log("variant-editor-data response:", data);
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.details || data.error || "Failed to load variant editor data");
+      }
+
+      document.getElementById("currentVariantImageUrl").value =
+        data.currentVariantImageUrl || "";
+
+      renderMetafieldFields(data.serialFields || []);
+    } catch (err) {
+      console.error("Variant editor data error:", err);
+      showToast(err.message || "Failed to load variant URLs", "error");
+    }
+  }
+
+  async function updateMetafieldOnly() {
+    const variantId = document.getElementById("variants").value;
+
+    if (!variantId) {
+      showToast("Select a variant first", "error");
+      return;
+    }
+
+    const inputs = [...document.querySelectorAll(".metafield-url-input")];
+
+    const urls = inputs
+      .sort((a, b) => Number(a.dataset.serial) - Number(b.dataset.serial))
+      .map((input) => input.value.trim())
+      .filter(Boolean);
+
+    try {
+      const res = await fetch(`${API}/update-variant-metafield`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          variantId,
+          urls
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.details || data.error || "Failed to update metafield");
+      }
+
+      document.getElementById("verifyMetafield").textContent =
+        data.metafieldConfirmed ? "Yes" : "No";
+
+      document.getElementById("verifyMetafieldValue").textContent =
+        data.confirmedValue || data.metafieldValue || "-";
+
+      renderMetafieldFields(data.serialFields || []);
+      showToast("Variant metafield updated successfully", "success");
+    } catch (err) {
+      console.error("Update metafield error:", err);
+      showToast(err.message || "Failed to update metafield", "error");
+    }
+  }
+
+  document.getElementById("products").addEventListener("change", async () => {
+    resetProgressUI(true);
+    loadVariants();
+    await loadVariantEditorData();
+  });
+
+  document.getElementById("variants").addEventListener("change", async () => {
+    resetProgressUI(true);
+    await loadVariantEditorData();
+  });
+
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("images");
+
+  ["dragenter", "dragover"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.add("dragover");
+    });
+  });
+
+  ["dragleave", "drop"].forEach((eventName) => {
+    dropZone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropZone.classList.remove("dragover");
+    });
+  });
+
+  dropZone.addEventListener("drop", (e) => {
+    const files = e.dataTransfer.files;
+    if (files && files.length) {
+      fileInput.files = files;
+      updateSelectedFileCount();
+    }
+  });
+
+  fileInput.addEventListener("change", updateSelectedFileCount);
+
+  renderMetafieldFields([]);
+  resetProgressUI(true);
+</script>
+{% comment %} {% else %}
+  <script>
+    // Redirect non-approved users to homepage
+    window.location.href = '/';
+  </script>
+{% endif %} {% endcomment %}

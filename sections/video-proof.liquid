@@ -1,0 +1,1022 @@
+{% style %}
+  #shopify-section-{{ section.id }} .trufairs-proof {
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__header {
+    max-width: 760px;
+    margin: 0 auto 42px;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 12px;
+    color: {{ section.settings.accent_color }};
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__eyebrow::before,
+  #shopify-section-{{ section.id }} .trufairs-proof__eyebrow::after {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: {{ section.settings.accent_color }};
+    opacity: 0.45;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__heading {
+    margin: 0 0 14px;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08;
+    font-weight: 750;
+    letter-spacing: -0.045em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__description {
+    margin: 0;
+    color: {{ section.settings.muted_text_color }};
+    font-size: 16.5px;
+    line-height: 1.7;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__card {
+    overflow: hidden;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.card_background }};
+    border: 1px solid {{ section.settings.border_color }};
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.055);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: {{ section.settings.media_background }};
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__media-trigger {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__poster,
+  #shopify-section-{{ section.id }} .trufairs-proof__fallback-image,
+  #shopify-section-{{ section.id }} .trufairs-proof__placeholder {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__poster {
+    transition: transform 450ms cubic-bezier(0.2, 0.75, 0.25, 1), filter 300ms ease;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__media-trigger:hover .trufairs-proof__poster,
+  #shopify-section-{{ section.id }} .trufairs-proof__media-trigger:focus-visible .trufairs-proof__poster {
+    transform: scale(1.045);
+    filter: brightness(0.86);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__media-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 42%, rgba(0, 0, 0, 0.35) 100%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    width: 68px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.94);
+    color: {{ section.settings.text_color }};
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+    transition: transform 220ms ease, background 220ms ease;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__play svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__media-trigger:hover .trufairs-proof__play,
+  #shopify-section-{{ section.id }} .trufairs-proof__media-trigger:focus-visible .trufairs-proof__play {
+    transform: translate(-50%, -50%) scale(1.08);
+    background: #ffffff;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__media-trigger:focus-visible {
+    outline: 3px solid {{ section.settings.accent_color }};
+    outline-offset: -3px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: {{ section.settings.badge_background }};
+    color: {{ section.settings.badge_text_color }};
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.055em;
+    text-transform: uppercase;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__badge svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__body {
+    padding: 22px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__title {
+    margin: 0 0 10px;
+    font-size: 18px;
+    line-height: 1.35;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__text {
+    margin: 0;
+    color: {{ section.settings.muted_text_color }};
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__note {
+    max-width: 860px;
+    margin: 42px auto 0;
+    padding: 24px 28px;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.note_background }};
+    border: 1px solid {{ section.settings.border_color }};
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__note p {
+    margin: 0;
+    color: {{ section.settings.muted_text_color }};
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof__note strong {
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal[hidden] {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 8, 6, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 1100px);
+    max-height: calc(100vh - 48px);
+    overflow: hidden;
+    border-radius: 20px;
+    background: #000000;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 5;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.58);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__close:hover,
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__close:focus-visible {
+    background: rgba(0, 0, 0, 0.85);
+    transform: scale(1.05);
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__close svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000000;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__media video,
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__media iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
+    background: #000000;
+    object-fit: contain;
+  }
+
+  #shopify-section-{{ section.id }} .trufairs-proof-modal__message {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    color: #ffffff;
+    text-align: center;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  body.trufairs-proof-modal-open {
+    overflow: hidden;
+  }
+
+  @media screen and (max-width: 990px) {
+    #shopify-section-{{ section.id }} .trufairs-proof__grid {
+      grid-template-columns: repeat(3, minmax(260px, 1fr));
+      gap: 18px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .trufairs-proof {
+      padding: {{ section.settings.mobile_padding_top }}px 0 {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__header {
+      padding: 0 16px;
+      margin-bottom: 30px;
+    
+    }
+
+ 
+
+  
+
+    #shopify-section-{{ section.id }} .trufairs-proof__heading {
+      font-size: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__description {
+      font-size: 15.5px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__scroller {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding: 0 16px 6px;
+      margin-left: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__scroller::-webkit-scrollbar {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__grid {
+      display: flex;
+      width: max-content;
+      gap: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__card {
+      width: 78vw;
+      max-width: 330px;
+      min-width: 260px;
+      scroll-snap-align: start;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__body {
+      padding: 18px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__note {
+      margin: 34px 16px 0;
+      padding: 22px;
+      text-align: left;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof__play {
+      width: 60px;
+      height: 60px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof-modal {
+      padding: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof-modal__dialog {
+      max-height: calc(100vh - 24px);
+      border-radius: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .trufairs-proof-modal__close {
+      top: 10px;
+      right: 10px;
+      width: 38px;
+      height: 38px;
+    }
+  }
+{% endstyle %}
+
+<section class="trufairs-proof" aria-labelledby="trufairs-proof-heading-{{ section.id }}">
+  <div class="trufairs-proof__container">
+    <div class="trufairs-proof__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="trufairs-proof__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 id="trufairs-proof-heading-{{ section.id }}" class="trufairs-proof__heading">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <p class="trufairs-proof__description">{{ section.settings.description }}</p>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="trufairs-proof__scroller">
+        <div class="trufairs-proof__grid">
+          {% for block in section.blocks %}
+            {% liquid
+              assign poster_image = block.settings.poster_image
+              if poster_image == blank and block.settings.shopify_video != blank
+                assign poster_image = block.settings.shopify_video.preview_image
+              endif
+
+              assign has_video = false
+              if block.settings.shopify_video != blank or block.settings.external_video != blank or block.settings.custom_video_url != blank
+                assign has_video = true
+              endif
+            %}
+
+            <article class="trufairs-proof__card" {{ block.shopify_attributes }}>
+              <div class="trufairs-proof__media">
+                {% if has_video %}
+                  <button
+                    type="button"
+                    class="trufairs-proof__media-trigger js-trufairs-video-trigger"
+                    aria-label="Play {{ block.settings.title | default: 'video' | escape }}"
+                    aria-haspopup="dialog"
+                    data-template-id="trufairs-video-template-{{ section.id }}-{{ block.id }}"
+                  >
+                    {% if poster_image != blank %}
+                      <img
+                        class="trufairs-proof__poster"
+                        src="{{ poster_image | image_url: width: 700 }}"
+                        srcset="
+                          {{ poster_image | image_url: width: 360 }} 360w,
+                          {{ poster_image | image_url: width: 600 }} 600w,
+                          {{ poster_image | image_url: width: 900 }} 900w
+                        "
+                        sizes="(max-width: 749px) 78vw, 33vw"
+                        alt="{{ poster_image.alt | default: block.settings.title | escape }}"
+                        loading="lazy"
+                        width="{{ poster_image.width }}"
+                        height="{{ poster_image.height }}"
+                      >
+                    {% elsif block.settings.image != blank %}
+                      <img
+                        class="trufairs-proof__poster"
+                        src="{{ block.settings.image | image_url: width: 700 }}"
+                        srcset="
+                          {{ block.settings.image | image_url: width: 360 }} 360w,
+                          {{ block.settings.image | image_url: width: 600 }} 600w,
+                          {{ block.settings.image | image_url: width: 900 }} 900w
+                        "
+                        sizes="(max-width: 749px) 78vw, 33vw"
+                        alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                        loading="lazy"
+                        width="{{ block.settings.image.width }}"
+                        height="{{ block.settings.image.height }}"
+                      >
+                    {% else %}
+                      {{ 'lifestyle-1' | placeholder_svg_tag: 'trufairs-proof__placeholder' }}
+                    {% endif %}
+
+                    <span class="trufairs-proof__media-overlay" aria-hidden="true"></span>
+
+                    {% if section.settings.show_badge %}
+                      <span class="trufairs-proof__badge">
+                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path d="M12 3l7 4v5c0 4.5-2.9 7.8-7 9-4.1-1.2-7-4.5-7-9V7l7-4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                          <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        {{ section.settings.badge_text }}
+                      </span>
+                    {% endif %}
+
+                    <span class="trufairs-proof__play" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M8.5 5.5v13l10-6.5-10-6.5z" fill="currentColor"/>
+                      </svg>
+                    </span>
+                  </button>
+
+                  <template id="trufairs-video-template-{{ section.id }}-{{ block.id }}">
+                    {% if block.settings.shopify_video != blank %}
+                      <video controls playsinline autoplay preload="metadata"
+                        {% if poster_image != blank %}poster="{{ poster_image | image_url: width: 1200 }}"{% endif %}
+                      >
+                        {% for source in block.settings.shopify_video.sources %}
+                          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                        {% endfor %}
+                      </video>
+                    {% elsif block.settings.external_video != blank %}
+                      {% assign external_video_id = block.settings.external_video.id %}
+                      {% assign external_video_type = block.settings.external_video.type %}
+
+                      {% if external_video_type == 'youtube' %}
+                        <iframe
+                          title="{{ block.settings.title | escape }}"
+                          src="https://www.youtube.com/embed/{{ external_video_id }}?autoplay=1&rel=0&modestbranding=1"
+                          allow="autoplay; accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                          allowfullscreen
+                        ></iframe>
+                      {% elsif external_video_type == 'vimeo' %}
+                        <iframe
+                          title="{{ block.settings.title | escape }}"
+                          src="https://player.vimeo.com/video/{{ external_video_id }}?autoplay=1"
+                          allow="autoplay; fullscreen; picture-in-picture"
+                          allowfullscreen
+                        ></iframe>
+                      {% endif %}
+                    {% elsif block.settings.custom_video_url != blank %}
+                      <div
+                        class="js-trufairs-custom-video"
+                        data-url="{{ block.settings.custom_video_url | escape }}"
+                        data-mode="{{ block.settings.custom_video_mode }}"
+                        data-title="{{ block.settings.title | escape }}"
+                        {% if poster_image != blank %}data-poster="{{ poster_image | image_url: width: 1200 }}"{% endif %}
+                      ></div>
+                    {% endif %}
+                  </template>
+                {% elsif block.settings.image != blank %}
+                  <img
+                    class="trufairs-proof__fallback-image"
+                    src="{{ block.settings.image | image_url: width: 700 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 360 }} 360w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w,
+                      {{ block.settings.image | image_url: width: 900 }} 900w
+                    "
+                    sizes="(max-width: 749px) 78vw, 33vw"
+                    alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                    loading="lazy"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                  >
+                {% else %}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'trufairs-proof__placeholder' }}
+                {% endif %}
+              </div>
+
+              <div class="trufairs-proof__body">
+                {% if block.settings.title != blank %}
+                  <h3 class="trufairs-proof__title">{{ block.settings.title }}</h3>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <p class="trufairs-proof__text">{{ block.settings.text }}</p>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if section.settings.note != blank %}
+      <div class="trufairs-proof__note">{{ section.settings.note }}</div>
+    {% endif %}
+  </div>
+
+  <div
+    class="trufairs-proof-modal js-trufairs-proof-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Video player"
+    hidden
+  >
+    <div class="trufairs-proof-modal__backdrop js-trufairs-modal-close" aria-hidden="true"></div>
+
+    <div class="trufairs-proof-modal__dialog" role="document">
+      <button type="button" class="trufairs-proof-modal__close js-trufairs-modal-close" aria-label="Close video">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="trufairs-proof-modal__media js-trufairs-modal-media"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var section = document.getElementById('shopify-section-{{ section.id }}');
+    if (!section || section.dataset.videoProofInitialized === 'true') return;
+
+    section.dataset.videoProofInitialized = 'true';
+
+    var modal = section.querySelector('.js-trufairs-proof-modal');
+    var modalMedia = section.querySelector('.js-trufairs-modal-media');
+    var triggers = section.querySelectorAll('.js-trufairs-video-trigger');
+    var closeButtons = section.querySelectorAll('.js-trufairs-modal-close');
+    var lastTrigger = null;
+
+    if (!modal || !modalMedia || !triggers.length) return;
+
+    function isDirectVideoUrl(url) {
+      return /\.(mp4|webm|ogg|ogv|mov|m4v|m3u8)(\?|#|$)/i.test(url);
+    }
+
+    function normalizeEmbedUrl(url) {
+      var normalizedUrl = url.trim();
+      var youtubeMatch = normalizedUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([^?&/]+)/i);
+      var vimeoMatch = normalizedUrl.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+
+      if (youtubeMatch && youtubeMatch[1]) {
+        return 'https://www.youtube.com/embed/' + youtubeMatch[1] + '?autoplay=1&rel=0&modestbranding=1';
+      }
+
+      if (vimeoMatch && vimeoMatch[1]) {
+        return 'https://player.vimeo.com/video/' + vimeoMatch[1] + '?autoplay=1';
+      }
+
+      return normalizedUrl;
+    }
+
+    function buildCustomVideo(holder) {
+      var url = holder.dataset.url ? holder.dataset.url.trim() : '';
+      var mode = holder.dataset.mode || 'auto';
+      var title = holder.dataset.title || 'Video player';
+      var poster = holder.dataset.poster || '';
+
+      if (!url) return null;
+
+      var useDirectVideo = mode === 'direct' || (mode === 'auto' && isDirectVideoUrl(url));
+
+      if (useDirectVideo) {
+        var video = document.createElement('video');
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+
+        if (poster) video.poster = poster;
+
+        var source = document.createElement('source');
+        source.src = url;
+
+        if (/\.webm(\?|#|$)/i.test(url)) {
+          source.type = 'video/webm';
+        } else if (/\.(ogg|ogv)(\?|#|$)/i.test(url)) {
+          source.type = 'video/ogg';
+        } else if (/\.m3u8(\?|#|$)/i.test(url)) {
+          source.type = 'application/x-mpegURL';
+        } else {
+          source.type = 'video/mp4';
+        }
+
+        video.appendChild(source);
+        return video;
+      }
+
+      var iframe = document.createElement('iframe');
+      iframe.title = title;
+      iframe.src = normalizeEmbedUrl(url);
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+      iframe.allowFullscreen = true;
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      return iframe;
+    }
+
+    function openModal(trigger) {
+      var templateId = trigger.dataset.templateId;
+      var template = templateId ? document.getElementById(templateId) : null;
+
+      if (!template) return;
+
+      lastTrigger = trigger;
+      modalMedia.innerHTML = '';
+
+      var fragment = template.content.cloneNode(true);
+      var customHolder = fragment.querySelector('.js-trufairs-custom-video');
+
+      if (customHolder) {
+        var customMedia = buildCustomVideo(customHolder);
+        if (customMedia) {
+          customHolder.replaceWith(customMedia);
+        } else {
+          customHolder.outerHTML = '<p class="trufairs-proof-modal__message">The video URL is missing or invalid.</p>';
+        }
+      }
+
+      modalMedia.appendChild(fragment);
+      modal.hidden = false;
+      document.body.classList.add('trufairs-proof-modal-open');
+
+      window.requestAnimationFrame(function () {
+        var closeButton = modal.querySelector('.trufairs-proof-modal__close');
+        if (closeButton) closeButton.focus();
+
+        var video = modalMedia.querySelector('video');
+        if (video) {
+          var playPromise = video.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function () {});
+          }
+        }
+      });
+    }
+
+    function closeModal() {
+      if (modal.hidden) return;
+
+      var video = modalMedia.querySelector('video');
+      if (video) {
+        video.pause();
+        video.removeAttribute('src');
+        video.querySelectorAll('source').forEach(function (source) {
+          source.removeAttribute('src');
+        });
+        video.load();
+      }
+
+      var iframe = modalMedia.querySelector('iframe');
+      if (iframe) iframe.src = 'about:blank';
+
+      modalMedia.innerHTML = '';
+      modal.hidden = true;
+      document.body.classList.remove('trufairs-proof-modal-open');
+
+      if (lastTrigger) {
+        lastTrigger.focus();
+        lastTrigger = null;
+      }
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        openModal(trigger);
+      });
+    });
+
+    closeButtons.forEach(function (button) {
+      button.addEventListener('click', closeModal);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && !modal.hidden) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener('shopify:section:unload', function (event) {
+      if (event.target && event.target.id === 'shopify-section-{{ section.id }}') {
+        closeModal();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Video Proof",
+  "tag": "section",
+  "class": "section-video-proof",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Real Validation"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "See What We Actually Test"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Real use. Real results. No guesswork. See how products perform before they become Trufairs Verified Picks."
+    },
+    {
+      "type": "richtext",
+      "id": "note",
+      "label": "Supporting copy",
+      "default": "<p><strong>Real use. Real results. No guesswork.</strong> This section helps answer: “Is this actually true, or just marketing?”</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show video badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Tested"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f8f5ef"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "media_background",
+      "label": "Media background",
+      "default": "#efe7da"
+    },
+    {
+      "type": "color",
+      "id": "note_background",
+      "label": "Bottom note background",
+      "default": "#fffaf0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Main text color",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text color",
+      "default": "#625a50"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#b8893b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#eadfcd"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Badge background",
+      "default": "#17130f"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 40,
+      "max": 140,
+      "step": 4,
+      "default": 88
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 32,
+      "max": 100,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 10,
+      "max": 34,
+      "step": 2,
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "proof_video",
+      "name": "Proof video",
+      "settings": [
+        {
+          "type": "video",
+          "id": "shopify_video",
+          "label": "Shopify-hosted video"
+        },
+        {
+          "type": "video_url",
+          "id": "external_video",
+          "label": "YouTube or Vimeo video",
+          "accept": ["youtube", "vimeo"]
+        },
+        {
+          "type": "url",
+          "id": "custom_video_url",
+          "label": "Bunny, direct, or embed video URL",
+          "info": "Supports direct MP4/WebM links, Bunny Stream iframe URLs, and other embeddable player URLs."
+        },
+        {
+          "type": "select",
+          "id": "custom_video_mode",
+          "label": "Custom URL type",
+          "default": "auto",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto detect"
+            },
+            {
+              "value": "direct",
+              "label": "Direct video file"
+            },
+            {
+              "value": "embed",
+              "label": "Embedded player / iframe"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "poster_image",
+          "label": "Video thumbnail"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Fallback image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Video title",
+          "default": "Real Usage Footage"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Video description",
+          "default": "Hands-on product validation focused on everyday performance, usability, and real results."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Proof",
+      "blocks": [
+        {
+          "type": "proof_video",
+          "settings": {
+            "title": "Real Use Footage",
+            "text": "Products are shown in practical use, not staged marketing-only visuals."
+          }
+        },
+        {
+          "type": "proof_video",
+          "settings": {
+            "title": "Hands-On Interaction",
+            "text": "We look at usability, quality, comfort, and how the product performs in real conditions."
+          }
+        },
+        {
+          "type": "proof_video",
+          "settings": {
+            "title": "Selection Confidence",
+            "text": "Only products that support a better buying decision move forward as verified picks."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

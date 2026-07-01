@@ -1,0 +1,54 @@
+<article class="video-card" data-video-type="{{ video_label | handle }}">
+  <figure class="video-card-figure">
+    <div class="video-wrapper" data-video-state="thumbnail">
+      {%- comment -%} Thumbnail State {%- endcomment -%}
+      <div class="video-thumbnail">
+        {%- if thumb_url != blank -%}
+          <img 
+            src="{{ thumb_url }}" 
+            alt="{{ video_label }} video for {{ product_title }}"
+            loading="lazy"
+            class="video-thumbnail-image"
+          >
+        {%- else -%}
+          <div class="video-thumbnail-placeholder" aria-hidden="true">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M40 73.3333C58.4095 73.3333 73.3333 58.4095 73.3333 40C73.3333 21.5905 58.4095 6.66667 40 6.66667C21.5905 6.66667 6.66667 21.5905 6.66667 40C6.66667 58.4095 21.5905 73.3333 40 73.3333Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M53.3333 40L33.3333 52V28L53.3333 40Z" fill="currentColor"/>
+            </svg>
+          </div>
+        {%- endif -%}
+        
+        {%- comment -%} Custom Play Button {%- endcomment -%}
+        <button 
+          class="video-play-button" 
+          aria-label="Play {{ video_label }} video"
+          data-video-url="{{ video_url }}"
+        >
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" fill="white" fill-opacity="0.95"/>
+            <circle cx="32" cy="32" r="31" stroke="white" stroke-width="2"/>
+            <path d="M26 22.5L44 32L26 41.5V22.5Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      {%- comment -%} Video Player (loaded dynamically) {%- endcomment -%}
+      <div class="video-player" style="display: none;"></div>
+    </div>
+
+    {%- comment -%} Video Badge {%- endcomment -%}
+    <span 
+      class="video-badge" 
+      style="background-color: {{ section.settings.badge_background }}; color: {{ section.settings.badge_text_color }};"
+    >
+      {{ video_label }}
+    </span>
+
+    {%- if section.settings.show_video_titles -%}
+      <figcaption class="video-card-caption">
+        <h3 class="video-card-title">{{ video_label }} Video</h3>
+      </figcaption>
+    {%- endif -%}
+  </figure>
+</article>

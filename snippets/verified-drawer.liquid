@@ -1,0 +1,55 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const drawer = document.getElementById('customDrawer');
+
+    if (!drawer) return;
+
+    const openButtons = document.querySelectorAll(
+      '#openDrawer, #openDrawer1, .custom-drawer-trigger'
+    );
+
+    const closeButton = drawer.querySelector('#closeDrawer, .drawer-close');
+    const overlay = drawer.querySelector('.drawer-overlay1');
+
+    function openDrawer(event) {
+      if (event) {
+        event.preventDefault();
+      }
+
+      drawer.classList.add('active');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer(event) {
+      if (event) {
+        event.preventDefault();
+      }
+
+      drawer.classList.remove('active');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    openButtons.forEach(function (button) {
+      button.addEventListener('click', openDrawer);
+    });
+
+    if (closeButton) {
+      closeButton.addEventListener('click', closeDrawer);
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', closeDrawer);
+    }
+
+    document.addEventListener('keydown', function (event) {
+      if (
+        event.key === 'Escape' &&
+        drawer.classList.contains('active')
+      ) {
+        closeDrawer();
+      }
+    });
+  });
+</script>

@@ -1,0 +1,267 @@
+{% assign has_faq = false %}
+
+{% if product.metafields.custom.questions != blank and product.metafields.custom.answers != blank %}
+  {% assign questions = product.metafields.custom.questions | split: '|' %}
+  {% assign answers = product.metafields.custom.answers | split: '|' %}
+
+  {% for q in questions %}
+    {% assign q_text = q | strip %}
+    {% assign a_text = answers[forloop.index0] | default: '' | strip %}
+
+    {% if q_text != blank and a_text != blank %}
+      {% assign has_faq = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if has_faq %}
+<div class="faq-contact-wrapper">
+  <div class="faq-contact-container container page-width">
+    <div class="faq-section">
+      <div class="faq-header">
+        <h2>{{ section.settings.faq_title }}</h2>
+
+        {% if section.settings.faq_subtitle != blank %}
+          <p class="faq-subtitle">{{ section.settings.faq_subtitle }}</p>
+        {% endif %}
+      </div>
+
+      <div class="faq-accordion">
+        {% for q in questions %}
+          {% assign q_text = q | strip %}
+          {% assign a_text = answers[forloop.index0] | default: '' | strip %}
+
+          {% if q_text != blank and a_text != blank %}
+            <div class="faq-item">
+              <button class="faq-question" aria-expanded="false" type="button">
+                {{ q_text }}
+
+                <span class="faq-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </button>
+
+              <div class="faq-answer">
+                <div class="faq-answer-content">
+                  {{ a_text | newline_to_br }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign first = true -%}
+    {%- for q in questions -%}
+      {%- assign q_text = q | strip -%}
+      {%- assign a_text = answers[forloop.index0] | default: '' | strip -%}
+
+      {%- if q_text != blank and a_text != blank -%}
+        {%- unless first -%},{%- endunless -%}
+        {
+          "@type": "Question",
+          "name": {{ q_text | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ a_text | strip_html | json }}
+          }
+        }
+        {%- assign first = false -%}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+{% endif %}
+
+<style>
+  .faq-contact-wrapper {
+    padding: 60px 20px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .faq-contact-container {
+    margin: 0 auto;
+    display: flex;
+    gap: 60px;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .faq-section {
+    width: 100%;
+  }
+
+  .faq-header {
+    text-align: left;
+    margin-bottom: 40px;
+  }
+
+  .faq-header h2 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: {{ section.settings.heading_color }};
+  }
+
+  .faq-subtitle {
+    font-size: 1rem;
+    color: {{ section.settings.text_color }};
+    opacity: 0.8;
+  }
+
+  .faq-accordion {
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .faq-question {
+    width: 100%;
+    text-align: left;
+    padding: 20px 0;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: {{ section.settings.heading_color }};
+    transition: color 0.3s ease;
+  }
+
+  .faq-question:hover {
+    color: {{ section.settings.accent_color }};
+  }
+
+  .faq-icon {
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 15px;
+  }
+
+  .faq-question[aria-expanded="true"] .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .faq-answer-content {
+    padding-bottom: 20px;
+    color: {{ section.settings.text_color }};
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .faq-question {
+      font-size: 1rem;
+    }
+
+    .faq-contact-wrapper {
+      padding: 40px 15px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+
+    faqQuestions.forEach(function (question) {
+      question.addEventListener('click', function () {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        const answer = this.nextElementSibling;
+
+        faqQuestions.forEach(function (item) {
+          if (item !== question) {
+            item.setAttribute('aria-expanded', 'false');
+            item.nextElementSibling.style.maxHeight = null;
+          }
+        });
+
+        this.setAttribute('aria-expanded', String(!isExpanded));
+
+        if (!isExpanded) {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+        } else {
+          answer.style.maxHeight = null;
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Dynamic Product FAQ",
+  "settings": [
+    {
+      "type": "header",
+      "content": "FAQ Section Settings"
+    },
+    {
+      "type": "text",
+      "id": "faq_title",
+      "label": "FAQ Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "faq_subtitle",
+      "label": "FAQ Subtitle",
+      "default": "Find answers to commonly asked questions below."
+    },
+    {
+      "type": "header",
+      "content": "Color Settings"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#2c2c2c"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#5c5c5c"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#007bff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dynamic Product FAQ 2"
+    }
+  ] 
+}
+{% endschema %}
