@@ -1909,10 +1909,11 @@ font-size: 12px;font-style: italic;
                                 aria-label="{{ value }}{% unless value_available %} - Out of stock{% endunless %}"
                                 title="{{ value }}{% unless value_available %} (Out of stock){% endunless %}">
                           {% if swatch_variant and swatch_variant.featured_media and swatch_variant.featured_media.media_type == 'image' %}
-                            <img src="{{ swatch_variant.featured_media | image_url: width: 140 }}"
-                                 alt="{{ value | escape }}"
-                                 loading="lazy"
-                                 decoding="async">
+                          <img
+  src="{{ swatch_variant.featured_media | image_url: width: 140 }}"
+  alt="{{ swatch_variant.featured_media.alt | default: value | escape }}"
+  loading="lazy"
+  decoding="async">
                           {% else %}
                             <div class="pdp-thumb-generic" data-type="opt"></div>
                           {% endif %}
