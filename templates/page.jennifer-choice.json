@@ -1,1 +1,747 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{}},"video_image_banner_slider_xnQQ6e":{"type":"video-image-banner-slider","blocks":{"slide_9LgPwC":{"type":"slide","disabled":true,"settings":{"media_type":"video","desktop_video_url":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/bddb77af43e74bb9a08f4a53e62b8247.mp4","mobile_video_url":"","enable_overlay":true,"overlay_color":"#000000","overlay_opacity":30,"subtop_text":"Step Into Classic Living","subtop_color":"#ffffff","heading":"Timeless Elegance, Crafted to Perfection","heading_color":"#ffffff","description":"Luxury furniture that blends design and comfort to elevate your space","description_color":"#ffffff","content_position":"center","subtop_font_size_mobile":12,"heading_font_size_mobile":40,"description_font_size_mobile":16,"button_font_size_mobile":14,"subtop_font_size_desktop":14,"heading_font_size_desktop":64,"description_font_size_desktop":19,"button_font_size_desktop":16,"button_text":"Shop Now","button_url":"\/collections\/all","button_bg_color":"rgba(0,0,0,0)","button_text_color":"#ffffff","button_border_color":"#ffffff"}},"slide_7bbNmD":{"type":"slide","settings":{"media_type":"video","desktop_video_url":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/7e8c6f5e74cb4f1c94bce4e18512c450.mp4","mobile_video_url":"","enable_overlay":true,"overlay_color":"#000000","overlay_opacity":40,"subtop_text":"PREMIUM QUALITY","subtop_color":"#ffffff","heading":"Exceptional Craftsmanship","heading_color":"#ffffff","description":"Every product is carefully selected for quality and style that lasts","description_color":"#ffffff","content_position":"middle-left","subtop_font_size_mobile":12,"heading_font_size_mobile":40,"description_font_size_mobile":16,"button_font_size_mobile":14,"subtop_font_size_desktop":14,"heading_font_size_desktop":64,"description_font_size_desktop":19,"button_font_size_desktop":16,"button_text":"Learn More","button_url":"\/pages\/about","button_bg_color":"rgba(0,0,0,0)","button_text_color":"#ffffff","button_border_color":"#ffffff"}},"slide_jCRYLQ":{"type":"slide","settings":{"media_type":"video","desktop_video_url":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/bddb77af43e74bb9a08f4a53e62b8247.mp4","mobile_video_url":"","enable_overlay":true,"overlay_color":"#000000","overlay_opacity":50,"subtop_text":"FULLSCREEN EXPERIENCE","subtop_color":"#ffffff","heading":"Immersive Display","heading_color":"#ffffff","description":"Experience our products in stunning fullscreen presentation","description_color":"#ffffff","content_position":"center","subtop_font_size_mobile":12,"heading_font_size_mobile":40,"description_font_size_mobile":16,"button_font_size_mobile":14,"subtop_font_size_desktop":14,"heading_font_size_desktop":64,"description_font_size_desktop":19,"button_font_size_desktop":16,"button_text":"Explore","button_url":"\/collections\/featured","button_bg_color":"rgba(0,0,0,0)","button_text_color":"#ffffff","button_border_color":"#ffffff"}}},"block_order":["slide_9LgPwC","slide_7bbNmD","slide_jCRYLQ"],"custom_css":[".video-banner-content-template--25108573389103__video_image_banner_slider_xnQQ6e.center {display: none;}"],"name":"🎬 Video\/Image Banner Slider","settings":{"mobile_height":"500","desktop_height":"700","autoplay_enabled":false,"autoplay_delay":7,"enable_loop":true,"show_navigation":false,"show_pagination":true,"pagination_color":"#ffffff","pagination_active_color":"#ff4f33","margin_top":0,"margin_bottom":0}},"jennifer_arindam_TWATUM":{"type":"jennifer-arindam","blocks":{"feature_item_NQLx8q":{"type":"feature_item","settings":{"icon1_type":"mission","feature_title":"Our Mission","feature_description":"Jennifer and Arindam blend healthcare expertise with entrepreneurial passion to curate luxurious, wellness-inspired home decor that enhances spaces and enriches daily life."}},"feature_item_hFiJgz":{"type":"feature_item","settings":{"icon1_type":"vision","feature_title":"Our Vision","feature_description":"Jennifer and Arindam aim to transform homes into sanctuaries of elegance and well-being, offering luxury decor that inspires joy, nurtures comfort, and reflects individuality."}}},"block_order":["feature_item_NQLx8q","feature_item_hFiJgz"],"name":"About Founders","settings":{"section_padding_top":30,"section_padding_bottom":30,"background_color":"#fafafa","tagline":"Modern & Fancy","tagline_color":"#ff8c42","main_heading":"Premium Furniture\nThat Lasts a Lifetime","heading_color":"#2d2d2d","description":"At Trufairs, founded by Jennifer and Arindam in 2023, we believe luxury living is an art. Our mission is to transform spaces and elevate lifestyles with curated pieces that reflect modern, classic, or rustic styles, tailored to your taste.","text_color":"#666666","icon1_color":"#666666","icon1_border_color":"#e0e0e0","feature_title_color":"#2d2d2d","feature_text_color":"#666666","show_cta_button":true,"cta_text":"Buy Now","cta_link":"shopify:\/\/collections\/best-sellers-1","cta_text_color":"#ff8c42","cta_border_color":"#ff8c42","cta_bg_color":"rgba(0,0,0,0)","founder1_image":"shopify:\/\/shop_images\/Rectangle_7.png","founder1_name":"Jennifer","founder1_title":"Founder","founder1_bio":"Jennifer blends healthcare expertise with design, creating comfort-driven curated spaces.","founder2_image":"shopify:\/\/shop_images\/Rectangle_7_1.png","founder2_name":"Arindam","founder2_title":"Co-Founder","founder2_bio":"Arindam fuses wellness expertise with entrepreneurship, enriching homes through luxury.","founder_name_color":"#ffffff","founder_title_color":"#ffffff","founder_bio_color":"#ffffff"}},"product_tab_3i6BLH":{"type":"product-tab","blocks":{"tab_YHfq66":{"type":"tab","settings":{"tab_title":"Sofa & Sectionals","collection":"sofa-sectional-sofas","product_limit":8}},"tab_cJibwJ":{"type":"tab","settings":{"tab_title":"Bedroom Bedding","collection":"bedroom-bedding","product_limit":8}},"tab_jVUnAq":{"type":"tab","settings":{"tab_title":"Patio Furniture","collection":"patio-furniture-sets","product_limit":8}},"tab_EThgC7":{"type":"tab","settings":{"tab_title":"Living Room Storage","collection":"living-room-storage","product_limit":8}}},"block_order":["tab_YHfq66","tab_cJibwJ","tab_jVUnAq","tab_EThgC7"],"name":"Tabbed Collection Products","settings":{"heading":"Featured Collections","section_padding_top":20,"section_padding_bottom":30,"background_color":"#fafafa","products_per_row":"4","show_compare_at":true,"enable_review":true,"show_buttons":true}},"jennifer_collections_9hLcPp":{"type":"jennifer-collections","blocks":{"category_HdUngV":{"type":"category","settings":{"collection":"bedroom","custom_category_name":"","custom_product_count":"","custom_category_url":""}},"category_RBXQFN":{"type":"category","settings":{"collection":"sofa-sectional-sofas","custom_category_name":"Drawing","custom_product_count":"","custom_category_url":""}},"category_d3V7Pp":{"type":"category","settings":{"collection":"dining","custom_category_image":"shopify:\/\/shop_images\/dspic_07a2b0ca-503f-46f3-b512-3fc1da9b17c2.webp","custom_category_name":"","custom_product_count":"","custom_category_url":""}},"category_bWGJik":{"type":"category","settings":{"collection":"small-cabinets","custom_category_name":"Cabinet","custom_product_count":"","custom_category_url":""}},"category_YP79zx":{"type":"category","settings":{"collection":"bookshelf","custom_category_name":"","custom_product_count":"","custom_category_url":""}}},"block_order":["category_HdUngV","category_RBXQFN","category_d3V7Pp","category_bWGJik","category_YP79zx"],"name":"Shopping by Category","settings":{"section_title":"Shopping by category","background_image":"shopify:\/\/shop_images\/dspic_c0f63c1c-3fa1-4db8-95e6-d0a0c1207cbe.webp","padding_top":60,"padding_bottom":60}},"best_selling_for_jennifer_YP7JUJ":{"type":"best-selling-for-jennifer","custom_css":["@media (max-width: 768px) {.psvideo-swiper {max-height: 320px; }}"],"name":"Product Slider with Video","settings":{"heading":"Best selling items","heading_size":40,"heading_color":"#333333","background_color":"#ffffff","video_type":"mp4","video_url":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/1619baaccc09417eb2863b8f7baf4f3b.mp4","video_width":30,"video_height":400,"video_border_radius":12,"autoplay":true,"muted":true,"loop":true,"controls":false,"collection":"best-sellers-1","padding_top":60,"padding_bottom":36}},"bg_image_text_ipiDpH":{"type":"bg-image-text","name":"Custom Testimonial","settings":{"background_image":"shopify:\/\/shop_images\/Drake_Japandi_Style_Curvy_Boucle_Sofa_Yellow_8d384494-df33-4528-aed5-15286164a18c.jpg","overlay_color":"#000000","overlay_opacity":40,"section_height":500,"border_radius":25,"content_width":800,"padding_top":80,"padding_bottom":80,"padding_horizontal":20,"margin_top":0,"margin_bottom":60,"margin_horizontal":0,"testimonial_text":"Good design speaks for itself, making every moment worthwhile.","author_name":"JENNIFER","quote_font_size":36,"quote_font_weight":"400","quote_line_height":"1.4","quote_color":"#ffffff","quote_font_family":"inherit","quote_margin_bottom":30,"author_font_size":16,"author_font_weight":"600","author_color":"#ffffff","author_text_transform":"uppercase","author_letter_spacing":2,"author_font_family":"inherit"}},"hero_section1_7hXYXC":{"type":"hero-section1","blocks":{"feature_MpUFLE":{"type":"feature","settings":{"feature_text":"Portable & lightweight"}},"feature_yWLUW6":{"type":"feature","settings":{"feature_text":"Quality full material"}},"feature_U3BL9D":{"type":"feature","settings":{"feature_text":"Minimalistic and stylish"}},"feature_JrCLKK":{"type":"feature","settings":{"feature_text":"Store Saving"}}},"block_order":["feature_MpUFLE","feature_yWLUW6","feature_U3BL9D","feature_JrCLKK"],"name":"Hero Section","settings":{"background_image":"shopify:\/\/shop_images\/Rectangle_14.png","image_shape":"square","container_width":1450,"padding_top":80,"padding_bottom":80,"margin_top":0,"margin_bottom":0,"background_color":"#8b4513","subtitle":"Minimal & Modern","title":"Classic wooden chair blend with simplicity","description":"Discover furniture that's designed to be cherished, evolving with your life and style, making every moment at home even more special.","text_color":"#ffffff","subtitle_font_size":14,"subtitle_font_weight":"400","subtitle_text_transform":"none","title_font_size":48,"title_font_weight":"700","title_text_transform":"none","title_line_height":1.2,"description_font_size":16,"description_line_height":1.6,"features_font_size":14,"checkmark_bg_color":"#ffffff","checkmark_color":"#8b4513","button_text":"View Collection","button_url":"shopify:\/\/collections\/chairs","button_bg_color":"rgba(0,0,0,0)","button_text_color":"#ffffff","button_border_color":"#ffffff","button_border_width":1,"button_hover_bg_color":"#ffffff","button_hover_text_color":"#8b4513","button_font_size":14,"button_font_weight":"500","button_padding_x":24,"button_padding_y":12,"button_border_radius":25,"hero_image":"shopify:\/\/shop_images\/668b2c5908f20b74bc48297087a1bf244268dee4.png"}},"treding_section_HdPmUt":{"type":"treding-section","name":"Trending Banner","settings":{"title":"Trending this week","subheading":"Minimal & Modern","heading":"20% Off","description":"With clean lines, high-quality materials","button_text":"Shop Now","button_url":"shopify:\/\/collections\/sofa-sectional-sofas","background_image":"shopify:\/\/shop_images\/b863b039de73928475aeb524d931e7d571b91345.png","background_color":"#d4a574","subheading_color":"#ffffff","heading_color":"#ffffff","heading_size":48,"description_color":"#ffffff","button_background":"#ffffff33","button_hover_background":"#ffffff4d","button_text_color":"#ffffff","button_border_radius":25,"border_radius":12,"margin_top":40,"margin_bottom":40}},"product_slider_Prjqet":{"type":"Product-Slider","custom_css":[".swiper-button-next,.swiper-button-prev {background: #0000007d;}"],"name":"Product Slider Custom","settings":{"title":"","home_featured_products":"bookshelves","product_limit":12,"per_row_desktop":4,"per_row_tablet":2,"per_row_mobile":1,"view_all":true,"divider":false}},"video_with_text1_beFULB":{"type":"video-with-text1","blocks":{"feature_6EYRTi":{"type":"feature","settings":{"icon_type":"checkmark","icon_color":"#28a745","text":"Showcase our high-quality, stylish furniture collections","text_color":"#666666"}},"feature_bhVryn":{"type":"feature","settings":{"icon_type":"checkmark","icon_color":"#28a745","text":"See how our premium pieces fit perfectly into real living spaces","text_color":"#666666"}},"feature_GfpYGK":{"type":"feature","settings":{"icon_type":"checkmark","icon_color":"#28a745","text":"Explore exclusive design tips and inspiration for your home decor","text_color":"#666666"}},"feature_LTKbH9":{"type":"feature","settings":{"icon_type":"checkmark","icon_color":"#28a745","text":"Get a closer look at product features and expert craftsmanship","text_color":"#666666"}}},"block_order":["feature_6EYRTi","feature_bhVryn","feature_GfpYGK","feature_LTKbH9"],"name":"Video Content Section","settings":{"background_color":"#f8f8f8","section_padding_top":60,"section_padding_bottom":60,"video_type":"hosted","youtube_url":"","hosted_video_url":"https:\/\/cdn.shopify.com\/videos\/c\/o\/v\/7e8c6f5e74cb4f1c94bce4e18512c450.mp4","video_autoplay":true,"video_caption":"","video_placeholder_text":"Add your video","heading":"A Closer Look at Our Premium Collection","heading_color":"#333333","cta_text":"","cta_url":"","cta_bg_color":"#333333","cta_text_color":"#ffffff"}},"scrolling_text_image_zjCJ86":{"type":"scrolling-text-image","blocks":{"text_image_item_qVmQjg":{"type":"text_image_item","settings":{"text":"Quality Furniture","image":"shopify:\/\/shop_images\/dspic_c0f63c1c-3fa1-4db8-95e6-d0a0c1207cbe_1.webp"}},"text_image_item_4VNFhT":{"type":"text_image_item","settings":{"text":"Modern & Elegant","image":"shopify:\/\/shop_images\/dspic_b093587f-b1f4-4055-93e7-65c6a226eb49.webp"}},"text_image_item_zDFD99":{"type":"text_image_item","settings":{"text":"Premium Design","image":"shopify:\/\/shop_images\/dspic_99460150-b0f2-4a49-b137-3a2bc8e2e126.webp"}}},"block_order":["text_image_item_qVmQjg","text_image_item_4VNFhT","text_image_item_zDFD99"],"name":"Scrolling Text & Image","settings":{"background_color":"#8b4513","padding_top":20,"padding_bottom":20,"scroll_speed":30,"pause_on_hover":true,"text_color":"#ffffff","font_size":52,"mobile_font_size":34,"mobile_small_font_size":26,"font_weight":"300","font_family":"Arial, sans-serif","item_spacing":60,"mobile_item_spacing":40,"text_image_gap":20,"mobile_text_image_gap":15,"image_border_radius":15}},"jennifer_collection_gallery_3BE4cj":{"type":"jennifer-collection-gallery","blocks":{"collection_item_zrwddg":{"type":"collection_item","settings":{"column":"1","collection":"adirondack-chairs","custom_title":"","custom_link":"shopify:\/\/collections\/air-coolers-fans"}},"collection_item_zjNxqQ":{"type":"collection_item","settings":{"column":"1","collection":"bedding-set","custom_title":"","custom_link":""}},"collection_item_peEcRc":{"type":"collection_item","settings":{"column":"1","collection":"bedroom-beds","custom_image":"shopify:\/\/shop_images\/Valery_King_Size_Cream_Boucle_Platform_Bed.jpg","custom_title":"","custom_link":""}},"collection_item_LM6RxC":{"type":"collection_item","settings":{"column":"1","collection":"small-cabinets","custom_title":"","custom_link":""}},"collection_item_DAyJGw":{"type":"collection_item","settings":{"column":"1","collection":"chairs","custom_title":"","custom_link":""}},"collection_item_mMnhnX":{"type":"collection_item","settings":{"column":"1","collection":"desk","custom_title":"","custom_link":""}},"collection_item_NgP8VL":{"type":"collection_item","settings":{"column":"2","collection":"bookshelf","custom_title":"","custom_link":""}},"collection_item_JnTHbj":{"type":"collection_item","settings":{"column":"2","collection":"bedside-tables","custom_title":"","custom_link":""}},"collection_item_URRRwA":{"type":"collection_item","settings":{"column":"2","collection":"chairs","custom_title":"","custom_link":""}},"collection_item_QyjpXz":{"type":"collection_item","settings":{"column":"2","collection":"dining","custom_image":"shopify:\/\/shop_images\/dspic_7a25067d-e9a5-4e7e-8c63-3c1d70b1fc40.webp","custom_title":"","custom_link":""}},"collection_item_PEbHcA":{"type":"collection_item","settings":{"column":"2","collection":"hanging-chairs","custom_title":"","custom_link":""}}},"block_order":["collection_item_zrwddg","collection_item_zjNxqQ","collection_item_peEcRc","collection_item_LM6RxC","collection_item_DAyJGw","collection_item_mMnhnX","collection_item_NgP8VL","collection_item_JnTHbj","collection_item_URRRwA","collection_item_QyjpXz","collection_item_PEbHcA"],"name":" Collection Gallery","settings":{"heading":"","subheading":"","column_1_speed":60,"column_2_speed":45}}},"order":["main","video_image_banner_slider_xnQQ6e","jennifer_arindam_TWATUM","product_tab_3i6BLH","jennifer_collections_9hLcPp","best_selling_for_jennifer_YP7JUJ","bg_image_text_ipiDpH","hero_section1_7hXYXC","treding_section_HdPmUt","product_slider_Prjqet","video_with_text1_beFULB","scrolling_text_image_zjCJ86","jennifer_collection_gallery_3BE4cj"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {}
+    },
+    "video_image_banner_slider_xnQQ6e": {
+      "type": "video-image-banner-slider",
+      "blocks": {
+        "slide_9LgPwC": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "media_type": "video",
+            "desktop_video_url": "https://cdn.shopify.com/videos/c/o/v/bddb77af43e74bb9a08f4a53e62b8247.mp4",
+            "mobile_video_url": "",
+            "enable_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 30,
+            "subtop_text": "Step Into Classic Living",
+            "subtop_color": "#ffffff",
+            "heading": "Timeless Elegance, Crafted to Perfection",
+            "heading_color": "#ffffff",
+            "description": "Luxury furniture that blends design and comfort to elevate your space",
+            "description_color": "#ffffff",
+            "content_position": "center",
+            "subtop_font_size_mobile": 12,
+            "heading_font_size_mobile": 40,
+            "description_font_size_mobile": 16,
+            "button_font_size_mobile": 14,
+            "subtop_font_size_desktop": 14,
+            "heading_font_size_desktop": 64,
+            "description_font_size_desktop": 19,
+            "button_font_size_desktop": 16,
+            "button_text": "Shop Now",
+            "button_url": "/collections/all",
+            "button_bg_color": "rgba(0,0,0,0)",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        },
+        "slide_7bbNmD": {
+          "type": "slide",
+          "settings": {
+            "media_type": "video",
+            "desktop_video_url": "https://cdn.shopify.com/videos/c/o/v/7e8c6f5e74cb4f1c94bce4e18512c450.mp4",
+            "mobile_video_url": "",
+            "enable_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 40,
+            "subtop_text": "PREMIUM QUALITY",
+            "subtop_color": "#ffffff",
+            "heading": "Exceptional Craftsmanship",
+            "heading_color": "#ffffff",
+            "description": "Every product is carefully selected for quality and style that lasts",
+            "description_color": "#ffffff",
+            "content_position": "middle-left",
+            "subtop_font_size_mobile": 12,
+            "heading_font_size_mobile": 40,
+            "description_font_size_mobile": 16,
+            "button_font_size_mobile": 14,
+            "subtop_font_size_desktop": 14,
+            "heading_font_size_desktop": 64,
+            "description_font_size_desktop": 19,
+            "button_font_size_desktop": 16,
+            "button_text": "Learn More",
+            "button_url": "/pages/about",
+            "button_bg_color": "rgba(0,0,0,0)",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        },
+        "slide_jCRYLQ": {
+          "type": "slide",
+          "settings": {
+            "media_type": "video",
+            "desktop_video_url": "https://cdn.shopify.com/videos/c/o/v/bddb77af43e74bb9a08f4a53e62b8247.mp4",
+            "mobile_video_url": "",
+            "enable_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 50,
+            "subtop_text": "FULLSCREEN EXPERIENCE",
+            "subtop_color": "#ffffff",
+            "heading": "Immersive Display",
+            "heading_color": "#ffffff",
+            "description": "Experience our products in stunning fullscreen presentation",
+            "description_color": "#ffffff",
+            "content_position": "center",
+            "subtop_font_size_mobile": 12,
+            "heading_font_size_mobile": 40,
+            "description_font_size_mobile": 16,
+            "button_font_size_mobile": 14,
+            "subtop_font_size_desktop": 14,
+            "heading_font_size_desktop": 64,
+            "description_font_size_desktop": 19,
+            "button_font_size_desktop": 16,
+            "button_text": "Explore",
+            "button_url": "/collections/featured",
+            "button_bg_color": "rgba(0,0,0,0)",
+            "button_text_color": "#ffffff",
+            "button_border_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "slide_9LgPwC",
+        "slide_7bbNmD",
+        "slide_jCRYLQ"
+      ],
+      "custom_css": [
+        ".video-banner-content-template--25108573389103__video_image_banner_slider_xnQQ6e.center {display: none;}"
+      ],
+      "name": "🎬 Video/Image Banner Slider",
+      "settings": {
+        "mobile_height": "500",
+        "desktop_height": "700",
+        "autoplay_enabled": false,
+        "autoplay_delay": 7,
+        "enable_loop": true,
+        "show_navigation": false,
+        "show_pagination": true,
+        "pagination_color": "#ffffff",
+        "pagination_active_color": "#ff4f33",
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "jennifer_arindam_TWATUM": {
+      "type": "jennifer-arindam",
+      "blocks": {
+        "feature_item_NQLx8q": {
+          "type": "feature_item",
+          "settings": {
+            "icon1_type": "mission",
+            "feature_title": "Our Mission",
+            "feature_description": "Jennifer and Arindam blend healthcare expertise with entrepreneurial passion to curate luxurious, wellness-inspired home decor that enhances spaces and enriches daily life."
+          }
+        },
+        "feature_item_hFiJgz": {
+          "type": "feature_item",
+          "settings": {
+            "icon1_type": "vision",
+            "feature_title": "Our Vision",
+            "feature_description": "Jennifer and Arindam aim to transform homes into sanctuaries of elegance and well-being, offering luxury decor that inspires joy, nurtures comfort, and reflects individuality."
+          }
+        }
+      },
+      "block_order": [
+        "feature_item_NQLx8q",
+        "feature_item_hFiJgz"
+      ],
+      "name": "About Founders",
+      "settings": {
+        "section_padding_top": 30,
+        "section_padding_bottom": 30,
+        "background_color": "#fafafa",
+        "tagline": "Modern & Fancy",
+        "tagline_color": "#ff8c42",
+        "main_heading": "Premium Furniture\nThat Lasts a Lifetime",
+        "heading_color": "#2d2d2d",
+        "description": "At Trufairs, founded by Jennifer and Arindam in 2023, we believe luxury living is an art. Our mission is to transform spaces and elevate lifestyles with curated pieces that reflect modern, classic, or rustic styles, tailored to your taste.",
+        "text_color": "#666666",
+        "icon1_color": "#666666",
+        "icon1_border_color": "#e0e0e0",
+        "feature_title_color": "#2d2d2d",
+        "feature_text_color": "#666666",
+        "show_cta_button": true,
+        "cta_text": "Buy Now",
+        "cta_link": "shopify://collections/best-sellers-1",
+        "cta_text_color": "#ff8c42",
+        "cta_border_color": "#ff8c42",
+        "cta_bg_color": "rgba(0,0,0,0)",
+        "founder1_image": "shopify://shop_images/Rectangle_7.png",
+        "founder1_name": "Jennifer",
+        "founder1_title": "Founder",
+        "founder1_bio": "Jennifer blends healthcare expertise with design, creating comfort-driven curated spaces.",
+        "founder2_image": "shopify://shop_images/Rectangle_7_1.png",
+        "founder2_name": "Arindam",
+        "founder2_title": "Co-Founder",
+        "founder2_bio": "Arindam fuses wellness expertise with entrepreneurship, enriching homes through luxury.",
+        "founder_name_color": "#ffffff",
+        "founder_title_color": "#ffffff",
+        "founder_bio_color": "#ffffff"
+      }
+    },
+    "product_tab_3i6BLH": {
+      "type": "product-tab",
+      "blocks": {
+        "tab_YHfq66": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Sofa & Sectionals",
+            "collection": "sofa-sectional-sofas",
+            "product_limit": 8
+          }
+        },
+        "tab_cJibwJ": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Bedroom Bedding",
+            "collection": "pillows-bedding-collection",
+            "product_limit": 8
+          }
+        },
+        "tab_jVUnAq": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Patio Furniture",
+            "collection": "patio-furniture-sets",
+            "product_limit": 8
+          }
+        },
+        "tab_EThgC7": {
+          "type": "tab",
+          "settings": {
+            "tab_title": "Living Room Storage",
+            "collection": "living-room-storage",
+            "product_limit": 8
+          }
+        }
+      },
+      "block_order": [
+        "tab_YHfq66",
+        "tab_cJibwJ",
+        "tab_jVUnAq",
+        "tab_EThgC7"
+      ],
+      "name": "Tabbed Collection Products",
+      "settings": {
+        "heading": "Featured Collections",
+        "section_padding_top": 20,
+        "section_padding_bottom": 30,
+        "background_color": "#fafafa",
+        "products_per_row": "4",
+        "show_compare_at": true,
+        "enable_review": true,
+        "show_buttons": true
+      }
+    },
+    "jennifer_collections_9hLcPp": {
+      "type": "jennifer-collections",
+      "blocks": {
+        "category_HdUngV": {
+          "type": "category",
+          "settings": {
+            "collection": "bedroom",
+            "custom_category_name": "",
+            "custom_product_count": "",
+            "custom_category_url": ""
+          }
+        },
+        "category_RBXQFN": {
+          "type": "category",
+          "settings": {
+            "collection": "sofa-sectional-sofas",
+            "custom_category_name": "Drawing",
+            "custom_product_count": "",
+            "custom_category_url": ""
+          }
+        },
+        "category_d3V7Pp": {
+          "type": "category",
+          "settings": {
+            "collection": "dining",
+            "custom_category_image": "shopify://shop_images/dspic_07a2b0ca-503f-46f3-b512-3fc1da9b17c2.webp",
+            "custom_category_name": "",
+            "custom_product_count": "",
+            "custom_category_url": ""
+          }
+        },
+        "category_bWGJik": {
+          "type": "category",
+          "settings": {
+            "collection": "small-cabinets",
+            "custom_category_name": "Cabinet",
+            "custom_product_count": "",
+            "custom_category_url": ""
+          }
+        },
+        "category_YP79zx": {
+          "type": "category",
+          "settings": {
+            "collection": "bookshelf",
+            "custom_category_name": "",
+            "custom_product_count": "",
+            "custom_category_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "category_HdUngV",
+        "category_RBXQFN",
+        "category_d3V7Pp",
+        "category_bWGJik",
+        "category_YP79zx"
+      ],
+      "name": "Shopping by Category",
+      "settings": {
+        "section_title": "Shopping by category",
+        "background_image": "shopify://shop_images/dspic_c0f63c1c-3fa1-4db8-95e6-d0a0c1207cbe.webp",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
+    },
+    "best_selling_for_jennifer_YP7JUJ": {
+      "type": "best-selling-for-jennifer",
+      "custom_css": [
+        "@media (max-width: 768px) {.psvideo-swiper {max-height: 320px; }}"
+      ],
+      "name": "Product Slider with Video",
+      "settings": {
+        "heading": "Best selling items",
+        "heading_size": 40,
+        "heading_color": "#333333",
+        "background_color": "#ffffff",
+        "video_type": "mp4",
+        "video_url": "https://cdn.shopify.com/videos/c/o/v/1619baaccc09417eb2863b8f7baf4f3b.mp4",
+        "video_width": 30,
+        "video_height": 400,
+        "video_border_radius": 12,
+        "autoplay": true,
+        "muted": true,
+        "loop": true,
+        "controls": false,
+        "collection": "best-sellers-1",
+        "padding_top": 60,
+        "padding_bottom": 36
+      }
+    },
+    "bg_image_text_ipiDpH": {
+      "type": "bg-image-text",
+      "name": "Custom Testimonial",
+      "settings": {
+        "background_image": "shopify://shop_images/Drake_Japandi_Style_Curvy_Boucle_Sofa_Yellow_8d384494-df33-4528-aed5-15286164a18c.jpg",
+        "overlay_color": "#000000",
+        "overlay_opacity": 40,
+        "section_height": 500,
+        "border_radius": 25,
+        "content_width": 800,
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "padding_horizontal": 20,
+        "margin_top": 0,
+        "margin_bottom": 60,
+        "margin_horizontal": 0,
+        "testimonial_text": "Good design speaks for itself, making every moment worthwhile.",
+        "author_name": "JENNIFER",
+        "quote_font_size": 36,
+        "quote_font_weight": "400",
+        "quote_line_height": "1.4",
+        "quote_color": "#ffffff",
+        "quote_font_family": "inherit",
+        "quote_margin_bottom": 30,
+        "author_font_size": 16,
+        "author_font_weight": "600",
+        "author_color": "#ffffff",
+        "author_text_transform": "uppercase",
+        "author_letter_spacing": 2,
+        "author_font_family": "inherit"
+      }
+    },
+    "hero_section1_7hXYXC": {
+      "type": "hero-section1",
+      "blocks": {
+        "feature_MpUFLE": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Portable & lightweight"
+          }
+        },
+        "feature_yWLUW6": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Quality full material"
+          }
+        },
+        "feature_U3BL9D": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Minimalistic and stylish"
+          }
+        },
+        "feature_JrCLKK": {
+          "type": "feature",
+          "settings": {
+            "feature_text": "Store Saving"
+          }
+        }
+      },
+      "block_order": [
+        "feature_MpUFLE",
+        "feature_yWLUW6",
+        "feature_U3BL9D",
+        "feature_JrCLKK"
+      ],
+      "name": "Hero Section",
+      "settings": {
+        "background_image": "shopify://shop_images/Rectangle_14.png",
+        "image_shape": "square",
+        "container_width": 1450,
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "background_color": "#8b4513",
+        "subtitle": "Minimal & Modern",
+        "title": "Classic wooden chair blend with simplicity",
+        "description": "Discover furniture that's designed to be cherished, evolving with your life and style, making every moment at home even more special.",
+        "text_color": "#ffffff",
+        "subtitle_font_size": 14,
+        "subtitle_font_weight": "400",
+        "subtitle_text_transform": "none",
+        "title_font_size": 48,
+        "title_font_weight": "700",
+        "title_text_transform": "none",
+        "title_line_height": 1.2,
+        "description_font_size": 16,
+        "description_line_height": 1.6,
+        "features_font_size": 14,
+        "checkmark_bg_color": "#ffffff",
+        "checkmark_color": "#8b4513",
+        "button_text": "View Collection",
+        "button_url": "shopify://collections/chairs",
+        "button_bg_color": "rgba(0,0,0,0)",
+        "button_text_color": "#ffffff",
+        "button_border_color": "#ffffff",
+        "button_border_width": 1,
+        "button_hover_bg_color": "#ffffff",
+        "button_hover_text_color": "#8b4513",
+        "button_font_size": 14,
+        "button_font_weight": "500",
+        "button_padding_x": 24,
+        "button_padding_y": 12,
+        "button_border_radius": 25,
+        "hero_image": "shopify://shop_images/668b2c5908f20b74bc48297087a1bf244268dee4.png"
+      }
+    },
+    "treding_section_HdPmUt": {
+      "type": "treding-section",
+      "name": "Trending Banner",
+      "settings": {
+        "title": "Trending this week",
+        "subheading": "Minimal & Modern",
+        "heading": "20% Off",
+        "description": "With clean lines, high-quality materials",
+        "button_text": "Shop Now",
+        "button_url": "shopify://collections/sofa-sectional-sofas",
+        "background_image": "shopify://shop_images/b863b039de73928475aeb524d931e7d571b91345.png",
+        "background_color": "#d4a574",
+        "subheading_color": "#ffffff",
+        "heading_color": "#ffffff",
+        "heading_size": 48,
+        "description_color": "#ffffff",
+        "button_background": "#ffffff33",
+        "button_hover_background": "#ffffff4d",
+        "button_text_color": "#ffffff",
+        "button_border_radius": 25,
+        "border_radius": 12,
+        "margin_top": 40,
+        "margin_bottom": 40
+      }
+    },
+    "product_slider_Prjqet": {
+      "type": "Product-Slider",
+      "custom_css": [
+        ".swiper-button-next,.swiper-button-prev {background: #0000007d;}"
+      ],
+      "name": "Product Slider Custom",
+      "settings": {
+        "title": "",
+        "home_featured_products": "bookshelves",
+        "product_limit": 12,
+        "per_row_desktop": 4,
+        "per_row_tablet": 2,
+        "per_row_mobile": 1,
+        "view_all": true,
+        "divider": false
+      }
+    },
+    "video_with_text1_beFULB": {
+      "type": "video-with-text1",
+      "blocks": {
+        "feature_6EYRTi": {
+          "type": "feature",
+          "settings": {
+            "icon_type": "checkmark",
+            "icon_color": "#28a745",
+            "text": "Showcase our high-quality, stylish furniture collections",
+            "text_color": "#666666"
+          }
+        },
+        "feature_bhVryn": {
+          "type": "feature",
+          "settings": {
+            "icon_type": "checkmark",
+            "icon_color": "#28a745",
+            "text": "See how our premium pieces fit perfectly into real living spaces",
+            "text_color": "#666666"
+          }
+        },
+        "feature_GfpYGK": {
+          "type": "feature",
+          "settings": {
+            "icon_type": "checkmark",
+            "icon_color": "#28a745",
+            "text": "Explore exclusive design tips and inspiration for your home decor",
+            "text_color": "#666666"
+          }
+        },
+        "feature_LTKbH9": {
+          "type": "feature",
+          "settings": {
+            "icon_type": "checkmark",
+            "icon_color": "#28a745",
+            "text": "Get a closer look at product features and expert craftsmanship",
+            "text_color": "#666666"
+          }
+        }
+      },
+      "block_order": [
+        "feature_6EYRTi",
+        "feature_bhVryn",
+        "feature_GfpYGK",
+        "feature_LTKbH9"
+      ],
+      "name": "Video Content Section",
+      "settings": {
+        "background_color": "#f8f8f8",
+        "section_padding_top": 60,
+        "section_padding_bottom": 60,
+        "video_type": "hosted",
+        "youtube_url": "",
+        "hosted_video_url": "https://cdn.shopify.com/videos/c/o/v/7e8c6f5e74cb4f1c94bce4e18512c450.mp4",
+        "video_autoplay": true,
+        "video_caption": "",
+        "video_placeholder_text": "Add your video",
+        "heading": "A Closer Look at Our Premium Collection",
+        "heading_color": "#333333",
+        "cta_text": "",
+        "cta_url": "",
+        "cta_bg_color": "#333333",
+        "cta_text_color": "#ffffff"
+      }
+    },
+    "scrolling_text_image_zjCJ86": {
+      "type": "scrolling-text-image",
+      "blocks": {
+        "text_image_item_qVmQjg": {
+          "type": "text_image_item",
+          "settings": {
+            "text": "Quality Furniture",
+            "image": "shopify://shop_images/dspic_c0f63c1c-3fa1-4db8-95e6-d0a0c1207cbe_1.webp"
+          }
+        },
+        "text_image_item_4VNFhT": {
+          "type": "text_image_item",
+          "settings": {
+            "text": "Modern & Elegant",
+            "image": "shopify://shop_images/dspic_b093587f-b1f4-4055-93e7-65c6a226eb49.webp"
+          }
+        },
+        "text_image_item_zDFD99": {
+          "type": "text_image_item",
+          "settings": {
+            "text": "Premium Design",
+            "image": "shopify://shop_images/dspic_99460150-b0f2-4a49-b137-3a2bc8e2e126.webp"
+          }
+        }
+      },
+      "block_order": [
+        "text_image_item_qVmQjg",
+        "text_image_item_4VNFhT",
+        "text_image_item_zDFD99"
+      ],
+      "name": "Scrolling Text & Image",
+      "settings": {
+        "background_color": "#8b4513",
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "scroll_speed": 30,
+        "pause_on_hover": true,
+        "text_color": "#ffffff",
+        "font_size": 52,
+        "mobile_font_size": 34,
+        "mobile_small_font_size": 26,
+        "font_weight": "300",
+        "font_family": "Arial, sans-serif",
+        "item_spacing": 60,
+        "mobile_item_spacing": 40,
+        "text_image_gap": 20,
+        "mobile_text_image_gap": 15,
+        "image_border_radius": 15
+      }
+    },
+    "jennifer_collection_gallery_3BE4cj": {
+      "type": "jennifer-collection-gallery",
+      "blocks": {
+        "collection_item_zrwddg": {
+          "type": "collection_item",
+          "settings": {
+            "column": "1",
+            "collection": "adirondack-chairs",
+            "custom_title": "",
+            "custom_link": "shopify://collections/air-coolers-fans"
+          }
+        },
+        "collection_item_zjNxqQ": {
+          "type": "collection_item",
+          "settings": {
+            "column": "1",
+            "collection": "bedding-set",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_peEcRc": {
+          "type": "collection_item",
+          "settings": {
+            "column": "1",
+            "collection": "bedroom-beds",
+            "custom_image": "shopify://shop_images/Valery_King_Size_Cream_Boucle_Platform_Bed.jpg",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_LM6RxC": {
+          "type": "collection_item",
+          "settings": {
+            "column": "1",
+            "collection": "small-cabinets",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_DAyJGw": {
+          "type": "collection_item",
+          "settings": {
+            "column": "1",
+            "collection": "chairs",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_mMnhnX": {
+          "type": "collection_item",
+          "settings": {
+            "column": "1",
+            "collection": "desk",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_NgP8VL": {
+          "type": "collection_item",
+          "settings": {
+            "column": "2",
+            "collection": "bookshelf",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_JnTHbj": {
+          "type": "collection_item",
+          "settings": {
+            "column": "2",
+            "collection": "bedside-tables",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_URRRwA": {
+          "type": "collection_item",
+          "settings": {
+            "column": "2",
+            "collection": "chairs",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_QyjpXz": {
+          "type": "collection_item",
+          "settings": {
+            "column": "2",
+            "collection": "dining",
+            "custom_image": "shopify://shop_images/dspic_7a25067d-e9a5-4e7e-8c63-3c1d70b1fc40.webp",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        },
+        "collection_item_PEbHcA": {
+          "type": "collection_item",
+          "settings": {
+            "column": "2",
+            "collection": "hanging-chairs",
+            "custom_title": "",
+            "custom_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_item_zrwddg",
+        "collection_item_zjNxqQ",
+        "collection_item_peEcRc",
+        "collection_item_LM6RxC",
+        "collection_item_DAyJGw",
+        "collection_item_mMnhnX",
+        "collection_item_NgP8VL",
+        "collection_item_JnTHbj",
+        "collection_item_URRRwA",
+        "collection_item_QyjpXz",
+        "collection_item_PEbHcA"
+      ],
+      "name": " Collection Gallery",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "column_1_speed": 60,
+        "column_2_speed": 45
+      }
+    }
+  },
+  "order": [
+    "main",
+    "video_image_banner_slider_xnQQ6e",
+    "jennifer_arindam_TWATUM",
+    "product_tab_3i6BLH",
+    "jennifer_collections_9hLcPp",
+    "best_selling_for_jennifer_YP7JUJ",
+    "bg_image_text_ipiDpH",
+    "hero_section1_7hXYXC",
+    "treding_section_HdPmUt",
+    "product_slider_Prjqet",
+    "video_with_text1_beFULB",
+    "scrolling_text_image_zjCJ86",
+    "jennifer_collection_gallery_3BE4cj"
+  ]
+}
