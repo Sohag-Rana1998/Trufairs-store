@@ -1,1 +1,876 @@
-{"sections":{"main":{"type":"main-page","disabled":true,"settings":{}},"banner_section_HJRCQf":{"type":"banner-section","custom_css":[".banner-promo-section {margin-top: 18px; overflow: hidden;}","img {border-radius: 20px;}"],"name":"Default Banner Promo","settings":{"desktop_image":"shopify:\/\/shop_images\/Black_Friday_Banner_Web.png","mobile_image":"shopify:\/\/shop_images\/Black_Friday_Banner_Mobile.png","full_width":false,"button_url":false,"overlay_opacity":0,"sub_heading":"","main_heading":"","description":"","button_text":"","button_link":""}},"deals_section_h6bL6d":{"type":"deals-section","blocks":{"deal_item_yhd3wq":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/dspic_c0f63c1c-3fa1-4db8-95e6-d0a0c1207cbe_2.webp","label":"All Sofa & Sectionals","link":"shopify:\/\/collections\/sofa-sectional-sofas"}},"deal_item_CFA6jg":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/dspic_5cfe3be6-9b7e-4809-bda7-66e4b40560d6.webp","label":"Sectional Sofas","link":"shopify:\/\/collections\/sectional-sofas"}},"deal_item_QzGEpq":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/d0102hes9ep.webp","label":"Patio Set","link":"https:\/\/trufairs.com\/collections\/patio-furniture-sets"}},"deal_item_PHz89t":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/D01027HIXBU_10_02a15393-daca-425b-afb4-5aa7596a0eef.jpg","label":"Christmas Decor","link":"shopify:\/\/collections\/christmas-decor"}},"deal_item_UxQpCW":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/d010277nwaj_a22f09ec-e75c-4c55-bc4b-a5fe700202ae.webp","label":"Recliners & Lounge Chairs","link":"shopify:\/\/collections\/recliners-lounge-chairs"}},"deal_item_qk7TnA":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/dspic_ddc368bf-4f20-40a0-8125-ae5797cf3e32.jpg","label":"Adirondack Chairs","link":"shopify:\/\/collections\/adirondack-chairs"}},"deal_item_jqYwtK":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/Chicago_Accent_Chair_Ivory.webp","label":"Accent Chairs","link":"shopify:\/\/collections\/accent-chairs-1"}},"deal_item_YKCDgA":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/dspic_1f9d3e7d-a665-4205-851e-0ea9c0e37703.webp","label":"Coffee Tables","link":"shopify:\/\/collections\/coffee-tables-1"}},"deal_item_AA3Gyy":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/d0102hq3scv_4ed24abd-2b8c-44b4-99e1-5b6ceda4cd4f.webp","label":"Cabinets Collection","link":"shopify:\/\/collections\/small-cabinets"}},"deal_item_6VtCfP":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/Graceville_King_Fabric_Platform_Bed.webp","label":"Bedroom Furniture","link":"shopify:\/\/collections\/bedroom-furniture-1"}},"deal_item_7fdytp":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/dspic_5e29c906-116c-420d-8ff9-d059053627c8.webp","label":"Diningroom Furniture","link":"shopify:\/\/collections\/diningroom-furniture"}},"deal_item_FCX7jw":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/47offic_1_828fb99f-d549-42b6-94cc-a84d3785bb56.webp","label":"Office Furniture","link":"shopify:\/\/collections\/office-furniture"}},"deal_item_rrC6ez":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/d0102hi629w_8a1d69b5-e332-4af9-9beb-eb5e2e49d34b.webp","label":"TV Stands","link":"shopify:\/\/collections\/tv-stands"}},"deal_item_AtBAzt":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/S28862ca7cb2b417c9755646668cd15e8l_66603ecb-7829-4416-97a3-9e3859147924.webp","label":"Mattress","link":"https:\/\/trufairs.com\/collections\/mattresses"}},"deal_item_rn7Te6":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/468867_1_1000x1000_afc16a6d-e19f-450d-90f8-d15241ed66cc.webp","label":"Chandeliers","link":"shopify:\/\/collections\/chandeliers"}},"deal_item_D4JPkb":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/570429_10_4r1BJKNd.webp","label":"Area Rug","link":"https:\/\/trufairs.com\/collections\/area-rugs-1"}},"deal_item_TLfaXG":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/2_1df4a81c-f63c-448e-a039-9caa450ae57d.webp","label":"Throw Pillow","link":"shopify:\/\/collections\/outdoor-throw-pillow"}},"deal_item_KXiPRr":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/Embroidered_Single_Panel_7.webp","label":"Curtains","link":"shopify:\/\/collections\/curtains"}},"deal_item_f8reEP":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/dspic_5e181d0b-11c9-4468-9cc2-653a5503bd62.jpg","label":"Vase & Flower Vase","link":"shopify:\/\/collections\/vase-flower-vase"}},"deal_item_wFchEJ":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/Gome_Ottoman_Oat_Yellow.webp","label":"Ottomans","link":"shopify:\/\/collections\/ottomans"}},"deal_item_7DgK3H":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/30x-magnifying-mirror-with-light-3-colors-dimmable-brightness-included-tweezer-scissor-travel-magnifying-makeup-mirror-with-suction-cup-360-adjustable-stand_11_10190b48-9e24-43f0-a462-344d6eaa929c.webp","label":"Mirrors","link":"shopify:\/\/collections\/mirrors"}},"deal_item_WBCmKf":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/398384_6_VKR7qRmd.webp","label":"Lighting","link":"shopify:\/\/collections\/lighting"}},"deal_item_rJUEqt":{"type":"deal_item","settings":{"icon":"shopify:\/\/shop_images\/Se0f784f3824341c1b03bd7a223ec8874L_16dc6713-b73f-47ef-8171-9089a10b3cff.webp","label":"Sculptures","link":"shopify:\/\/collections\/sculptures"}},"deal_item_UXKgRg":{"type":"deal_item","disabled":true,"settings":{"icon":"shopify:\/\/shop_images\/dspic_117a045f-c824-46e3-9b3a-4a1b980061a3_1.jpg","label":"Throw Blanket","link":"shopify:\/\/collections\/throw-blanket-heated-throw-blanket"}},"deal_item_ULNe4X":{"type":"deal_item","disabled":true,"settings":{"icon":"shopify:\/\/shop_images\/dspic_c2c839ba-8186-44a4-af81-9f9cc3746aab.jpg","label":"Comforter & Comforter Set","link":"shopify:\/\/collections\/comforter-comforter-set"}}},"block_order":["deal_item_yhd3wq","deal_item_CFA6jg","deal_item_QzGEpq","deal_item_PHz89t","deal_item_UxQpCW","deal_item_qk7TnA","deal_item_jqYwtK","deal_item_YKCDgA","deal_item_AA3Gyy","deal_item_6VtCfP","deal_item_7fdytp","deal_item_FCX7jw","deal_item_rrC6ez","deal_item_AtBAzt","deal_item_rn7Te6","deal_item_D4JPkb","deal_item_TLfaXG","deal_item_KXiPRr","deal_item_f8reEP","deal_item_wFchEJ","deal_item_7DgK3H","deal_item_WBCmKf","deal_item_rJUEqt","deal_item_UXKgRg","deal_item_ULNe4X"],"name":"Deals Icon Grid","settings":{"columns":7}},"event_slider_CVMa6i":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#95e2f1","promo_title":"Christmas Decor","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"christmas-decor","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_Be6CAJ":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#81e7af","promo_title":"Sofas & Sectionals","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"sofa-sectional-sofas","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_T9braC":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#ff8282","promo_title":"Patio Set","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"patio-sets","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_RhjyL8":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#5aecf1","promo_title":"Recliners & Lounge Chairs","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"recliners-lounge-chairs","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_VB48hn":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#858b25","promo_title":"Adirondack Chairs","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"adirondack-chairs","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_Xwtwqk":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#b395f1","promo_title":"Accent Chairs","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"accent-chairs-1","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_yp3U9h":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#95e2f1","promo_title":"Coffee Tables","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"coffee-tables-1","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_m9xJF4":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#ec9a9f","promo_title":"Bedroom Furniture","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"bedroom-furniture-1","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_RDaawR":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#cee397","promo_title":"Cabinets Collection","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"small-cabinets","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_6zB99B":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#d095f1","promo_title":"Diningroom Furniture","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"diningroom-furniture","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_iPqmU7":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#80bcbd","promo_title":"Office Furniture","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"office-furniture","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_aTPzjw":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#c7b7a3","promo_title":"Area Rugs","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"area-rugs-1","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":false,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_tKxwLh":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#a0deff","promo_title":"TV Stands","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"tv-stands","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_yhfATP":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#ff8282","promo_title":"Chandeliers","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"chandeliers","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_mA7Ttn":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#bad8b6","promo_title":"Vase & Flower Vase","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"vase-flower-vase","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_d3yYMw":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#e195ab","promo_title":"Mattress & Mattress Topper","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"bedroom-mattress","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_itbTKY":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#a0deff","promo_title":"Lighting","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"lighting-sale","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":false,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_Lzt67k":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#9fc39b","promo_title":"Throw Pillow","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"outdoor-throw-pillow","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_qwfN8b":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#dfa67b","promo_title":"Mirror Collections","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"mirrors","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_AeMeQK":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#ba94d1","promo_title":"Curtains","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"curtains","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_9YRmRH":{"type":"Event-slider","name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#b1bce6","promo_title":"Ottomans","promo_text":"Black Friday Sale","promo_button_url":"","home_featured_products":"ottomans","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}},"event_slider_h4FcAn":{"type":"Event-slider","disabled":true,"name":"Event Product Slider","settings":{"title":"","divider":false,"promo_image":"#ffffff","bg_color":"#ffbed8","promo_title":"Bookshelf Collections","promo_text":"Back To School Sale","promo_button_url":"","home_featured_products":"bookshelf","product_limit":12,"view_all":true,"per_row_desktop":4,"per_row_tablet":3,"per_row_mobile":2,"show_arrows":true,"show_dots":true,"autoplay":false,"slider_speed":5,"view_all_collections":true,"view_all_collections_text":"View All","view_all_collections_url":"shopify:\/\/collections"}}},"order":["main","banner_section_HJRCQf","deals_section_h6bL6d","event_slider_CVMa6i","event_slider_Be6CAJ","event_slider_T9braC","event_slider_RhjyL8","event_slider_VB48hn","event_slider_Xwtwqk","event_slider_yp3U9h","event_slider_m9xJF4","event_slider_RDaawR","event_slider_6zB99B","event_slider_iPqmU7","event_slider_aTPzjw","event_slider_tKxwLh","event_slider_yhfATP","event_slider_mA7Ttn","event_slider_d3yYMw","event_slider_itbTKY","event_slider_Lzt67k","event_slider_qwfN8b","event_slider_AeMeQK","event_slider_9YRmRH","event_slider_h4FcAn"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {}
+    },
+    "banner_section_HJRCQf": {
+      "type": "banner-section",
+      "custom_css": [
+        ".banner-promo-section {margin-top: 18px; overflow: hidden;}",
+        "img {border-radius: 20px;}"
+      ],
+      "name": "Default Banner Promo",
+      "settings": {
+        "desktop_image": "shopify://shop_images/Black_Friday_Banner_Web.png",
+        "mobile_image": "shopify://shop_images/Black_Friday_Banner_Mobile.png",
+        "full_width": false,
+        "button_url": false,
+        "overlay_opacity": 0,
+        "sub_heading": "",
+        "main_heading": "",
+        "description": "",
+        "button_text": "",
+        "button_link": ""
+      }
+    },
+    "deals_section_h6bL6d": {
+      "type": "deals-section",
+      "blocks": {
+        "deal_item_yhd3wq": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/dspic_c0f63c1c-3fa1-4db8-95e6-d0a0c1207cbe_2.webp",
+            "label": "All Sofa & Sectionals",
+            "link": "shopify://collections/sofa-sectional-sofas"
+          }
+        },
+        "deal_item_CFA6jg": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/dspic_5cfe3be6-9b7e-4809-bda7-66e4b40560d6.webp",
+            "label": "Sectional Sofas",
+            "link": "shopify://collections/sectional-sofas"
+          }
+        },
+        "deal_item_QzGEpq": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/d0102hes9ep.webp",
+            "label": "Patio Set",
+            "link": "https://trufairs.com/collections/patio-furniture-sets"
+          }
+        },
+        "deal_item_PHz89t": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/D01027HIXBU_10_02a15393-daca-425b-afb4-5aa7596a0eef.jpg",
+            "label": "Christmas Decor",
+            "link": "shopify://collections/christmas-decor"
+          }
+        },
+        "deal_item_UxQpCW": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/d010277nwaj_a22f09ec-e75c-4c55-bc4b-a5fe700202ae.webp",
+            "label": "Recliners & Lounge Chairs",
+            "link": "shopify://collections/recliners-lounge-chairs"
+          }
+        },
+        "deal_item_qk7TnA": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/dspic_ddc368bf-4f20-40a0-8125-ae5797cf3e32.jpg",
+            "label": "Adirondack Chairs",
+            "link": "shopify://collections/adirondack-chairs"
+          }
+        },
+        "deal_item_jqYwtK": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/Chicago_Accent_Chair_Ivory.webp",
+            "label": "Accent Chairs",
+            "link": "shopify://collections/accent-chairs-1"
+          }
+        },
+        "deal_item_YKCDgA": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/dspic_1f9d3e7d-a665-4205-851e-0ea9c0e37703.webp",
+            "label": "Coffee Tables",
+            "link": "shopify://collections/coffee-tables-1"
+          }
+        },
+        "deal_item_AA3Gyy": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/d0102hq3scv_4ed24abd-2b8c-44b4-99e1-5b6ceda4cd4f.webp",
+            "label": "Cabinets Collection",
+            "link": "shopify://collections/small-cabinets"
+          }
+        },
+        "deal_item_6VtCfP": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/Graceville_King_Fabric_Platform_Bed.webp",
+            "label": "Bedroom Furniture",
+            "link": "shopify://collections/bedroom-furniture-1"
+          }
+        },
+        "deal_item_7fdytp": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/dspic_5e29c906-116c-420d-8ff9-d059053627c8.webp",
+            "label": "Diningroom Furniture",
+            "link": "shopify://collections/diningroom-furniture"
+          }
+        },
+        "deal_item_FCX7jw": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/47offic_1_828fb99f-d549-42b6-94cc-a84d3785bb56.webp",
+            "label": "Office Furniture",
+            "link": "shopify://collections/office-furniture"
+          }
+        },
+        "deal_item_rrC6ez": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/d0102hi629w_8a1d69b5-e332-4af9-9beb-eb5e2e49d34b.webp",
+            "label": "TV Stands",
+            "link": "shopify://collections/tv-stands"
+          }
+        },
+        "deal_item_AtBAzt": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/S28862ca7cb2b417c9755646668cd15e8l_66603ecb-7829-4416-97a3-9e3859147924.webp",
+            "label": "Mattress",
+            "link": "https://trufairs.com/collections/mattresses"
+          }
+        },
+        "deal_item_rn7Te6": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/468867_1_1000x1000_afc16a6d-e19f-450d-90f8-d15241ed66cc.webp",
+            "label": "Chandeliers",
+            "link": "shopify://collections/chandeliers"
+          }
+        },
+        "deal_item_D4JPkb": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/570429_10_4r1BJKNd.webp",
+            "label": "Area Rug",
+            "link": "https://trufairs.com/collections/area-rugs-1"
+          }
+        },
+        "deal_item_TLfaXG": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/2_1df4a81c-f63c-448e-a039-9caa450ae57d.webp",
+            "label": "Throw Pillow",
+            "link": "shopify://collections/outdoor-throw-pillow"
+          }
+        },
+        "deal_item_KXiPRr": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/Embroidered_Single_Panel_7.webp",
+            "label": "Curtains",
+            "link": "shopify://collections/curtains"
+          }
+        },
+        "deal_item_f8reEP": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/dspic_5e181d0b-11c9-4468-9cc2-653a5503bd62.jpg",
+            "label": "Vase & Flower Vase",
+            "link": "shopify://collections/vase-flower-vase"
+          }
+        },
+        "deal_item_wFchEJ": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/Gome_Ottoman_Oat_Yellow.webp",
+            "label": "Ottomans",
+            "link": "shopify://collections/ottomans"
+          }
+        },
+        "deal_item_7DgK3H": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/30x-magnifying-mirror-with-light-3-colors-dimmable-brightness-included-tweezer-scissor-travel-magnifying-makeup-mirror-with-suction-cup-360-adjustable-stand_11_10190b48-9e24-43f0-a462-344d6eaa929c.webp",
+            "label": "Mirrors",
+            "link": "shopify://collections/mirrors"
+          }
+        },
+        "deal_item_WBCmKf": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/398384_6_VKR7qRmd.webp",
+            "label": "Lighting",
+            "link": "shopify://collections/lighting"
+          }
+        },
+        "deal_item_rJUEqt": {
+          "type": "deal_item",
+          "settings": {
+            "icon": "shopify://shop_images/Se0f784f3824341c1b03bd7a223ec8874L_16dc6713-b73f-47ef-8171-9089a10b3cff.webp",
+            "label": "Sculptures",
+            "link": "shopify://collections/sculptures"
+          }
+        },
+        "deal_item_UXKgRg": {
+          "type": "deal_item",
+          "disabled": true,
+          "settings": {
+            "icon": "shopify://shop_images/dspic_117a045f-c824-46e3-9b3a-4a1b980061a3_1.jpg",
+            "label": "Throw Blanket",
+            "link": "shopify://collections/throw-blanket-heated-throw-blanket"
+          }
+        },
+        "deal_item_ULNe4X": {
+          "type": "deal_item",
+          "disabled": true,
+          "settings": {
+            "icon": "shopify://shop_images/dspic_c2c839ba-8186-44a4-af81-9f9cc3746aab.jpg",
+            "label": "Comforter & Comforter Set",
+            "link": "shopify://collections/comforter-comforter-set"
+          }
+        }
+      },
+      "block_order": [
+        "deal_item_yhd3wq",
+        "deal_item_CFA6jg",
+        "deal_item_QzGEpq",
+        "deal_item_PHz89t",
+        "deal_item_UxQpCW",
+        "deal_item_qk7TnA",
+        "deal_item_jqYwtK",
+        "deal_item_YKCDgA",
+        "deal_item_AA3Gyy",
+        "deal_item_6VtCfP",
+        "deal_item_7fdytp",
+        "deal_item_FCX7jw",
+        "deal_item_rrC6ez",
+        "deal_item_AtBAzt",
+        "deal_item_rn7Te6",
+        "deal_item_D4JPkb",
+        "deal_item_TLfaXG",
+        "deal_item_KXiPRr",
+        "deal_item_f8reEP",
+        "deal_item_wFchEJ",
+        "deal_item_7DgK3H",
+        "deal_item_WBCmKf",
+        "deal_item_rJUEqt",
+        "deal_item_UXKgRg",
+        "deal_item_ULNe4X"
+      ],
+      "name": "Deals Icon Grid",
+      "settings": {
+        "columns": 7
+      }
+    },
+    "event_slider_CVMa6i": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#95e2f1",
+        "promo_title": "Christmas Decor",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "christmas-decor",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_Be6CAJ": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#81e7af",
+        "promo_title": "Sofas & Sectionals",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "sofa-sectional-sofas",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_T9braC": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#ff8282",
+        "promo_title": "Patio Set",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "patio-sets",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_RhjyL8": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#5aecf1",
+        "promo_title": "Recliners & Lounge Chairs",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "recliners-lounge-chairs",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_VB48hn": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#858b25",
+        "promo_title": "Adirondack Chairs",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "adirondack-chairs",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_Xwtwqk": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#b395f1",
+        "promo_title": "Accent Chairs",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "accent-chairs-1",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_yp3U9h": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#95e2f1",
+        "promo_title": "Coffee Tables",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "coffee-tables-1",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_m9xJF4": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#ec9a9f",
+        "promo_title": "Bedroom Furniture",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "bedroom-furniture-1",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_RDaawR": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#cee397",
+        "promo_title": "Cabinets Collection",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "small-cabinets",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_6zB99B": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#d095f1",
+        "promo_title": "Diningroom Furniture",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "diningroom-furniture",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_iPqmU7": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#80bcbd",
+        "promo_title": "Office Furniture",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "office-furniture",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_aTPzjw": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#c7b7a3",
+        "promo_title": "Area Rugs",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "faux-fur-sheepskin-area-rugs",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": false,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_tKxwLh": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#a0deff",
+        "promo_title": "TV Stands",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "tv-stands",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_yhfATP": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#ff8282",
+        "promo_title": "Chandeliers",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "chandeliers",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_mA7Ttn": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#bad8b6",
+        "promo_title": "Vase & Flower Vase",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "vase-flower-vase",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_d3yYMw": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#e195ab",
+        "promo_title": "Mattress & Mattress Topper",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "bedroom-mattress",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_itbTKY": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#a0deff",
+        "promo_title": "Lighting",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "lighting-sale",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": false,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_Lzt67k": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#9fc39b",
+        "promo_title": "Throw Pillow",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "outdoor-throw-pillow",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_qwfN8b": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#dfa67b",
+        "promo_title": "Mirror Collections",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "mirrors",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_AeMeQK": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#ba94d1",
+        "promo_title": "Curtains",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "curtains",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_9YRmRH": {
+      "type": "Event-slider",
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#b1bce6",
+        "promo_title": "Ottomans",
+        "promo_text": "Black Friday Sale",
+        "promo_button_url": "",
+        "home_featured_products": "ottomans",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    },
+    "event_slider_h4FcAn": {
+      "type": "Event-slider",
+      "disabled": true,
+      "name": "Event Product Slider",
+      "settings": {
+        "title": "",
+        "divider": false,
+        "promo_image": "#ffffff",
+        "bg_color": "#ffbed8",
+        "promo_title": "Bookshelf Collections",
+        "promo_text": "Back To School Sale",
+        "promo_button_url": "",
+        "home_featured_products": "bookshelf",
+        "product_limit": 12,
+        "view_all": true,
+        "per_row_desktop": 4,
+        "per_row_tablet": 3,
+        "per_row_mobile": 2,
+        "show_arrows": true,
+        "show_dots": true,
+        "autoplay": false,
+        "slider_speed": 5,
+        "view_all_collections": true,
+        "view_all_collections_text": "View All",
+        "view_all_collections_url": "shopify://collections"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "banner_section_HJRCQf",
+    "deals_section_h6bL6d",
+    "event_slider_CVMa6i",
+    "event_slider_Be6CAJ",
+    "event_slider_T9braC",
+    "event_slider_RhjyL8",
+    "event_slider_VB48hn",
+    "event_slider_Xwtwqk",
+    "event_slider_yp3U9h",
+    "event_slider_m9xJF4",
+    "event_slider_RDaawR",
+    "event_slider_6zB99B",
+    "event_slider_iPqmU7",
+    "event_slider_aTPzjw",
+    "event_slider_tKxwLh",
+    "event_slider_yhfATP",
+    "event_slider_mA7Ttn",
+    "event_slider_d3yYMw",
+    "event_slider_itbTKY",
+    "event_slider_Lzt67k",
+    "event_slider_qwfN8b",
+    "event_slider_AeMeQK",
+    "event_slider_9YRmRH",
+    "event_slider_h4FcAn"
+  ]
+}
